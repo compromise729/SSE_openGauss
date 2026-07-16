@@ -87,7 +87,6 @@ orion_debug
 *.dsdb
 *.dcdb
 
-janus_master.key
 
 # Xcode
 #

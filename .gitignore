@@ -1,52 +1,131 @@
-# 大写重复目录，统一使用小写 sse
-/SSE/
+# ============================================================
+# SSE_openGauss repository ignore rules
+# 上传源码和 *.key 密钥；不上传运行状态、日志和编译产物。
+# ============================================================
 
-# 编译安装输出
+# 重复目录与旧子模块配置
+/SSE/
+/.gitmodules
+
+# openGauss 配置、安装和日志输出
 /dest/
 /tmp_build/
 /output/
-
-# configure 和运行日志
 /config.log
 /config.status
+/config.cache
 /logfile
 /ereport.txt
 /escan.txt
 /sse_sql/logfile
 
-# SSE 运行状态及密钥
-/sse_storage/
-/sse_server_storage/
-*.key
+# SSE 运行数据
+# 忽略状态、计时和日志，但允许上传所有 *.key
+/sse_storage/*
+!/sse_storage/*.key
+!/sse_storage/.gitkeep
 
-# 编译产物
-*.o
+/sse_server_storage/*
+!/sse_server_storage/*.key
+!/sse_server_storage/.gitkeep
+
+# opensse-schemes 生成的数据库状态
+*.csdb
+*.ssdb
+*.dsdb
+*.dcdb
+
+# 编译生成文件
+*.slo
 *.lo
+*.o
+*.obj
+*.gch
+*.pch
 *.a
 *.la
-*.so
-*.so.*
+*.lai
+*.lib
 *.d
 *.gcda
 *.gcno
-core
-core.*
+*.gcov
 
-# CMake 生成文件
-CMakeCache.txt
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# 原项目自带的固定 .so，需要上传
+!/docker/dockerfiles/1.1.0/wal2json.so
+!/contrib/roach_api/openeuler_aarch64/roach_api.so
+
+# 本地生成的无扩展名程序，保留对应 .cpp 源码
+/sse/clean_sodium
+/sse/init_sodium
+
+# Autotools 生成目录
+.deps/
+.libs/
+autom4te.cache/
+
+# CMake / Ninja 生成文件
+# 不要添加 /build/，根目录 build/ 是项目源码
 CMakeFiles/
+CMakeCache.txt
 cmake_install.cmake
 install_manifest.txt
+CTestTestfile.cmake
+Makefile.cmake
+build.ninja
+.ninja_deps
+.ninja_log
 
-# Python 和编辑器
+# SSE 子项目的实际编译目录
+/sse/Mitra/build/
+/sse/Mitra/third_party/crypto/build/
+/sse/opensse-schemes/build/
+/sse/opensse-schemes/third_party/crypto/build/
+
+# 崩溃转储和调试输出
+core
+core.*
+vgcore.*
+*.stackdump
+
+# 不应放入项目仓库的固定依赖
+/binarylibs/
+/deps-src/
+/cmake-3.29.3/
+/boost_1_64_0/
+/fides_relic/
+/mitra_relic/
+/openGauss-third_party_binarylibs.tar.gz
+
+# Python 缓存
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# 编辑器和操作系统文件
 .vscode/
 .idea/
 *.swp
+*.swo
 *~
-
-# 系统文件
 .DS_Store
+._*
 Thumbs.db
-/.gitmodules
+Desktop.ini
+
+# 临时文件和备份
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.backup-*
