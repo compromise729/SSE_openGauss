@@ -1,0 +1,52 @@
+# 大写重复目录，统一使用小写 sse
+/SSE/
+
+# 编译安装输出
+/dest/
+/tmp_build/
+/output/
+
+# configure 和运行日志
+/config.log
+/config.status
+/logfile
+/ereport.txt
+/escan.txt
+/sse_sql/logfile
+
+# SSE 运行状态及密钥
+/sse_storage/
+/sse_server_storage/
+*.key
+
+# 编译产物
+*.o
+*.lo
+*.a
+*.la
+*.so
+*.so.*
+*.d
+*.gcda
+*.gcno
+core
+core.*
+
+# CMake 生成文件
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# Python 和编辑器
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+*.swp
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+/.gitmodules
