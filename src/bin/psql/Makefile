@@ -22,6 +22,8 @@ MAKESGMLDIR = $(top_builddir)/src/common/pgxc/tools/makesgml
 SGMLDIR= $(top_builddir)/doc/src/sgml
 
 override CPPFLAGS := -I. -I$(srcdir) -I$(libpq_srcdir) -I$(top_srcdir)/src/bin/pg_dump -DHAVE_CE $(CPPFLAGS)
+override CPPFLAGS += -I$(top_builddir)/sse/opensse-schemes/lib/include
+override CPPFLAGS += -I$(top_builddir)/sse/opensse-schemes/third_party/crypto/src/include
 
 ifneq ($(enable_multiple_nodes)_$(enable_privategauss), no_no)
 CPPFLAGS += -L$(top_builddir)/src/distribute/bin/gs_ktool/ -lgs_ktool -L$(LIBKMC_LIB_PATH) -lkmc

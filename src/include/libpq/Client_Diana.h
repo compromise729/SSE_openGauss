@@ -9,6 +9,8 @@
 namespace sse {
 namespace diana {
 
+using diana_UpdateRequest = UpdateRequest<std::string>;
+
 extern const char* MASTER_KEY_FILE ;
 extern const char* KW_TOKEN_MASTER_KEY_FILE ;
 

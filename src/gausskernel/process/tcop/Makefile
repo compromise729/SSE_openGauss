@@ -30,6 +30,9 @@ ifneq "$(MAKECMDGOALS)" "clean"
   endif
 endif
 
+override CPPFLAGS += -I$(top_builddir)/sse/opensse-schemes/lib/include
+override CPPFLAGS += -I$(top_builddir)/sse/opensse-schemes/third_party/crypto/src/include
+
 ifeq ($(enable_multiple_nodes), yes)
 	OBJS= Server_Sophos.o Server_Diana.o Server_FBDSSE.o Server_Orion.o closefb_server.o dual_server.o januspp_server.o stmt_retry.o dest.o fastpath.o postgres.o pquery.o utility.o auditfuncs.o
 else

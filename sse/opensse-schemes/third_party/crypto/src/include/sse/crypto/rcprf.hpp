@@ -1329,6 +1329,24 @@ public:
             {((NBYTES >> 8) & 0xFF), (NBYTES & 0XFF)}};
     }
 
+    size_t getSerializedSize() const noexcept
+    {
+        return serialized_size();
+    }
+
+    void serializePublic(uint8_t* out) const
+    {
+        serialize(out);
+    }
+
+    static ConstrainedRCPrf<NBYTES> deserializePublic(
+        uint8_t* in,
+        const size_t in_size,
+        size_t& n_bytes_read)
+    {
+        return deserialize(in, in_size, n_bytes_read);
+    }
+
 private:
     std::vector<std::unique_ptr<ConstrainedRCPrfElement<NBYTES>>> elements_;
 
