@@ -16,7 +16,6 @@
 /config.cache
 /logfile
 /ereport.txt
-/escan.txt
 /sse_sql/logfile
 
 # SSE 运行数据
@@ -50,6 +49,10 @@
 *.gcda
 *.gcno
 *.gcov
+
+# 固定构建输入，必须随源码提交；不是编译产物。
+!/src/common/backend/utils/probes.d
+!/escan.txt
 
 *.so
 *.so.*
