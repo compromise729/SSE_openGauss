@@ -1245,6 +1245,7 @@ int PQsendQuery(PGconn* conn, const char* query)
     string qsfides_11(querystr_lower, 0, 11);
     
     string temp;
+    bool zyc_invalid_sse_request = false; /* section 5: empty-token request guard */
     bool temp_recovery=true;
     // bool tpch_test=false;
 
@@ -1674,7 +1675,13 @@ END $$;
         	    sreq = Sophos_client->search_request(keyword);
                 tracker.stop("fides_client search computation");
                 
+                if (sreq.token.empty() || sreq.derivation_key.empty()) {
+                    /* Section 5: keyword absent from client state ->
+                     * empty token. Do not build/send this request. */
+                    zyc_invalid_sse_request = true;
+                } else {
 		        temp = "fides_select * from " + tableName+"_index where token=" + sreq.token + " and derivation_key="  +sreq.derivation_key + " and add_count=" + to_string(sreq.add_count)+";";
+                }
                 tracker.stop("fides search SQL rewrite");            
             }
 	    }
@@ -2206,6 +2213,12 @@ END $$;
     if(temp_recovery)
     {
         temp = query;
+    }
+    if (zyc_invalid_sse_request) {
+        printfPQExpBuffer(&conn->errorMessage,
+            "SSE: keyword is not registered in the client state; no search token "
+            "was generated and the request was not sent.\n");
+        return 0;
     }
     const char* query_changed = temp.c_str();
     query=query_changed;
