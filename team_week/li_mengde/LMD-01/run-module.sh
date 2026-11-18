@@ -6,6 +6,8 @@ if [[ $# != 4 ]]; then
     exit 2
 fi
 here=$(cd -- "$(dirname -- "$0")" && pwd)
+schema="$here/SSE_v1.sql"
+if [[ ! -f "$schema" ]]; then schema="$here/../../../sse_sql/SSE_v1.sql"; fi
 socket=$(realpath -- "$1")
 state=$(realpath -- "$4")
 repo=/opt/og/openGauss-server
@@ -32,7 +34,7 @@ finish() {
 trap finish EXIT
 
 "${sql[@]}" -c 'SELECT current_database(), version()'
-"${sql[@]}" -f SSE_v1.sql
+"${sql[@]}" -f "$schema"
 "${sql[@]}" -f storage-fixture.sql
 
 phase=create_registration
