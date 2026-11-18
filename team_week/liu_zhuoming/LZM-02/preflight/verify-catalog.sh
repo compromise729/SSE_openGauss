@@ -19,6 +19,7 @@ export OPENGAUSS_PROJECT_ROOT="$repo"
 bash "$here/build-checker.sh" "$out/check-state"
 "${CXX:-g++}" -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0 -pthread -Wall -Wextra -Werror -I"$repo/src/include" \
   "$here/catalog-fixture.cpp" \
+  -L"$out" -Wl,-rpath,"$out" -lstate_verify \
   -L"$repo/dest/lib" -Wl,-rpath,"$repo/dest/lib" -lpq_ce -lsse_crypto -lmitra_sse_crypto -lsodium -lgmp -o "$out/catalog-fixture"
 chmod 0755 "$out/"{check-state,catalog-fixture}
 # The v1 fixture is created inside a new LZM-01 run, separate from its legacy client.
@@ -67,20 +68,23 @@ done
 echo 'PASS CATALOG-07: missing rid or ut primary key is rejected'
 
 rc=0
-SSE_V1_STATE_DIR="$state" LD_LIBRARY_PATH="$source_repo/src/common/interfaces/libpq:$LD_LIBRARY_PATH" \
+"$test_tools/runtime-check" "$test_tools/libstate_verify.so"
+SSE_V1_STATE_DIR="$state" STATE_VERIFY_EXPECT_MODULE="$test_tools/libstate_verify.so" LD_PRELOAD="$test_tools/libstate_verify.so" LD_LIBRARY_PATH="$source_repo/src/common/interfaces/libpq:$LD_LIBRARY_PATH" \
   "$source_repo/src/bin/psql/gsql" -X -h "$ISOLATED_RUN_DIR/socket" -p "$ISOLATED_PORT" -d postgres -U omm \
   -c 'SELECT 1;' > "$ISOLATED_RUN_DIR/evidence/v1-startup.log" 2>&1 || rc=$?
 [[ $rc != 0 ]]
+grep -q '^PASS RUNTIME-02:' "$ISOLATED_RUN_DIR/evidence/v1-startup.log"
 grep -q 'Fides unsupported: v1 request routing requires the ZYC integration' "$ISOLATED_RUN_DIR/evidence/v1-startup.log"
-echo 'PASS CATALOG-03: rebuilt gsql validates fixture before routing gate'
+echo 'PASS CATALOG-03: gsql with current temporary module validates fixture before routing gate'
 printf 'interrupted fixture\n' > "$state/operation.v1"
 rc=0
-SSE_V1_STATE_DIR="$state" LD_LIBRARY_PATH="$source_repo/src/common/interfaces/libpq:$LD_LIBRARY_PATH" \
+SSE_V1_STATE_DIR="$state" STATE_VERIFY_EXPECT_MODULE="$test_tools/libstate_verify.so" LD_PRELOAD="$test_tools/libstate_verify.so" LD_LIBRARY_PATH="$source_repo/src/common/interfaces/libpq:$LD_LIBRARY_PATH" \
   "$source_repo/src/bin/psql/gsql" -X -h "$ISOLATED_RUN_DIR/socket" -p "$ISOLATED_PORT" -d postgres -U omm \
   -c 'SELECT 1;' > "$ISOLATED_RUN_DIR/evidence/v1-interrupted.log" 2>&1 || rc=$?
 [[ $rc != 0 ]]
+grep -q '^PASS RUNTIME-02:' "$ISOLATED_RUN_DIR/evidence/v1-interrupted.log"
 grep -q 'Fides incomplete_operation' "$ISOLATED_RUN_DIR/evidence/v1-interrupted.log"
-echo 'PASS CATALOG-04: rebuilt gsql refuses unfinished marker before any user SQL'
+echo 'PASS CATALOG-04: gsql with current temporary module refuses unfinished marker before any user SQL'
 rc=0
 "$test_tools/check-state" "${args[@]}" --keyword apple || rc=$?
 [[ $rc == 3 ]]
