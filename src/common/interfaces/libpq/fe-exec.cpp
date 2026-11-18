@@ -17,6 +17,7 @@
 #include <string>
 #include "init_crypto.h"
 #include "libpq/Client_Sophos.h"
+#include "libpq/fides_sql_literal.h"
 #include "libpq/Client_Mitra.h"
 #include "libpq/Client_FBDSSE.h"
 #include "libpq/Client_Diana.h"
@@ -1237,9 +1238,6 @@ int PQsendQuery(PGconn* conn, const char* query)
     string querystr_lower(query);
     string querystr(query);
     transform(querystr_lower.begin(), querystr_lower.end(), querystr_lower.begin(), (int(*)(int))tolower);
-    vector<string> value_vec;
-    extract_strings(querystr, value_vec);
-    int value_vecsize = value_vec.size();
 
     string qs_seven(querystr_lower,0,7);
     string qsfides_11(querystr_lower, 0, 11);
@@ -1664,13 +1662,15 @@ END $$;
             }
             if(!indexupdate && !join_flag)
             {
+                string keyword;
+                if (read_fides_sql_literal(querystr, querystr.find('\''), keyword) == std::string::npos) {
+                    printfPQExpBuffer(&conn->errorMessage, "invalid Fides search keyword literal\n");
+                    return 0;
+                }
                 tracker.start("fides search SQL rewrite");
                 string tableName=getTableNameFromSelectSQL(querystr_lower);
                 sseflag.fides=true;//fang dao sou suo chu
 	    	    sse::sophos::new_SearchRequest sreq;
-		        int keyword_begin = querystr_lower.find("'");
-			    int keyword_end = querystr_lower.find("'", keyword_begin + 1);
-    		    string keyword(querystr, keyword_begin + 1, keyword_end - keyword_begin - 1);
                 tracker.start("fides_client search computation");
         	    sreq = Sophos_client->search_request(keyword);
                 tracker.stop("fides_client search computation");
