@@ -706,6 +706,16 @@ Status register_current_table(const std::string& table)
     return register_table(scope, kProtocolVersion);
 }
 
+Status current_operation_counters(Counters& out)
+{
+    std::lock_guard<std::mutex> guard(state_mutex);
+    out.clear();
+    if (!active.lock.valid() || active.failed || active.kind == "create")
+        return {Code::incomplete_operation, "active insert or search required before loading Fides counters"};
+    out = active.counters;
+    return good();
+}
+
 Status save_counters(const Operation& operation, const Counters& counters)
 {
     std::lock_guard<std::mutex> guard(state_mutex);

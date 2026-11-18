@@ -501,11 +501,11 @@ int main(int argc, char* argv[])
             return sse_v1::read_catalog(pset.db, table, catalog);
         });
         const auto checked = status.ok() ? sse_v1::validate_startup() : status;
-        const auto code = checked.ok() ? sse_v1::Code::unsupported : checked.code;
-        const char* message = checked.ok() ? "v1 request routing requires the ZYC integration" : checked.message.c_str();
-        fprintf(stderr, "Fides %s: %s\n", sse_v1::code_name(code), message);
-        PQfinish(pset.db);
-        return EXIT_FAILURE;
+        if (!checked.ok()) {
+            fprintf(stderr, "Fides %s: %s\n", sse_v1::code_name(checked.code), checked.message.c_str());
+            PQfinish(pset.db);
+            return EXIT_FAILURE;
+        }
     }
 
     PQsetNoticeProcessor(pset.db, NoticeProcessor, NULL);

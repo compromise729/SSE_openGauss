@@ -33,6 +33,8 @@ const char* code_name(Code);
 // No startup or preflight path invokes it implicitly.
 Status initialize_state(const std::string& database_oid, const KeyInitializer&);
 Status operation_counters(const Operation&, Counters&);
+// Request adapters construct the Fides object only after begin succeeds.
+Status current_operation_counters(Counters&);
 bool v1_state_selected();
 Status increment_counter(const std::string&, int&, bool persist);
 Status save_current_counters(const Counters&);
