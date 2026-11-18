@@ -114,7 +114,7 @@ SophosServer* init_SophosServer()
 	// return new SophosServer();
 }
 
-std::string SophosServer::search(new_server_SearchRequest sreq, std::string tableName)
+std::string SophosServer::search(new_server_SearchRequest sreq, std::string tableName, bool row_aead_v1)
 {
 	// std::string key = "mysecretkey";
 	// TimeTracker& tracker = TimeTracker::getInstance();
@@ -126,7 +126,12 @@ std::string SophosServer::search(new_server_SearchRequest sreq, std::string tabl
 
 	crypto::Prf<kUpdateTokenSize> derivation_prf(crypto::Key<kDerivationKeySize>(DerivationKey_arr.data()));
 
-	std::string R = "DELETE FROM " + tableName + " _index WHERE UT IN ('";
+	std::string R;
+    if (row_aead_v1) {
+        R = "SELECT ut, locator_blob FROM public.sse_v1_take('public','" + tableName + "',ARRAY['";
+    } else {
+        R = "DELETE FROM " + tableName + " _index WHERE UT IN ('";
+    }
 	std::string tem="";
 	tracker.start("fides_server search computation");
 	for (int i = sreq.add_count; i > 0; i--)
@@ -144,7 +149,8 @@ std::string SophosServer::search(new_server_SearchRequest sreq, std::string tabl
 		st = public_tdp_.eval(st);
 	}
 	tracker.stop("fides_server search computation");
-	R = R + tem + "') RETURNING *;";
+	R += tem;
+    R += row_aead_v1 ? "']::text[]);" : "') RETURNING *;";
 	return R;
 }
 }//sophos

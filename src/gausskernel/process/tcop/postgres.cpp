@@ -35,6 +35,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <algorithm>
+#include <regex>
 
 #ifdef HAVE_SYS_RESOURCE_H
 #include <sys/time.h>
@@ -2161,7 +2162,40 @@ static void exec_simple_query(const char* query_string, MessageType messageType,
 			    temp = query_string;
 	    }
     }
-    if(qs_six=="fides_")
+    if (qs_cpy.compare(0, 15, "fides_v1_select") == 0) {
+        static const std::regex pattern(
+            R"(^fides_v1_select[ \t]+\*[ \t]+from[ \t]+public\.([a-z][a-z0-9_]{0,39})_index[ \t]+where[ \t]+token=([A-Za-z0-9+/=]*)[ \t]+and[ \t]+derivation_key=([A-Za-z0-9+/=]*)[ \t]+and[ \t]+add_count=([0-9]{1,10});?[ \t\r\n]*$)");
+        std::smatch match;
+        if (qs_ori.size() > 1024 || !std::regex_match(qs_ori, match, pattern)) {
+            ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("invalid Fides v1 search request")));
+        }
+        const std::string logical_name = match[1];
+        const unsigned long long count = strtoull(match[4].str().c_str(), NULL, 10);
+        if (count > INT_MAX) {
+            ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("invalid Fides v1 add_count")));
+        }
+        if (count == 0 && match[2].length() == 0 && match[3].length() == 0) {
+            temp = "SELECT ut, locator_blob FROM public.sse_v1_take('public','" + logical_name + "',ARRAY[]::text[]);";
+        } else {
+            if (count == 0 || match[2].length() != 344 || match[3].length() != 44) {
+                ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("invalid Fides v1 token encoding")));
+            }
+            sse::sophos::new_server_SearchRequest request;
+            request.token = sse::sophos::base64_decode(match[2]);
+            request.derivation_key = sse::sophos::base64_decode(match[3]);
+            if (request.token.size() != sse::sophos::kSearchTokenSize ||
+                request.derivation_key.size() != sse::sophos::kDerivationKeySize ||
+                sse::sophos::base64_encode(request.token) != match[2].str() ||
+                sse::sophos::base64_encode(request.derivation_key) != match[3].str()) {
+                ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("invalid Fides v1 token size")));
+            }
+            if (Sophos_server == nullptr) {
+                ereport(ERROR, (errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE), errmsg("run fides_setup before Fides v1 search")));
+            }
+            request.add_count = static_cast<uint32_t>(count);
+            temp = Sophos_server->search(request, logical_name, true);
+        }
+    } else if(qs_six=="fides_")
     {
         int init = qs_cpy.find("setup");
         if(init != qs_cpy.npos)
