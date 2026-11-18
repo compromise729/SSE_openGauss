@@ -42,7 +42,7 @@ fixture_create() {
 SELECT public.sse_v1_create('public', :'logical_name');
 SQL
     printf '%s\t%s\tpublic\t%s\t1\n' "$deployment" "$database_oid" "$logical_name" >> "$scratch/row_aead_tables.v1" || return
-    printf '%s keyword|FIDES\n' "$logical_name" >> "$scratch/sse_table.mat"
+    printf '%s keyword|fides\n' "$logical_name" >> "$scratch/sse_table.mat"
 }
 
 mapping_digest() {
@@ -54,10 +54,10 @@ database_oid=$("${sql[@]}" -Atq -c "SELECT oid FROM pg_database WHERE datname=cu
     sed -n '/^[0-9][0-9]*$/p')
 [[ "$database_oid" =~ ^[0-9]+$ ]]
 printf 'SSE_ROW_TABLES_V1\n' > "$scratch/row_aead_tables.v1"
-printf 'lmd_legacy keyword|FIDES\n' > "$scratch/sse_table.mat"
+printf 'lmd_legacy keyword|fides\n' > "$scratch/sse_table.mat"
 fixture_create lmd_registration_ok
 grep -F $'\tpublic\tlmd_registration_ok\t1' "$scratch/row_aead_tables.v1"
-grep -Fx 'lmd_registration_ok keyword|FIDES' "$scratch/sse_table.mat"
+grep -Fx 'lmd_registration_ok keyword|fides' "$scratch/sse_table.mat"
 "${sql[@]}" -c "SELECT public.sse_v1_require_table('public','lmd_registration_ok')"
 echo 'PASS test caller registered both mappings after successful server create'
 
@@ -87,7 +87,11 @@ BEGIN
     RAISE NOTICE 'PASS catalog rejection rolled back both physical tables and left no catalog entry';
 END;
 $$;
+BEGIN;
 ALTER TABLE public.sse_v1_catalog DROP CONSTRAINT lmd_fixture_reject;
+DROP TABLE public.lmd_registration_ok_data, public.lmd_registration_ok_index;
+DELETE FROM public.sse_v1_catalog WHERE logical_schema = 'public' AND logical_table = 'lmd_registration_ok';
+COMMIT;
 SQL
 echo 'PASS failed create left both fixture mapping files byte-identical'
 
