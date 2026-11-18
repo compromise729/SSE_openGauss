@@ -1,0 +1,41 @@
+--- a/src/common/interfaces/libpq/sse_common.cpp
++++ b/src/common/interfaces/libpq/sse_common.cpp
+@@ -706,9 +706,13 @@
+     if (key_file) {
+         key.resize(16);  // 假设文件保存的是128位密钥
+         key_file.read(&key[0], 16);
++        const std::streamsize bytes_read = key_file.gcount();
+         key_file.close();
+ 
+-        if (key.size() != 16) {
++        // resize() only pre-allocates the container; it does not prove that
++        // 16 bytes were actually read. A short or empty file must fail
++        // explicitly instead of silently using zero-filled tail bytes as key.
++        if (bytes_read != 16 || key.size() != 16) {
+             //std::cerr << "Invalid key size from file!" << std::endl;
+             return "";
+         }
+@@ -741,6 +745,11 @@
+ 
+ // AES加密函数
+ std::string aes_encrypt(const std::string& pt, const std::string& key) {
++    // Reject an invalid key before any AES call. Empty return is the
++    // documented failure signal for callers.
++    if (key.size() != 16) {
++        return "";
++    }
+     // 生成一个随机的值v
+     unsigned char v[AES_BLOCK_SIZE];
+     if (!RAND_bytes(v, sizeof(v))) {
+@@ -781,6 +790,11 @@
+ 
+ // AES解密函数
+ std::string aes_decrypt(const std::string& ct, const std::string& key) {
++    // Reject an invalid key before any AES call. Empty return is the
++    // documented failure signal for callers.
++    if (key.size() != 16) {
++        return "";
++    }
+     // 提取随机值v
+     size_t len = ct.size();
+     std::string random_value = ct.substr(len - AES_BLOCK_SIZE, AES_BLOCK_SIZE);
