@@ -1,0 +1,325 @@
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+#include <libpq-fe.h>
+#include "libpq/Client_Sophos.h"
+#include "row_aead_v1.h"
+#include "sse/crypto/utils.hpp"
+
+namespace {
+using Result = std::unique_ptr<PGresult, decltype(&PQclear)>;
+using Strings = std::vector<std::string>;
+using sse_v1::Locator;
+using sse_v1::Row;
+
+void require(bool condition, const char* diagnostic) {
+    if (!condition) throw std::runtime_error(diagnostic);
+}
+
+void require_crypto(const sse_v1::Status& status, const char* phase) {
+    if (!status.ok()) throw std::runtime_error(std::string(phase) + ": " + status.message);
+}
+
+Result checked(PGconn* conn, PGresult* raw) {
+    Result result(raw, PQclear);
+    if (!result || (PQresultStatus(result.get()) != PGRES_TUPLES_OK &&
+                    PQresultStatus(result.get()) != PGRES_COMMAND_OK)) {
+        throw std::runtime_error(result ? PQresultErrorMessage(result.get()) : PQerrorMessage(conn));
+    }
+    return result;
+}
+
+PGresult* exec_params(PGconn* conn, const char* sql, const Strings& params) {
+    std::vector<const char*> values;
+    for (const auto& param : params) values.push_back(param.c_str());
+    return PQexecParams(conn, sql, values.size(), nullptr, values.data(), nullptr, nullptr, 0);
+}
+
+Result query(PGconn* conn, const char* sql, const Strings& params = {}) {
+    return checked(conn, exec_params(conn, sql, params));
+}
+
+void expect_error(PGresult* raw, const std::string& state, const char* phase) {
+    Result result(raw, PQclear);
+    require(result && PQresultStatus(result.get()) == PGRES_FATAL_ERROR, "expected a database error");
+    const auto actual = PQresultErrorField(result.get(), PG_DIAG_SQLSTATE);
+    require(actual && actual == state, PQresultErrorMessage(result.get()));
+    std::cout << "PASS " << phase << " SQLSTATE=" << actual << '\n';
+}
+
+std::string field(const Result& result, int row, int col) {
+    require(row < PQntuples(result.get()) && col < PQnfields(result.get()) &&
+            !PQgetisnull(result.get(), row, col), "missing result field");
+    return std::string(PQgetvalue(result.get(), row, col), PQgetlength(result.get(), row, col));
+}
+
+std::string array_param(const Strings& values) {
+    std::string result = "{";
+    for (const auto& value : values) {
+        if (result.size() > 1) result += ',';
+        result += '"';
+        for (char c : value) {
+            if (c == '\\' || c == '"') result += '\\';
+            result += c;
+        }
+        result += '"';
+    }
+    return result + '}';
+}
+
+void expect_columns(const Result& result, const char* first, const char* second) {
+    require(PQnfields(result.get()) == 2 && std::string(PQfname(result.get(), 0)) == first &&
+            std::string(PQfname(result.get(), 1)) == second, "unexpected result columns");
+}
+
+std::string search_sql(const sse::sophos::new_SearchRequest& request, const std::string& table = "week_demo") {
+    return "fides_v1_select * from public." + table + "_index where token=" + request.token +
+        " and derivation_key=" + request.derivation_key + " and add_count=" + std::to_string(request.add_count) + ";";
+}
+
+const char* insert_sql = "SELECT public.sse_v1_insert('public','week_demo',$1::text[],$2::text[],$3::text[],$4::text[])";
+const char* fetch_sql = "SELECT rid,data_blob FROM public.sse_v1_fetch('public','week_demo',$1::text[])";
+const char* reinsert_sql = "SELECT public.sse_v1_reinsert('public','week_demo',$1::text[],$2::text[])";
+
+std::string snapshot(PGconn* conn, const char* phase) {
+    auto data = query(conn, "SELECT count(*)::text || ':' || COALESCE(md5(string_agg(rid || ':' || md5(data_blob),"
+                            "',' ORDER BY rid)), '-') FROM public.week_demo_data");
+    auto index = query(conn, "SELECT count(*)::text || ':' || COALESCE(md5(string_agg(ut || ':' || md5(locator_blob),"
+                             "',' ORDER BY ut)), '-') FROM public.week_demo_index");
+    std::string line = "data=" + field(data, 0, 0) + " index=" + field(index, 0, 0);
+    std::cout << "SNAPSHOT " << phase << ' ' << line << '\n';
+    return line;
+}
+
+struct Sample {
+    Row row;
+    std::string rid, data_blob, ut, locator_blob;
+};
+
+Sample encode(const Row& row, const sse_v1::Scope& scope, const sse_v1::KeySet& keys,
+              sse::sophos::SophosClient& client) {
+    Sample sample;
+    sample.row = row;
+    require_crypto(sse_v1::new_rid(sample.rid), "new rid");
+    require_crypto(sse_v1::encrypt_row(scope, sample.rid, row, keys, sample.data_blob), "encrypt row");
+    require_crypto(sse_v1::encrypt_locator(scope, {sample.rid, 0}, keys, sample.locator_blob), "encrypt locator");
+    sample.ut = client.insertion_request(row.keyword, "").token;
+    return sample;
+}
+
+void verify_failures(PGconn* conn, const std::vector<Sample>& samples, const sse_v1::Scope& scope,
+                     const sse_v1::KeySet& keys, sse::sophos::SophosClient& client) {
+    const auto before = snapshot(conn, "before_errors");
+    const auto& first = samples[0];
+    const auto& second = samples[1];
+    const auto a = encode({"4", "fixture-failure", ""}, scope, keys, client);
+    const auto b = encode({"5", "fixture-failure", "中文"}, scope, keys, client);
+    const auto c = encode({"6", "fixture-failure", "'quote'"}, scope, keys, client);
+    const auto d = encode({"7", "fixture-failure", "last"}, scope, keys, client);
+    expect_error(exec_params(conn, insert_sql, {
+        array_param({a.rid,second.rid,b.rid}), array_param({a.data_blob,second.data_blob,b.data_blob}),
+        array_param({a.ut,c.ut,b.ut}), array_param({a.locator_blob,second.locator_blob,b.locator_blob})
+    }), "23505", "middle duplicate rid");
+    require(snapshot(conn, "after_duplicate_rid") == before, "duplicate rid left writes");
+    expect_error(exec_params(conn, insert_sql, {
+        array_param({c.rid,d.rid}), array_param({c.data_blob,d.data_blob}),
+        array_param({c.ut,second.ut}), array_param({c.locator_blob,d.locator_blob})
+    }), "23505", "index collision");
+    require(snapshot(conn, "after_index_collision") == before, "index collision left writes");
+    expect_error(exec_params(conn, fetch_sql, {array_param({first.rid,a.rid})}), "21000", "missing row");
+    require(snapshot(conn, "after_missing_row") == before, "missing-row fetch changed tables");
+}
+
+void verify_missing_hit(PGconn* conn, const Sample& sample, const sse_v1::Scope& scope,
+                        const sse_v1::KeySet& keys, sse::sophos::SophosClient& client) {
+    const auto before = snapshot(conn, "before_missing_hit_fixture");
+    const auto request = client.search_request(sample.row.keyword);
+    query(conn, "BEGIN");
+    // Keep the injected deletion and the real Fides take in a disposable transaction.
+    auto deleted = query(conn, "DELETE FROM public.week_demo_data WHERE rid=$1", {sample.rid});
+    require(std::string(PQcmdTuples(deleted.get())) == "1", "missing-hit fixture did not delete a row");
+    auto matched = checked(conn, PQexec(conn, search_sql(request).c_str()));
+    expect_columns(matched, "ut", "locator_blob");
+    require(PQntuples(matched.get()) == 1 && field(matched, 0, 0) == sample.ut,
+            "missing-hit fixture did not match the index");
+    Locator locator;
+    require_crypto(sse_v1::decrypt_locator(scope, field(matched, 0, 1), keys, locator),
+                   "authenticate locator for missing-hit fixture");
+    require(locator.rid == sample.rid && locator.operation == 0, "missing-hit locator did not identify removed row");
+    snapshot(conn, "after_missing_hit_injection");
+    expect_error(exec_params(conn, fetch_sql, {array_param({locator.rid})}), "21000", "matched locator has no data row");
+    query(conn, "ROLLBACK");
+    require(snapshot(conn, "after_missing_hit_rollback") == before, "fault fixture rollback changed tables");
+}
+
+void verify_search(PGconn* conn, const std::string& keyword, unsigned expected_hits, unsigned round,
+                   std::vector<Sample>& samples, const sse_v1::Scope& scope,
+                   const sse_v1::KeySet& keys, sse::sophos::SophosClient& client) {
+    const auto request = client.search_request(keyword);
+    require(request.add_count > 0, "Fides did not generate a request for a known word");
+    auto matched = checked(conn, PQexec(conn, search_sql(request).c_str()));
+    expect_columns(matched, "ut", "locator_blob");
+    require(PQntuples(matched.get()) == static_cast<int>(expected_hits), "wrong Fides hit count");
+    std::map<std::string, Sample*> expected;
+    for (auto& sample : samples) {
+        if (sample.row.keyword == keyword) expected.emplace(sample.ut, &sample);
+    }
+    Strings hit_rids, new_tokens, new_positions;
+    for (int row = 0; row < PQntuples(matched.get()); ++row) {
+        const auto ut = field(matched, row, 0);
+        const auto envelope = field(matched, row, 1);
+        const auto it = expected.find(ut);
+        require(it != expected.end() && it->second->locator_blob == envelope, "unknown UT or changed position bytes");
+        auto& sample = *it->second;
+        Locator locator;
+        require_crypto(sse_v1::decrypt_locator(scope, envelope, keys, locator), "authenticate locator");
+        require(locator.operation == 0 && locator.rid == sample.rid, "wrong rid or position operation");
+        std::cout << "HIT round=" << round << " ut=" << ut << " locator_blob_bytes=" << envelope.size()
+                  << " client_rid=" << locator.rid << " client_operation=0\n";
+        hit_rids.push_back(locator.rid);
+        sample.ut = client.insertion_request(keyword, "").token;
+        require_crypto(sse_v1::encrypt_locator(scope, locator, keys, sample.locator_blob), "encrypt reinserted locator");
+        require(sample.locator_blob != envelope && sample.ut != ut, "reinsert reused an envelope or update token");
+        new_tokens.push_back(sample.ut);
+        new_positions.push_back(sample.locator_blob);
+        expected.erase(it);
+    }
+    require(expected.empty(), "missing expected positions");
+    auto repeated = checked(conn, PQexec(conn, search_sql(request).c_str()));
+    expect_columns(repeated, "ut", "locator_blob");
+    require(PQntuples(repeated.get()) == 0, "consumed tokens still hit");
+    query(conn, reinsert_sql, {array_param(new_tokens),array_param(new_positions)});
+
+    auto fetched = query(conn, fetch_sql, {array_param(hit_rids)});
+    expect_columns(fetched, "rid", "data_blob");
+    require(PQntuples(fetched.get()) == static_cast<int>(expected_hits), "wrong number of fetched rows");
+    Strings remaining = hit_rids;
+    for (int row = 0; row < PQntuples(fetched.get()); ++row) {
+        const auto rid = field(fetched, row, 0);
+        const auto envelope = field(fetched, row, 1);
+        const auto wanted = std::find(remaining.begin(), remaining.end(), rid);
+        const auto sample = std::find_if(samples.begin(), samples.end(), [&](const Sample& s) { return s.rid == rid; });
+        require(wanted != remaining.end() && sample != samples.end() && sample->data_blob == envelope,
+                "unexpected rid or changed business envelope");
+        remaining.erase(wanted);
+        Row decoded;
+        require_crypto(sse_v1::decrypt_row(scope, rid, envelope, keys, decoded), "authenticate row");
+        require(decoded.ind == sample->row.ind && decoded.keyword == sample->row.keyword &&
+                decoded.payload == sample->row.payload, "client recovery mismatch");
+        std::cout << "FETCH round=" << round << " rid=" << rid << " data_blob_bytes=" << envelope.size();
+        if (decoded.keyword.size() <= 16) {
+            std::cout << " client_row=[" << decoded.ind << ',' << decoded.keyword << ',' << decoded.payload << ']';
+        } else {
+            std::cout << " client_field_bytes=" << decoded.ind.size() << ',' << decoded.keyword.size()
+                      << ',' << decoded.payload.size();
+        }
+        std::cout << '\n';
+    }
+    require(remaining.empty(), "fetched rid set is incomplete");
+    auto count = query(conn, "SELECT (SELECT count(*) FROM public.week_demo_data),"
+                             "(SELECT count(*) FROM public.week_demo_index)");
+    require(field(count, 0, 0) == std::to_string(samples.size()) &&
+            field(count, 0, 1) == std::to_string(samples.size()), "reinsert changed row counts");
+    std::cout << "PASS Fides round=" << round << " hits=" << expected_hits << " data and index rows=" << samples.size() << '\n';
+}
+} // namespace
+
+int main(int argc, char** argv) {
+    if (argc != 5) {
+        std::cerr << "Usage: fides-roundtrip-probe SOCKET_DIRECTORY PORT DATABASE NEW_KEY_DIRECTORY\n";
+        return 2;
+    }
+    try {
+        sse::crypto::init_crypto_lib();
+        std::unique_ptr<sse::sophos::SophosClient> client(sse::sophos::init_SophosClient());
+        Sophos_client = client.get();
+        const char* names[] = {"host", "port", "dbname", nullptr};
+        const char* values[] = {argv[1], argv[2], argv[3], nullptr};
+        std::unique_ptr<PGconn, decltype(&PQfinish)> connection(PQconnectdbParams(names, values, 0), PQfinish);
+        auto* conn = connection.get();
+        require(conn && PQstatus(conn) == CONNECTION_OK, "cannot connect to isolated database");
+        require(field(checked(conn, PQexec(conn, "fides_setup;")), 0, 0) == "ok", "Fides setup failed");
+        query(conn, "SELECT public.sse_v1_create('public','week_demo')");
+        sse_v1::Scope scope{"", field(query(conn,
+            "SELECT oid::text FROM pg_database WHERE datname=current_database()"), 0, 0), "public", "week_demo"};
+        require_crypto(sse_v1::new_rid(scope.deployment_id), "test deployment id");
+        sse_v1::KeySet keys;
+        require_crypto(sse_v1::initialize_keys(argv[4], keys), "initialize isolated fixture keys");
+        const Row rows[] = {{"1","apple","red apple"},{"2","apple","green apple"},{"3","banana","yellow banana"}};
+        std::vector<Sample> samples;
+        Strings rids, blobs, uts, locators;
+        for (const auto& row : rows) {
+            samples.push_back(encode(row, scope, keys, *client));
+            const auto& sample = samples.back();
+            rids.push_back(sample.rid);
+            blobs.push_back(sample.data_blob);
+            uts.push_back(sample.ut);
+            locators.push_back(sample.locator_blob);
+        }
+        snapshot(conn, "before_insert");
+        query(conn, insert_sql, {array_param(rids),array_param(blobs),array_param(uts),array_param(locators)});
+        snapshot(conn, "after_insert");
+        // Read the physical tables directly as an auditor, before running the Fides path.
+        auto data = query(conn, "SELECT rid,data_blob FROM public.week_demo_data");
+        auto index = query(conn, "SELECT ut,locator_blob FROM public.week_demo_index");
+        require(PQntuples(data.get()) == 3 && PQntuples(index.get()) == 3, "wrong physical row counts");
+        for (const auto& sample : samples) {
+            bool found_data = false, found_index = false;
+            for (int i = 0; i < 3; ++i) {
+                found_data |= field(data, i, 0) == sample.rid && field(data, i, 1) == sample.data_blob;
+                found_index |= field(index, i, 0) == sample.ut && field(index, i, 1) == sample.locator_blob;
+            }
+            require(found_data && found_index, "storage changed ciphertext bytes");
+            std::cout << "DATA rid=" << sample.rid << " data_blob=" << sample.data_blob << '\n';
+            std::cout << "INDEX ut=" << sample.ut << " locator_blob=" << sample.locator_blob << '\n';
+        }
+        std::cout << "PASS DB-03 stored row and locator bytes match YZH-01 output\n";
+        verify_failures(conn, samples, scope, keys, *client);
+        const auto pristine_data = field(query(conn, "SELECT md5(string_agg(rid || ':' || data_blob, ',' ORDER BY rid)) "
+                                                "FROM public.week_demo_data"), 0, 0);
+        verify_search(conn, "apple", 2, 1, samples, scope, keys, *client);
+        verify_search(conn, "apple", 2, 2, samples, scope, keys, *client);
+        verify_search(conn, "banana", 1, 3, samples, scope, keys, *client);
+        const auto unknown_request = client->search_request("lmd-unknown-keyword");
+        require(unknown_request.add_count == 0 && unknown_request.token.empty() && unknown_request.derivation_key.empty(),
+                "unknown keyword did not generate an empty request");
+        auto empty = checked(conn, PQexec(conn, search_sql(unknown_request).c_str()));
+        expect_columns(empty, "ut", "locator_blob");
+        require(PQntuples(empty.get()) == 0, "empty search returned rows");
+        expect_error(PQexec(conn, "fides_v1_select * from public.week_demo_index where token=invalid "
+                                  "and derivation_key=invalid and add_count=1;"), "22023", "malformed search");
+        auto tampered_request = client->search_request("apple");
+        tampered_request.token.back() = 'A'; // A 256-byte token always ends in two padding characters.
+        expect_error(PQexec(conn, search_sql(tampered_request).c_str()), "22023", "invalid search token padding");
+        const auto current_data = field(query(conn, "SELECT md5(string_agg(rid || ':' || data_blob, ',' ORDER BY rid)) "
+                                               "FROM public.week_demo_data"), 0, 0);
+        require(pristine_data == current_data, "search or reinsert changed business rows");
+        snapshot(conn, "after_reinsert");
+        std::cout << "PASS empty search, replay miss, and unchanged business rows after reinsert\n";
+        verify_missing_hit(conn, samples[2], scope, keys, *client);
+
+        samples.push_back(encode({"编号 '四'", "apple", ""}, scope, keys, *client));
+        const auto& added = samples.back();
+        query(conn, insert_sql, {array_param({added.rid}),array_param({added.data_blob}),
+                                array_param({added.ut}),array_param({added.locator_blob})});
+        verify_search(conn, "apple", 3, 4, samples, scope, keys, *client);
+        std::cout << "PASS append after search, UTF-8, space, literal quote and empty payload round trip\n";
+
+        const Row max_row{std::string(16384,'I'),std::string(1024,'K'),std::string(16384,'P')};
+        samples.push_back(encode(max_row, scope, keys, *client));
+        const auto& max_sample = samples.back();
+        require(max_sample.data_blob.size() == 45144, "unexpected max real row envelope length");
+        query(conn, insert_sql, {array_param({max_sample.rid}),array_param({max_sample.data_blob}),
+                                array_param({max_sample.ut}),array_param({max_sample.locator_blob})});
+        verify_search(conn, max_row.keyword, 1, 5, samples, scope, keys, *client);
+        std::cout << "PASS maximum YZH-01 field sizes round trip through libpq\n";
+    } catch (const std::exception& error) {
+        std::cerr << "FAIL " << error.what() << '\n';
+        return 1;
+    }
+}
