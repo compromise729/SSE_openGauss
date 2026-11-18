@@ -1,4 +1,6 @@
 #include "libpq/SSE_map.h"
+#include "libpq/row_state_v1.h"
+#include <stdexcept>
 
 const char *SSE_KIND_NAME[] = {"undefined", "fides", "mitra", "fbdsse", "orion", "dual", "closefb", "januspp"};
 
@@ -67,7 +69,25 @@ void table_map_init(const char* sse_map_path){
     sse_map.close();
 }
 
+static void save_v1_mapping(const std::map<std::string, std::vector<sse_col>>& tables)
+{
+    if (tables.size() != 1) throw std::runtime_error("state_invalid: one v1 table required");
+    const auto& table = *tables.begin();
+    const auto& cols = table.second;
+    if (cols.size() != 3 || cols[0].col_name != "ind" || cols[0].kind != sse_kind::UNDEFINED ||
+        cols[1].col_name != "keyword" || cols[1].kind != sse_kind::FIDES ||
+        cols[2].col_name != "payload" || cols[2].kind != sse_kind::UNDEFINED)
+        throw std::runtime_error("state_invalid: invalid v1 column mapping");
+    const auto status = sse_v1::register_current_table(table.first);
+    if (!status.ok()) throw std::runtime_error(std::string(sse_v1::code_name(status.code)) + ": " + status.message);
+}
+
 void appendTableMap(const std::string& tableName, const std::vector<sse_col>& columns, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        save_v1_mapping({{tableName, columns}});
+        return;
+    }
+
     std::ofstream ofs(filename, std::ios::app); // 打开文件以追加模式
     if (!ofs) {
         //std::cerr << "无法打开文件进行写入：" << filename << std::endl;
@@ -84,6 +104,11 @@ void appendTableMap(const std::string& tableName, const std::vector<sse_col>& co
 }
 
 void writeTableMap(const std::map<std::string, std::vector<sse_col>>& sse_table_map, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        save_v1_mapping(sse_table_map);
+        return;
+    }
+
     std::ofstream ofs(filename, std::ios::trunc); // 打开文件以覆盖模式
     if (!ofs) {
         //std::cerr << "无法打开文件进行写入：" << filename << std::endl;
@@ -105,6 +130,11 @@ void writeTableMap(const std::map<std::string, std::vector<sse_col>>& sse_table_
 }
 
 void table_map_write(const char* sse_map_path) {
+    if (sse_v1::v1_state_selected()) {
+        save_v1_mapping(sse_table_map);
+        return;
+    }
+
     ofstream sse_map(sse_map_path);
     if (!sse_map.is_open()) {
         cerr << "Error: Unable to open file for writing: " << sse_map_path << endl;

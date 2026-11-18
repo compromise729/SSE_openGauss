@@ -59,7 +59,7 @@ override CPPFLAGS += -I$(top_builddir)/sse/opensse-schemes/third_party/crypto/sr
 
 # We can't use Makefile variables here because the MSVC build system scrapes
 # OBJS from this file.
-OBJS=	SSE_map.o SSE_time.o sophos_common.o diana_common.o sse_common.o  Client_Sophos.o Client_Diana.o Client_Mitra.o Client_FBDSSE.o closefb_client.o dual_client.o januspp_client.o AES.o Bid.o RAMStore.o ORAM.o AVLTree.o OMAP.o Orion.o operation_utils.o Utilities.o fe-auth.o fe-connect.o fe-exec.o fe-misc.o fe-print.o fe-lobj.o \
+OBJS=	row_state_v1.o row_state_catalog.o SSE_map.o SSE_time.o sophos_common.o diana_common.o sse_common.o  Client_Sophos.o Client_Diana.o Client_Mitra.o Client_FBDSSE.o closefb_client.o dual_client.o januspp_client.o AES.o Bid.o RAMStore.o ORAM.o AVLTree.o OMAP.o Orion.o operation_utils.o Utilities.o fe-auth.o fe-connect.o fe-exec.o fe-misc.o fe-print.o fe-lobj.o \
 	fe-protocol2.o fe-protocol3.o pqexpbuffer.o pqsignal.o fe-secure.o \
 	libpq-events.o
 # libpgport C files we always use
