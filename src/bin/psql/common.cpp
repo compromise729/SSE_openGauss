@@ -6,6 +6,7 @@
  * src/bin/psql/common.c
  */
 #include "libpq/sse_common.h"
+#include "libpq/fides_sql_literal.h"
 #include "libpq/Client_Sophos.h"
 #include "libpq/Client_Mitra.h"
 #include "libpq/Client_FBDSSE.h"
@@ -20,6 +21,7 @@
 #include "common.h"
 
 #include <ctype.h>
+#include <regex>
 #include <signal.h>
 #ifndef WIN32
 #include <unistd.h>   /* for write() */
@@ -1542,14 +1544,17 @@ bool SendQuery(const char* query, bool is_print, bool print_error)
                     }
                 }
 
-                /* Keep existing JOIN / comma-list paths untouched. */
-                if (zyc_outside.find(" join ") == std::string::npos &&
-                    zyc_outside.find(',') == std::string::npos) {
+                /* A comma in the projection is not a comma-separated FROM list. */
+                const auto zyc_from = zyc_outside.find(" from ");
+                static const std::regex zyc_comma_from(
+                    R"(^[ \t\r\n]*[a-z0-9_.]+(?:[ \t\r\n]+(?:as[ \t\r\n]+)?[a-z0-9_]+)?[ \t\r\n]*,)");
+                const bool zyc_multi_table = zyc_from != std::string::npos &&
+                    std::regex_search(zyc_outside.cbegin() + zyc_from + 6, zyc_outside.cend(), zyc_comma_from);
+                if (zyc_outside.find(" join ") == std::string::npos && !zyc_multi_table) {
                     const char* zyc_reason = NULL;
 
                     /* (1) projection must be SELECT * */
                     std::string::size_type zyc_sel = zyc_outside.find("select");
-                    std::string::size_type zyc_from = zyc_outside.find(" from ", zyc_sel);
                     if (zyc_sel == std::string::npos || zyc_from == std::string::npos) {
                         zyc_reason = "not a plain single-table SELECT";
                     } else {
@@ -1596,8 +1601,8 @@ bool SendQuery(const char* query, bool is_print, bool print_error)
                                     zyc_cond.find_first_not_of(" \t\r\n", zyc_eq + 1) != zyc_q1) {
                                     zyc_reason = "keyword value must be a quoted string";
                                 } else {
-                                    std::string::size_type zyc_q2 =
-                                        zyc_cond.find('\'', zyc_q1 + 1);
+                                    std::string keyword;
+                                    const auto zyc_q2 = read_fides_sql_literal(zyc_cond, zyc_q1, keyword);
                                     if (zyc_q2 == std::string::npos) {
                                         zyc_reason = "unterminated quoted keyword";
                                     } else {
@@ -1806,10 +1811,10 @@ bool SendQuery(const char* query, bool is_print, bool print_error)
         {
             common_tableName=getTableNameFromSelectSQL(querystr_lower);
             common_sseflag.fides=true;
-            int keyword_begin = querystr_lower.find("'");
-		    int keyword_end = querystr_lower.find("'", keyword_begin + 1);
-    	    string keyword(querystr, keyword_begin + 1, keyword_end - keyword_begin - 1);
-            common_keyword=keyword;
+            if (read_fides_sql_literal(querystr, querystr.find('\''), common_keyword) == std::string::npos) {
+                psql_error("invalid Fides search keyword literal\n");
+                return false;
+            }
         }
         else if(qs_12 == "mitra_select")
         {
