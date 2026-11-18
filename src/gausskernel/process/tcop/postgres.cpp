@@ -19,6 +19,7 @@
  */
 #include "Server_FBDSSE.h"
 #include "Server_Sophos.h"
+#include "sse_v1_search_limits.h"
 #include "Server_Diana.h"
 #include "libpq/Orion.h"
 #include "dual_server.h"
@@ -2171,8 +2172,9 @@ static void exec_simple_query(const char* query_string, MessageType messageType,
         }
         const std::string logical_name = match[1];
         const unsigned long long count = strtoull(match[4].str().c_str(), NULL, 10);
-        if (count > INT_MAX) {
-            ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("invalid Fides v1 add_count")));
+        if (count > sse_v1::kMaxSearchAddCount) {
+            ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+                errmsg("Fides v1 add_count exceeds maximum of %u", sse_v1::kMaxSearchAddCount)));
         }
         if (count == 0 && match[2].length() == 0 && match[3].length() == 0) {
             temp = "SELECT ut, locator_blob FROM public.sse_v1_take('public','" + logical_name + "',ARRAY[]::text[]);";

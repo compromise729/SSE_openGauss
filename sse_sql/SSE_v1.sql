@@ -159,12 +159,18 @@ BEGIN
        OR (SELECT count(DISTINCT value COLLATE "C") FROM unnest(rids) AS ids(value)) <> wanted THEN
         RAISE EXCEPTION 'sse_v1 inconsistent_result: invalid or repeated requested rid' USING ERRCODE = '21000';
     END IF;
-    RETURN QUERY EXECUTE format('SELECT d.rid, d.data_blob
-        FROM generate_subscripts($1, 1) AS g(s) JOIN %I.%I AS d ON d.rid = $1[s]
-        ORDER BY s', schema_name, logical_name || '_data') USING rids;
+    -- Only count positions that match exactly once, even if the physical primary key was removed.
+    RETURN QUERY EXECUTE format('SELECT matches.rid, matches.data_blob
+        FROM (
+            SELECT d.rid, d.data_blob, g.s, count(*) OVER (PARTITION BY g.s) AS match_count
+            FROM generate_subscripts($1, 1) AS g(s) JOIN %I.%I AS d ON d.rid = $1[s]
+        ) AS matches
+        WHERE matches.match_count = 1
+        ORDER BY matches.s', schema_name, logical_name || '_data') USING rids;
     GET DIAGNOSTICS found_rows = ROW_COUNT;
     IF found_rows <> wanted THEN
-        RAISE EXCEPTION 'sse_v1 inconsistent_result: requested %, found %', wanted, found_rows USING ERRCODE = '21000';
+        RAISE EXCEPTION 'sse_v1 inconsistent_result: requested % rid(s), % matched exactly once',
+            wanted, found_rows USING ERRCODE = '21000';
     END IF;
 END;
 $$;

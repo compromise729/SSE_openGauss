@@ -152,6 +152,30 @@ if "${sql[@]}" -c 'fides_v1_select * from public.lmd_legacy_index where token= a
 fi
 grep -F 'unregistered sse_v1 table: lmd_legacy' "$scratch/check"
 echo 'PASS v1 wire entry rejected the old Fides table'
+
+# Use public, canonical Base64 values of the real token and key lengths.
+probe_token=$(head -c 256 /dev/zero | tr '\000' '\001' | base64 -w0)
+probe_key=$(head -c 32 /dev/zero | tr '\000' '\002' | base64 -w0)
+wire_search() {
+    "${sql[@]}" -Atq -f - <<SQL
+fides_setup;
+fides_v1_select * from public.lmd_sample_index where token=$probe_token and derivation_key=$probe_key and add_count=$1;
+SQL
+}
+snapshot > "$scratch/db-before"
+wire_search 4096
+echo 'PASS v1 search accepts add_count=4096'
+for count in 4097 2147483647; do
+    if wire_search "$count" > "$scratch/check" 2>&1; then
+        echo "FAIL v1 search accepted add_count=$count" >&2
+        exit 1
+    fi
+    grep -F 'Fides v1 add_count exceeds maximum of 4096' "$scratch/check"
+    printf 'PASS v1 search rejects add_count=%s before deriving tokens\n' "$count"
+done
+snapshot > "$scratch/db-after"
+diff -u "$scratch/db-before" "$scratch/db-after"
+echo 'PASS search limit checks preserved data, index and client state'
 "${sql[@]}" -c "INSERT INTO public.lmd_legacy_data VALUES ('1','fixture','duplicate')"
 expect_failure public lmd_legacy fides 'FAIL duplicate IDs found'
 for verdict in FAIL SKIP; do

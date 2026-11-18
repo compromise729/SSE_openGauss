@@ -144,3 +144,28 @@ BEGIN
         before_data, after_data, before_index, after_index;
 END;
 $$;
+
+-- Simulate corruption without leaving the disposable table changed.
+BEGIN;
+ALTER TABLE public.lmd_sample_data DROP CONSTRAINT lmd_sample_data_pkey;
+DELETE FROM public.lmd_sample_data WHERE rid = repeat('b', 32);
+INSERT INTO public.lmd_sample_data (rid, data_blob)
+SELECT rid, data_blob FROM public.lmd_sample_data WHERE rid = repeat('a', 32);
+
+DO $$
+DECLARE
+    requested text[] := ARRAY[repeat('a', 32), repeat('b', 32)];
+BEGIN
+    IF (SELECT count(*) FROM public.lmd_sample_data WHERE rid = ANY(requested)) <> 2
+       OR (SELECT count(*) FROM public.lmd_sample_data WHERE rid = requested[1]) <> 2 THEN
+        RAISE EXCEPTION 'fixture must contain a duplicate and a missing rid with the original row count';
+    END IF;
+    BEGIN
+        PERFORM public.sse_v1_fetch('public', 'lmd_sample', requested);
+        RAISE EXCEPTION 'equal total masked a duplicate and a missing rid';
+    EXCEPTION WHEN cardinality_violation THEN
+        RAISE NOTICE 'PASS fetch rejects equal total with duplicate and missing rid (SQLSTATE %)', SQLSTATE;
+    END;
+END;
+$$;
+ROLLBACK;
