@@ -15,7 +15,7 @@ if ((EUID == 0)); then
     run=(runuser -u omm --)
 else
     mkdir "$out/cases"
-    run=()
+    run=(env)
 fi
 "${run[@]}" "$out/state-cases" "$out/cases"
 for fault in map save unlink clear-sync staged; do

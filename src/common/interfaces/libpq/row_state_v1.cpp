@@ -24,6 +24,8 @@ const char* const kMapping = "sse_table.mat";
 const char* const kTables = "row_aead_tables.v1";
 const char* const kDeployment = "deployment.v1";
 const char* const kEnvironment = "environment.v1";
+const char* const kKeyStage = ".row-keys-init-v1";
+const char* const kKeyFiles[] = {"row_aead_v1.key", "locator_aead_v1.key", "row_aead_v1.keyid"};
 const char* const kTableHeader = "SSE_ROW_TABLES_V1\n";
 const char* const kEnvironmentHeader = "SSE_ROW_ENVIRONMENT_V1\n";
 const size_t kStateSizeLimit = 64U * 1024U * 1024U;
@@ -206,20 +208,45 @@ Status read_file(int dir, const char* name, std::string& out)
 
 Status read_key_id(int dir, std::string& id)
 {
-    const char* names[] = {"row_aead_v1.key", "locator_aead_v1.key", "row_aead_v1.keyid"};
     const off_t lengths[] = {32, 32, 16};
     for (size_t i = 0; i < 3; ++i) {
-        Fd fd(openat(dir, names[i], O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC));
+        Fd fd(openat(dir, kKeyFiles[i], O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC));
         struct stat st;
         if (!fd.valid() || fstat(fd.fd, &st) != 0 || !owned_regular(st) ||
             (st.st_mode & 07777) != 0600 || st.st_size != lengths[i])
-            return key_error(std::string("missing, unreadable or invalid key metadata: ") + names[i]);
+            return key_error(std::string("missing, unreadable or invalid key metadata: ") + kKeyFiles[i]);
     }
     std::string raw;
-    const Status s = read_file(dir, names[2], raw);
+    const Status s = read_file(dir, kKeyFiles[2], raw);
     if (!s.ok() || raw.size() != 16) return key_error("unable to read row_aead_v1.keyid");
     id = hex(raw);
     return good();
+}
+
+Status initialize_crypto_keys(int dir, const std::string& path, const KeyInitializer& initialize, std::string& key_id)
+{
+    // The state lock and deployment record already exist in the parent.
+    // The crypto initializer needs a new private directory that is still empty.
+    if (mkdirat(dir, kKeyStage, 0700) != 0) return io_error("create", kKeyStage);
+    const auto stage_path = path + "/" + kKeyStage;
+    Fd stage;
+    auto status = open_directory(stage_path, stage);
+    if (!status.ok()) return status;
+
+    KeySet keys;
+    status = initialize(stage_path, keys);
+    if (status.ok()) status = read_key_id(stage.fd, key_id);
+    if (!status.ok()) return status;
+    if (hex(keys.key_id) != key_id) return key_error("initialized key_id does not match its file");
+
+    // Keep partial initialization for diagnosis. environment.v1 is published
+    // only after promotion completes. Each link refuses an existing target.
+    for (const auto* name : kKeyFiles) {
+        if (linkat(stage.fd, name, dir, name, 0) != 0) return io_error("publish", name);
+        if (unlinkat(stage.fd, name, 0) != 0) return io_error("remove staged file", name);
+    }
+    if (unlinkat(dir, kKeyStage, AT_REMOVEDIR) != 0) return io_error("remove empty directory", kKeyStage);
+    return sync_fd(dir) ? good() : io_error("fsync directory after publishing", kKeyStage);
 }
 
 bool identifier(const std::string& name)
@@ -479,11 +506,8 @@ Status initialize_state(const std::string& database_oid, const KeyInitializer& i
     snap.deployment_id = hex(deployment);
     // After this point a partial setup is preserved. A second init is rejected.
     s = durable_write(dir.fd, kDeployment, deployment, true);
-    KeySet keys;
-    if (s.ok()) s = initialize(path, keys);
     std::string key_id;
-    if (s.ok()) s = read_key_id(dir.fd, key_id);
-    if (s.ok() && hex(keys.key_id) != key_id) s = key_error("initialized key_id does not match its file");
+    if (s.ok()) s = initialize_crypto_keys(dir.fd, path, initialize, key_id);
     if (s.ok()) s = durable_write(dir.fd, kCounter, "", true);
     if (s.ok()) s = durable_write(dir.fd, kMapping, "", true);
     if (s.ok()) s = durable_write(dir.fd, kTables, kTableHeader, true);

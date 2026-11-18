@@ -17,9 +17,8 @@ echo "EVIDENCE_DIR=$out"
 chmod 0711 "$out"
 export OPENGAUSS_PROJECT_ROOT="$repo"
 bash "$here/build-checker.sh" "$out/check-state"
-src="$repo/src/common/interfaces/libpq"
-"${CXX:-g++}" -std=c++11 -pthread -Wall -Wextra -Werror -I"$repo/src/include" \
-  "$here/catalog-fixture.cpp" "$src/row_state_v1.cpp" "$src/row_state_catalog.cpp" \
+"${CXX:-g++}" -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0 -pthread -Wall -Wextra -Werror -I"$repo/src/include" \
+  "$here/catalog-fixture.cpp" \
   -L"$repo/dest/lib" -Wl,-rpath,"$repo/dest/lib" -lpq_ce -lsse_crypto -lmitra_sse_crypto -lsodium -lgmp -o "$out/catalog-fixture"
 chmod 0755 "$out/"{check-state,catalog-fixture}
 # The v1 fixture is created inside a new LZM-01 run, separate from its legacy client.
