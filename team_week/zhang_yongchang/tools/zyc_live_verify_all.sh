@@ -20,6 +20,22 @@ done
 [[ $port =~ ^[0-9]+$ && ${#port} -le 5 ]] || fail 'invalid port'
 (( 10#$port >= 1024 && 10#$port <= 65535 )) || fail 'invalid port'
 repo=$(cd -- "$repo" && pwd -P) || fail 'project root does not exist'
+# The released LZM loader parses ldd columns and cannot represent whitespace
+# in its selected install path. A private bind alias keeps the checkout bytes
+# intact and lets both released validation and this entry use the same install.
+if [[ $repo == *[[:space:]]* ]]; then
+  exec unshare -m --propagation private bash -euc '
+    mount --make-rprivate /
+    alias=$(mktemp -d /var/tmp/zyc-checkout.XXXXXXXX)
+    cleanup() { umount "$alias"; rmdir "$alias"; }
+    trap cleanup EXIT
+    mount --bind "$1" "$alias"
+    export ZYC_REQUESTED_PROJECT_ROOT="$1"
+    args=(--project-root "$alias" --port "$2")
+    [[ -z $3 ]] || args+=(--evidence-dir "$3")
+    bash "$alias/team_week/zhang_yongchang/tools/zyc_live_verify_all.sh" "${args[@]}"
+  ' _ "$repo" "$port" "$out"
+fi
 here="$repo/team_week/zhang_yongchang/tools"
 for f in dest/bin/gsql dest/bin/gaussdb dest/lib/libpq_ce.so.5.5 \
   sse_sql/SSE_v1.sql team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp \
