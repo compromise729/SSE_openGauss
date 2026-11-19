@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "tested_head": "a0f563fe586cca1c72384b40397dc614954e0080",
+  "modified_tracked_inputs": false,
+  "module_cases": 18,
+  "baseline_live_cases": 18,
+  "zyc_cases": 13,
+  "entry_regressions": 3,
+  "successful_search_traces": 10,
+  "instances_stopped": true,
+  "public_synthetic_fixtures_only": true,
+  "derivation_key_values": "redacted",
+  "input_sha256": {
+    "dest/bin/gsql": "fb8165c9128d8d7a0b2389ace28bca0b3234970725d240717b8908c59763a003",
+    "dest/bin/gaussdb": "9bbfce3be6c54628486647fc01b91b6ee10d34d4f293fa6e6969168927b11365",
+    "dest/lib/libpq_ce.so.5.5": "f5a124cdd195fbffc5f889fda173e425f99387ce6e6320eaf7147c461ecb73c6",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34",
+    "team_week/zhang_yongchang/tools/.gitattributes": "b9054cf4e6b3d1df1c7705211437efd3ec46d7ff9c1b2b028eb3cd2dc8de9ad6",
+    "team_week/zhang_yongchang/tools/test_zyc_delivery.py": "b492dc4fda596e01bd23d0912f6498431e73d378da0f987e3e75a9c53209fa12",
+    "team_week/zhang_yongchang/tools/zyc_cases.py": "9d2b47ab05b97f569d77e5aa0bb4cb48410e37aebf6c9f37a0d3f1e60f4d621a",
+    "team_week/zhang_yongchang/tools/zyc_decode.cpp": "2e94ad8db065469498a7900017f5d543daeb55f5981c32b268648d4bb6d6e9a0",
+    "team_week/zhang_yongchang/tools/zyc_evidence.py": "4f92c8dd55cfcf3ca64070756b8ba52b05aa418017187d9e6d24e0c88f212b89",
+    "team_week/zhang_yongchang/tools/zyc_live_verify_all.sh": "1630736ae52d8fed4df4d65fa5ba7b325cb6a2ad707d9afe6a3cf3cbd234be1c",
+    "team_week/zhang_yongchang/tools/zyc_session.sh": "d50c4b4e2c3355fce2eaf5a36211bb1735c6efc548f1e82378217c5b11f59d25",
+    "team_week/zhang_yongchang/tools/zyc_trace.cpp": "a867b7e386eb48ca645232b62ae966cde7492ea526ffa7382c55f5f628514c26"
+  }
+}

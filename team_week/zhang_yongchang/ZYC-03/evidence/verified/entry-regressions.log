@@ -1,0 +1,8 @@
+test_checkout_script_is_valid_bash (__main__.DeliveryEntryTest) ... ok
+test_missing_install_and_failed_sql_never_report_pass (__main__.DeliveryEntryTest) ... ok
+test_outer_entry_propagates_failed_validation_stage (__main__.DeliveryEntryTest) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.036s
+
+OK

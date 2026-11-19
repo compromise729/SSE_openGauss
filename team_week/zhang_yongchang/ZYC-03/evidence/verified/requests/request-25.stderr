@@ -1,0 +1,11 @@
+STATE_EVENT keys_loaded
+STATE_EVENT begin_durable
+STATE_EVENT counter_advanced
+STATE_EVENT counter_advanced
+STATE_EVENT insert_sent
+Fides db_failed: ERROR:  review injected second-row failure
+CONTEXT:  SQL statement "INSERT INTO public.week_demo_data (rid, data_blob)
+        SELECT $1[s], $2[s] FROM generate_subscripts($1, 1) AS g(s)"
+PL/pgSQL function sse_v1_insert(text,text,text[],text[],text[],text[]) line 10 at EXECUTE statement
+referenced column: sse_v1_insert
+
