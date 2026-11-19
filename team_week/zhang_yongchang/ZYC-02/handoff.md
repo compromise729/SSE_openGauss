@@ -5,7 +5,7 @@
 |前置任务编号|**SHY-03**（已验收 PASS；README 明示 ZYC-02 从含 `8111044` 的最新 main 接续）|
 |实际输入提交号|`c631fbc2be74…`（main）；含 SHY-03 正式发布 `8111044852770529bfacde4de5af5690dd6a8322`（PR #12）|
 |合同版本|SHY-02 v1.0（`sse_v1_contract.hpp`, kProtocolVersion=1）；SHY-03 搜索/计数约定|
-|本人输出提交号/补丁|无独立源码提交（接入代码已在上述 main 提交中，由 SHY-03/LZM-03 落地并经我逐项核对）；本目录交付验收报告 + 证据。`SSE_v1.sql` SHA256 `5c1f413d…bf34` 与 SHY-03 官方一致，可作为本次输入指纹|
+|本人输出提交号/补丁|无独立源码提交（接入代码已在上述 main 提交中，由 SHY-03/LZM-03 落地并经我逐项核对）；本目录交付验收报告 + 证据。`SSE_v1.sql` SHA256 `5c1f413d…bf34` 与 SHY-03 官方一致，可作为本次输入指纹。**Git 交付分支 `feature/ZYC-02-encrypted-write`，输出提交 `3a22a5311c6af8b7aad77958f8516588667ca451`，PR [#14](https://github.com/compromise729/SSE_openGauss/pull/14)**（提交内容为验收材料与可复跑脚本，不含源码改写）|
 |改动文件及原因|本轮不改源码。`row_request_v1.cpp`/`common.cpp` 的写入实现、本人 ZYC-01 的两份防护补丁均已在输入提交；逐项核对确认无重复植入、无与契约符号冲突|
 |构建命令|独立可写副本 `/home/yonghu/shy03_build`，GCC7.3 环境：`make -j6` → `make install prefix=$PWD/dest`；结果 `MAKE_EXIT=0`/`INSTALL_EXIT=0`|
 |测试输入与预期/实际|建表、三行 INSERT、中文/空格、SQL 转义、物理表明文扫描——全部 PASS，详见 `insert-report.md` 第 5 节与 `evidence/`|

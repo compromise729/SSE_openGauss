@@ -1,8 +1,8 @@
 # SHA-256 manifest (ZYC-03)
-generated: 2026-11-19 15:36:37 +0800
+generated: 2026-11-19 16:23:46 +0800
 
 0be86b656d4d7678f24ac87a1b1917450666537de4eb7395bf7c123fbfdb1dc8 *./evidence/live-full.log
 6509b3940ae10be31c6867524757e6cab05bc50a3994053886905f06b9206eca *./evidence/live-round1.log
-7f5febbf0e184b8b96937d6b09753a67e2da7f6c6747b538a18999f50549c6f1 *./handoff.md
+bfe02bb9d563b97a3b167dfc17f430f886af3c9bc0a47e9616090bf5bec4f6a7 *./handoff.md
 7a3ae53680eb963dd1f27d05d62ed01b3db5e57dc6d31c224d8540476b5c25e9 *./search-report.md
 23a0e4721d3defb6731a6c6dda3811526f2e76a2613c71290e8ff94879b3caf1 *./sql/zyc03-verify-cases.sql

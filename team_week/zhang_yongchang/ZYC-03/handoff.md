@@ -5,7 +5,7 @@
 |前置任务编号|**ZYC-02**（本批同提交同会话验收 PASS）|
 |实际输入提交号|`c631fbc2be74…`（main，含 SHY-03 发布 `8111044`）；检索链路代码在 `row_request_v1.cpp` 的 `execute_request()` SELECT 分支|
 |合同版本|SHY-02 v1.0；SHY-03 搜索事务约定（取出索引→认证→重插→回查→提交→清标记→展示）|
-|本人输出提交号/补丁|无独立源码提交（检索实现已在输入提交，由 SHY-03/LZM-03 落地并经我逐项核对）；本目录交付检索验收报告 + 完整原始日志|
+|本人输出提交号/补丁|无独立源码提交（检索实现已在输入提交，由 SHY-03/LZM-03 落地并经我逐项核对）；本目录交付检索验收报告 + 完整原始日志。**Git 交付分支 `feature/ZYC-02-encrypted-write`，输出提交 `3a22a5311c6af8b7aad77958f8516588667ca451`，PR [#14](https://github.com/compromise729/SSE_openGauss/pull/14)**（提交内容为验收材料与可复跑脚本，不含源码改写）|
 |改动文件及原因|本轮不改源码。`Client_Sophos.cpp` 状态读写/过滤归刘卓明、`startup.cpp` 归刘卓明、密码模块归严子涵、服务端 SQL 归李孟德，均未触碰；新版字符串 rid 去重在 `row_request_v1.cpp` 内已由输入提交实现|
 |构建/运行命令|同 ZYC-02 的原生构建产物；隔离实例 `LZM-01/isolated.sh init --port 55439`，会话内 `fides_setup` → `SSE_v1.sql` → `initialize-live` → CREATE/INSERT/SELECT|
 |测试输入与预期/实际|apple 2 行、banana 1 行、未知词 0 行、重复 apple 仍 2 行、中文/空格 2 行、SQL 转义 1 行、AND/投影拒绝 rc=3、无明文泄露——全部 PASS，详见 `search-report.md` 第 3 节与 `evidence/live-full.log`|
