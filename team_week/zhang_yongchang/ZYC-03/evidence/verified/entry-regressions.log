@@ -1,0 +1,10 @@
+test_checkout_script_is_valid_bash (__main__.DeliveryEntryTest) ... ok
+test_missing_install_and_failed_sql_never_report_pass (__main__.DeliveryEntryTest) ... ok
+test_one_missing_successful_search_trace_is_rejected (__main__.DeliveryEntryTest) ... ok
+test_optimized_python_cannot_approve_invalid_evidence (__main__.DeliveryEntryTest) ... ok
+test_outer_entry_propagates_failed_validation_stage (__main__.DeliveryEntryTest) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.074s
+
+OK

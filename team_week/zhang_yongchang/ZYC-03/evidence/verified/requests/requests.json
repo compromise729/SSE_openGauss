@@ -1,0 +1,412 @@
+[
+  {
+    "request": 1,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "create_sent"
+    ],
+    "expected_kind": "create"
+  },
+  {
+    "request": 2,
+    "exit": 1,
+    "events": [],
+    "expected_kind": "create"
+  },
+  {
+    "request": 3,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "create_sent",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "create"
+  },
+  {
+    "request": 4,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 5,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 6,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 7,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 8,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "unknown_empty"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "request": 9,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 10,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 11,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 12,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 13,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 14,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 15,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 16,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 17,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 18,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 19,
+    "exit": 3,
+    "events": [
+      "keys_loaded"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 20,
+    "exit": 3,
+    "events": [
+      "keys_loaded"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 21,
+    "exit": 3,
+    "events": [
+      "keys_loaded"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 22,
+    "exit": 3,
+    "events": [],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 23,
+    "exit": 3,
+    "events": [],
+    "expected_kind": "search"
+  },
+  {
+    "request": 24,
+    "exit": 3,
+    "events": [],
+    "expected_kind": "search"
+  },
+  {
+    "request": 25,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "counter_advanced",
+      "insert_sent"
+    ],
+    "expected_kind": "insert"
+  },
+  {
+    "request": 26,
+    "exit": 1,
+    "events": [],
+    "expected_kind": "search"
+  },
+  {
+    "request": 27,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 28,
+    "exit": 1,
+    "events": [],
+    "expected_kind": "search"
+  },
+  {
+    "request": 29,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent"
+    ],
+    "expected_kind": "search"
+  },
+  {
+    "request": 30,
+    "exit": 1,
+    "events": [],
+    "expected_kind": "search"
+  }
+]

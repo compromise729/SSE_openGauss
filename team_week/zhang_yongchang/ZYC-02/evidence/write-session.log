@@ -1,0 +1,210 @@
+=== ZYC-02/03 live verify Thu Nov 19 15:33:52 CST 2026 ===
+user=omm RUN_DIR=/var/tmp/fides-isolated.rAJ5U9Lm PORT=55439
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+ fides_setup 
+-------------
+ ok
+(1 row)
+
+STEP1 fides_setup OK
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+gsql:/home/yonghu/shy03_build/sse_sql/SSE_v1.sql:9: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "sse_v1_catalog_pkey" for table "sse_v1_catalog"
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+COMMIT
+total time: 20  ms
+STEP2 SSE_v1.sql OK
+INITIALIZE_STATUS=ok
+STEP3 initialize-live OK state=/var/tmp/fides-isolated.rAJ5U9Lm/evidence/v1-state
+--- STEP4 CREATE ---
+Initializing crypto library
+cryptoInitWrapper ok
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_data_pkey" for table "week_demo_data"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_index_pkey" for table "week_demo_index"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+
+CREATE rc=0
+--- STEP5 INSERT 3 rows ---
+Initializing crypto library
+cryptoInitWrapper ok
+
+INSERT rc=0
+--- STEP6 physical tables (should be ciphertext only) ---
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+               rid                |                                                      data_blob                                                       
+----------------------------------+----------------------------------------------------------------------------------------------------------------------
+ 883001c15aaa84d4d645e0a95becbe01 | U1NFMQEBtOh6e7gYHHnHyhIA9yHfgxArS3RwUap+JDkgPAAAABt93qQO3uRdevH3Xmnt5RswQhn3O0Gig00ilWT7EYsHX2ALEgVEO6cU9STD
+ 50410ef79b34f98f56cec253484a69a8 | U1NFMQEBtOh6e7gYHHnHyhIA9yHfg08T6dLEG8lbP679+gAAAB3PRX+ZzXhrCbPN6bSEEELKw0dCGsc1xyDWKDQKmx8wZF/DvwsYjOiVIY016f8=
+ aacf10290dab5fd5fc67b0ef7b8ad477 | U1NFMQEBtOh6e7gYHHnHyhIA9yHfgxQl9PDi4PUIHUWl8QAAACDiMHauAZcBL43d6rGdtTPNAnyLYML+V9xpbpSRAHqrrRahOcCw0VCWborosmZaPLI=
+(3 rows)
+
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+            ut            |                                           locator_blob                                           
+--------------------------+--------------------------------------------------------------------------------------------------
+ PPEc40YM+l0By3y8NOyuuQ== | U1NFMQECtOh6e7gYHHnHyhIA9yHfg1/0cPJDWnvfcG7togAAABFK0Z99LFhaNdc1X2xUeV3Ocyl+0PpRMbAh7qCm2YRo9rw=
+ eN5ofZ5oIhP4kpnDWPg6Ng== | U1NFMQECtOh6e7gYHHnHyhIA9yHfgytkksXSx3cjHhOKfAAAABGqMgUml8iv0upf/v9IyFh5qQI3EU7PIX4/QjpZNNht4Lk=
+ tjoDPpdIrse1IchrbgtY4Q== | U1NFMQECtOh6e7gYHHnHyhIA9yHfg3GMhNPoA2urdeam0AAAABFDBHPNOdYpZI1G/Ue4No4r3HxuC3B+ETrr4CyFEk9NoYA=
+(3 rows)
+
+--- STEP7 SELECT apple ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind | keyword |   payload   
+-----+---------+-------------
+ 1   | apple   | red apple
+ 2   | apple   | green apple
+(2 rows)
+
+SELECT apple rc=0
+--- STEP8 SELECT banana ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind | keyword |    payload    
+-----+---------+---------------
+ 3   | banana  | yellow banana
+(1 row)
+
+SELECT banana rc=0
+--- STEP9 SELECT unknown ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind | keyword | payload 
+-----+---------+---------
+(0 rows)
+
+SELECT unknown rc=0
+--- STEP10 repeat SELECT apple (dedup check) ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind | keyword |   payload   
+-----+---------+-------------
+ 1   | apple   | red apple
+ 2   | apple   | green apple
+(2 rows)
+
+SELECT apple repeat rc=0
+=== ROUND2 (same session) ===
+--- A. apple still intact (resume) ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind | keyword |   payload   
+-----+---------+-------------
+ 1   | apple   | red apple
+ 2   | apple   | green apple
+(2 rows)
+
+apple rc=0
+--- B. Chinese + space keyword INSERT ---
+Initializing crypto library
+cryptoInitWrapper ok
+
+insert-cn rc=0
+--- C. Chinese + space SELECT ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind |     keyword     |  payload   
+-----+-----------------+------------
+ 4   | 中文 苹果 space | red 苹果
+ 5   | 中文 苹果 space | green 苹果
+(2 rows)
+
+select-cn rc=0
+--- D. SQL quote escape ('it''s OR not') ---
+Initializing crypto library
+cryptoInitWrapper ok
+
+insert-esc rc=0
+Initializing crypto library
+cryptoInitWrapper ok
+ ind |   keyword   |    payload    
+-----+-------------+---------------
+ 6   | it's OR not | o'brien apple
+(1 row)
+
+select-esc rc=0
+--- E. unsupported syntax: AND compound (should REJECT) ---
+Initializing crypto library
+cryptoInitWrapper ok
+Fides unsupported: single simple v1 statement required
+select-AND rc=3 (expect NONZERO)
+--- F. unsupported: column projection (should REJECT) ---
+Initializing crypto library
+cryptoInitWrapper ok
+Fides unsupported: unsupported v1 SQL form
+select-proj rc=3 (expect NONZERO)
+--- G. unknown keyword zero rows ---
+Initializing crypto library
+cryptoInitWrapper ok
+ ind | keyword | payload 
+-----+---------+---------
+(0 rows)
+
+select-unknown rc=0
+--- H. physical tables still ciphertext only (no plaintext) ---
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+               rid                |                                                              data_blob                                                               
+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------
+ 883001c15aaa84d4d645e0a95becbe01 | U1NFMQEBtOh6e7gYHHnHyhIA9yHfgxArS3RwUap+JDkgPAAAABt93qQO3uRdevH3Xmnt5RswQhn3O0Gig00ilWT7EYsHX2ALEgVEO6cU9STD
+ 50410ef79b34f98f56cec253484a69a8 | U1NFMQEBtOh6e7gYHHnHyhIA9yHfg08T6dLEG8lbP679+gAAAB3PRX+ZzXhrCbPN6bSEEELKw0dCGsc1xyDWKDQKmx8wZF/DvwsYjOiVIY016f8=
+ aacf10290dab5fd5fc67b0ef7b8ad477 | U1NFMQEBtOh6e7gYHHnHyhIA9yHfgxQl9PDi4PUIHUWl8QAAACDiMHauAZcBL43d6rGdtTPNAnyLYML+V9xpbpSRAHqrrRahOcCw0VCWborosmZaPLI=
+ 32d218f3ea5a90981542bd1d901e392a | U1NFMQEBtOh6e7gYHHnHyhIA9yHfg8dzAfgX+WSfTtL+nwAAACpsHY4dWPvDN1C1ms117IH+LwNJdcrD69WSHcLk10aGiaCGRnNpg5dmhCQLvNWkT43IXgCFxftnzU6C
+ 0679db21234494d2af64684e2c01762c | U1NFMQEBtOh6e7gYHHnHyhIA9yHfg1eiw3eqmNbzXDmI1wAAACyQuWxjJWN6gDDLlu5a0c1KRyCSQ12nqTg8YkR1LIMiu/9Za45K+Q57zz+yA//sSsvOwxnJFm/DvoIFDWY=
+ 7e0c91227936ad205fa0cdabf63ddd0b | U1NFMQEBtOh6e7gYHHnHyhIA9yHfg3oVZthv3cfFvjSVGwAAACVigO04pbdOJ9jUILPhfEnSxNJ2u7hn4yygAl5DQNZDE0q3Eft8nMB6Usb0ptVmCJTrM0k9/g==
+(6 rows)
+
+NO_PLAINTEXT_IN_DATA_OK
+NO_PLAINTEXT_IN_INDEX_OK
+=== END Thu Nov 19 15:33:53 CST 2026 ===

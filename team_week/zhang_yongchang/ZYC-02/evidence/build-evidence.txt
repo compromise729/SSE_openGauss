@@ -1,0 +1,15 @@
+BUILD_EVIDENCE 2026年 11月 19日 星期四 15:34:50 CST
+input_commit=c631fbc2be74 (SHY-03 main, contains release 8111044)
+base_commit_in_checkout=25489f5 (.git metadata; source files overwritten from c631fbc2 via API)
+SSE_v1.sql sha256=5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34 (matches SHY-03 official)
+--- artifacts ---
+4999e793e49dc21b03bfb47bf53eefa0369e0edd1cc1bab759a1fbd406dec7a9  /home/yonghu/shy03_build/dest/bin/gsql
+7bbdd1e3bc878312af3a8fec05a17bbee9e91ba2826bd5dc1ddc947f82548658  /home/yonghu/shy03_build/dest/bin/gaussdb
+c7da6c48fea2397a732df08e45cd12dd9ac2679b2c4e74e21d037abc078a413f  /home/yonghu/shy03_build/dest/lib/libpq_ce.so.5.5
+5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34  /home/yonghu/shy03_build/sse_sql/SSE_v1.sql
+--- build result ---
+MAKE_EXIT=0 INSTALL_EXIT=0
+All of openGauss successfully made. Ready to install.
+openGauss installation complete.
+--- changed source files applied (19) ---
+common.cpp startup.cpp fe-exec.cpp row_request_v1.cpp row_state_v1.cpp row_state_catalog.cpp Client_Sophos.cpp SSE_map.cpp sse_common.cpp Server_Sophos.cpp postgres.cpp + 9 headers/Makefile

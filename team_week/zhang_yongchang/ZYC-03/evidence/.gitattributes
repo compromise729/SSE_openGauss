@@ -1,0 +1,4 @@
+# Preserve exact public diagnostic output from gsql and gs_ctl.
+*.log -whitespace
+*.stdout -whitespace
+*.stderr -whitespace

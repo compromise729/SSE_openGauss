@@ -1,0 +1,52 @@
+RUN_DIR=/var/tmp/fides-isolated.RNB9JI36
+PREFLIGHT_EXIT=3 RECORD=/var/tmp/fides-isolated.RNB9JI36/pre-init.F6mp1sbD.json
+{"counter": {"path": "/var/tmp/fides-isolated.RNB9JI36/client/fides_client.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "teamdemo20261012apple"}, "mapping": {"path": "/var/tmp/fides-isolated.RNB9JI36/client/sse_table.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "team_fides_demo"}, "recommendation": "\u72b6\u6001\u5f02\u5e38\uff0c\u5148\u5904\u7406\u6587\u4ef6\u95ee\u9898\uff1b\u5982\u9884\u671f\u4e3a\u9996\u6b21\u521d\u59cb\u5316\uff0c\u8bf7\u4eba\u5de5\u6838\u5bf9\u5b9e\u9a8c\u524d\u63d0\u3002"}
+RUN_DIR=/var/tmp/fides-isolated.RNB9JI36
+INSTANCE=/var/tmp/fides-isolated.RNB9JI36/db/instance
+SOCKET=/var/tmp/fides-isolated.RNB9JI36/socket
+PORT=55443
+CLIENT=/var/tmp/fides-isolated.RNB9JI36/client (mounted at /opt/og/openGauss-server/sse_storage)
+SERVER=/var/tmp/fides-isolated.RNB9JI36/server (mounted at /opt/og/openGauss-server/sse_server_storage)
+PID=155708
+In this omm shell: isolated.sh gsql | preflight | stop; exit also stops the instance.
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+gsql:/var/tmp/zyc-checkout.KlJQmH3A/sse_sql/SSE_v1.sql:9: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "sse_v1_catalog_pkey" for table "sse_v1_catalog"
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+COMMIT
+total time: 20  ms
+INITIALIZE_STATUS=ok
+PASS ZYC-00-registration-failure
+PASS ZYC-01-create
+PASS ZYC-02-insert-three
+PASS ZYC-03-physical-ciphertext
+PASS ZYC-04-normal-reopen-unknown
+PASS ZYC-05-append-and-repeat
+PASS ZYC-06-utf8-quote-empty
+PASS ZYC-07-maximum-payload
+PASS ZYC-08-reject-before-effects
+PASS ZYC-09-write-failure
+PASS ZYC-10-last-row-authentication
+PASS ZYC-11-missing-fetched-row
+PASS ZYC-12-wire-phases
+ADDITIONAL_RESULT=PASS CASES=13
+[2026-11-19 18:56:56.376][155972][][gs_ctl]: gs_ctl stopped ,datadir is /var/tmp/fides-isolated.RNB9JI36/db/instance 
+waiting for server to shut down......... done
+server stopped
+ISOLATED_SERVER_STOPPED

@@ -1,0 +1,444 @@
+[
+  {
+    "request": 5,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=JNvs6Q4Gg7RzQqaQ7/qRhv9SS6dM2QpxgKqgUq8g7kVbdLfnZLnVgvjYTDiYx4Nki5fzGeux0POMi6TCKhD9PtP0qsL7tHeJutZdtHg7qU2hSCC2xb02JIby2WobzlF1yjREutBYZwg179fGZ8edFWWdT0gqhvCvGgdxMUSTvTW9MSqRGzmsesGcro9otLLkSv+z7/QUON2WFiXRMB3Vou+P5RTN4MRJ8BppgBwI6vtUdnK6yBUaSHROvamvBxt4ZGx9WJZIehxYsK7cUvumo8nzRIQNKNgWyflULcKi6FUBG381adIODkNgw2o7a/fwjFbkM6JsEOlluGwWAqtSIw== and derivation_key=<redacted> and add_count=2;",
+    "encrypted_locator_rows": [
+      [
+        "0TFFM+8Sp4AiGhvXAB3kzw==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8SbZO6/LjFTulSEO1AAAABFRF8WgDOG+DqnMFdKYD6u29EHVnjEfFA/Q2PmGTk+LEKo="
+      ],
+      [
+        "O+lHZA2QaljGEBoO2ExUOg==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8bYe+H7Nl9X+F8uooQAAABHMwPRyPeaHXkSme+mdKnBSbBHoxjmHjGYG6n+qwKiLCmc="
+      ]
+    ],
+    "authenticated_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "reinsert_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "fetch_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "returned_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 6,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=X3R2vDWU+AzgwgjqVbBCo7AqmlMV2kM2ElPpqc9uPuW7n7+gMiipFAsPQrXl0yqI5bU+VBttgoMwdnwlch6CZpeoBt2q9nSpPblRrj5TnW4mcjPuxjzfgzM0yD0+pKAMV7ER4Z8WFv+94a1NEPumLoMZLXzGlRrP2+Tl4whfSxxeJgnl0RdTMQc9rdptgaCFt3OqlUCBBgdYpIG4ujN/Flsuae/NuXnskbMDvvr8vbS4OD7k5rGPpK6TCxaZzjLtSOgwPdXEOcg3Vt+MwOCgFNkDYGVoAJoOth3ggEXXMzWzrg9tUhiyknWHVutAihewC4JoHGzqeOCgpueMxY0LWQ== and derivation_key=<redacted> and add_count=1;",
+    "encrypted_locator_rows": [
+      [
+        "bpQjSM09Wqbsc6y5GNkH/g==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8ejT+/4/7Mc9+paNWgAAABF66yy6W46l3YNyzxcczFuUDyHg+6tA1hXYeCPNXpEpJjU="
+      ]
+    ],
+    "authenticated_rids": [
+      "1a5eddf1d0f9c5b9c439be6155af49cc"
+    ],
+    "reinsert_rids": [
+      "1a5eddf1d0f9c5b9c439be6155af49cc"
+    ],
+    "fetch_rids": [
+      "1a5eddf1d0f9c5b9c439be6155af49cc"
+    ],
+    "returned_rids": [
+      "1a5eddf1d0f9c5b9c439be6155af49cc"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 7,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=8Umi7bs3g1XV7qWiBLAMfqqtadqwJq1g4LPaqeh/RH+uorYbiaTJ0/ciZByyC/8766KQwYAa2xPfg84KTyZHgOmkuD11SmMA/5mF1xTBZhVXJIPEN5YIzFgqqgjffog0GHeoUpB9j24n4SWZfpdKoCdjnP80f+Nm+o+/WTtHD34oiYXLELU77n3LGI+/8iRpjAcLeMMqG/2qYXNWz8k0eJQaeNUCC/amkc28aB4+bpEsALTMgy0YfmhUMbp03qcAVRgDfYgW5VmIxj91t+Hm0b1dsh6sRAxUDxePG2pYCLVJ6Yb/NjMXZ98GArP0irllH4bf3V2GtFw9xC/q4QhIAQ== and derivation_key=<redacted> and add_count=4;",
+    "encrypted_locator_rows": [
+      [
+        "Zcy02OX54q0iT0TxBTYc2g==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8XW8/yY3V/gDnQa1UAAAABGpgUJ/XGp2+oO+Sgdz5ggzqaBSmhaCBBcYsDGQ7RikIHU="
+      ],
+      [
+        "l0p5/IfudGUOzFt33v0NjA==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8bzm609tnZ0+ECS3xwAAABGS+Xn5Choj8hhL0rE8jiVovQ3Gnyw0bDn9Rg9xUwdNqtA="
+      ]
+    ],
+    "authenticated_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "reinsert_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "fetch_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "returned_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 10,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=G1W1fHVW8iRENx1AiI76RPnat2X14Blh4z0o0U13/XI2qht+MQGnxnXlyja7jC0TzahON510qh0QIVN2er/tXDywIjDElfM0X6fMB63O3hFHa1lwa+E5StLyJuM/ZKm61lfq1+/kLwzR65Yb8sLWKZto3U3NcKf4WFp++2lyjnezRzCB400CbpnD2UabIoaNYwt0/+GJIvdB7KhowDzwWQLo6sIi2+zoifBbg78pmvOT4/ILXwDa+oasZDTcrqz5fF6ifoLi05cu5Tstc4zZtwJ4O748zk3L3HZrUdYFBFhAXUEM4J2qBm+cDMegpPebuIkWwKAVTSWjpjFMOZQ7JA== and derivation_key=<redacted> and add_count=7;",
+    "encrypted_locator_rows": [
+      [
+        "4/2Jqom7+22G9+hF9kOsNQ==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8VYJKdGd3/eIlAZppAAAABESLgKw9qWsBNQ2F4B/X12ShbCO2z+ljOCI7gXefLT0btA="
+      ],
+      [
+        "IYz6XR8ntg8J/IOeSA1Vrg==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8Q7nbsUlQt2oiEYTNgAAABEuhGKrd9WmHySXwDU4Z0dnaQRSJywv5sKId54AUgxTdbA="
+      ],
+      [
+        "guH3jGNuhZhv+4oYHB3l+g==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8dZUukTpSEFTrMnvdwAAABFv2B91EnSul53XkZaPck6Mo8FOEEe+ZpuvSaKEz/Xoo9s="
+      ]
+    ],
+    "authenticated_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "reinsert_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "fetch_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "returned_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 11,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=bunsv/avd/anlIsfDQjJX6wxqQ2H9atWOTBFPQM+vzlaztGYsRvrjPRHVXt7YPynYlRH2vl6rhveaMSd1785ZTaFzAHPZDUMGUoWBMFf9cUpWu0IA74v3hgMloAowrSlrgC3Vitbx2qDukqHPIENOxcISV3QjmwU7E0ih1QkZjKCZfnQ0AaVbqYShJayqplC3xNkfdaaTDurcL7vxlHTKRClWIIdq7jZP/Pm5p4fE3MaCFVhvUg+X7Vb3GM78ge1tLsr1SO7uzbTc7WLmriwvZPURR9ZQXAx1/o0cjlhFOGsy3pffEXBlWwE9pw7fKq4yAs8ap36q+55wyTawOiB1w== and derivation_key=<redacted> and add_count=10;",
+    "encrypted_locator_rows": [
+      [
+        "VwbFak3AIEw1J38k+PaELw==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8XamUOsZRlNt7wsEHQAAABENMuvSH7jv4aOXhHi1b3nuEvkZcFgGb6zGlJVAOkSnt5c="
+      ],
+      [
+        "aJ/3BNWREtmE8jsLt7ZaJQ==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8eutte0Bd1CSkCs4GgAAABF9Lswwdw79C3IaOdCeNUIuuQkvJ9dMCJDx+lHREhBV2oE="
+      ],
+      [
+        "OF6lctx+GyDJ99jCS9fw/A==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8e3VFk37aEUr80wAYQAAABHu/Lk0kpsm+WmbKwlzvsnu/D6Xfxuu26rMeQ/RqEzsmdA="
+      ]
+    ],
+    "authenticated_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "reinsert_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "fetch_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "returned_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 12,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=4yhCgJzw/ZGQNAsX17G/yZTV5An6kbr34kmx7N5uCV3p95Q29VJlBv1z109t6rzaOR94U3l4fVehrhrCKj4Se6PaXob6i92ytMDPKvDAu1cHD1H3tY7rvxmvAUlco44j3Pf2nAnimKS/CEmcMB0fbRNoBwcM5keOmInMdCWmYAceTr+OHoSrI5LetmOCFofvdaBPgmSkz4O10FXaUbTLXp9QJio6lvuTVR4YlYZ10IOSOHDtD9aKFbA1NvdYK1ULtmHkUoxU5lp941ei7hJX4yPYjRJzYglrqxzeX7EBbD9WcC9hwCV8WOwadvgpbjkpmGeh9nvXCt0J84CZe6Q8nA== and derivation_key=<redacted> and add_count=13;",
+    "encrypted_locator_rows": [
+      [
+        "c9sO6an0KWrLdjTh48Bnww==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8UgHeVRRF4MOpHGhgwAAABECyezLck/Ugq+01EwrZOlvap75ucs2je74VRNU0PqiHTk="
+      ],
+      [
+        "Xy/TKZfCxkE/FXKzgzixPQ==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8agDJ5XtH40ru6Gh/AAAABEoKQ8QgJyoqShflIBbEp7227yxBVJk/f8hG3jWVYfOdGg="
+      ],
+      [
+        "Sre4DWegZI4xZ8QWUlW61w==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8cN4Rrh7YaFBIHzVOAAAABEKY5waY1C8DH50ANRVCAtf4RALWWvb2FWnsxHUeKVg/3A="
+      ]
+    ],
+    "authenticated_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "reinsert_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "fetch_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "returned_rids": [
+      "55a4bb79bf6dd93ea1ec37416b3c5eb3",
+      "935cba7a858eb38cd58ec59054d36b4f",
+      "9b0f98ff1d84812b0c1f4d1e3710b478"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 14,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=N2DAhS7gYsM0L7Z2w78kS0L4DuCrxNBVkK5sQ7Y0w4uM70RLf+CpCQcmMKeXJ88ZuyCb9oZxrITYgko2yUC9LuaKzYZwEOenv0Uxiw4YoheS/EZC87zHE2LUbDnN5oGX9wv9uk+4tOMPHNGaBfpV9917AN5OV9dmSJ6WI9/c+O5Oqyf/mPkEuH3FcEOXVpGsHxJTnOeP4zCGizx4J/uB/X8otM40C/fMU8lmZaXwjUnhygJ/4K5fsE7cjt0udfDU0pjWQ0+M+06EZbn5+u4StznqQ/iw3pYoF/PmU8rzQWbhg68X6PGIqGMYpr8PI8wxvNWzOtOcyFT+TJuXsIO6ZA== and derivation_key=<redacted> and add_count=1;",
+    "encrypted_locator_rows": [
+      [
+        "9rvi1hLEMAoB0HKAyWDE0Q==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8e92gHICgb/2ONfrMQAAABH/zSfbqhw3tqNO9hyVCtWvciNS5C0jfRsgGo7cSsnYyLc="
+      ]
+    ],
+    "authenticated_rids": [
+      "ca1e20e54800ef01fa598cf0e22606d4"
+    ],
+    "reinsert_rids": [
+      "ca1e20e54800ef01fa598cf0e22606d4"
+    ],
+    "fetch_rids": [
+      "ca1e20e54800ef01fa598cf0e22606d4"
+    ],
+    "returned_rids": [
+      "ca1e20e54800ef01fa598cf0e22606d4"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 15,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=GCq/urPtsq04qEI55VuDynv9EWzgq3qY8vm4b3dtextRxbG5eYzYBFDD6WNZMNe8Z3U6UZhTjAkTD0qlmHSzCybVmsMDrOgND93t+6w40VfNXXjt+EhDK+fzEkfsTzmtxKeo5keHaJo1b4NrKm56mDd3C81YZXJ0Rz5o1KRNpVuRmk0PGbLrYQMPYCS44BageSeMRFynSlaGy26FWvq0oQb1v/PE9EXSA1mOCVwl2Lz+x1DOvyJtskYvn+P4dg10WYsJ6dSmNlFG9Qsh4WA7aeNGIqSmQ+wKSCENPkWKqVwarQ7PEgECcqLpk46tC5HlDGbWWUOCS22ck+jYXrq9qw== and derivation_key=<redacted> and add_count=1;",
+    "encrypted_locator_rows": [
+      [
+        "/KPHmt8gmNYW4mmqzA4j+A==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8a2r6HG2YMB/jc7mjQAAABEn8wU5GRFfdrz9wZuFbQ4kXQsyjHT5UD3yvebFPi/s254="
+      ]
+    ],
+    "authenticated_rids": [
+      "aa7d57448683562eccf0f4abf61dde87"
+    ],
+    "reinsert_rids": [
+      "aa7d57448683562eccf0f4abf61dde87"
+    ],
+    "fetch_rids": [
+      "aa7d57448683562eccf0f4abf61dde87"
+    ],
+    "returned_rids": [
+      "aa7d57448683562eccf0f4abf61dde87"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 16,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=FK9/3O4idroWMeiVWFIcgG745UHUdMqxZgBazd4O/tQLLCYnIAn5M51XN8a8upA7yGDlwNMy4qAscYzsTZKes+PmoexmHQEPs96/7Z14pNTeyXc5Kfq8yqFn90uDa/OZDLkFQfL8Rlerl+5y21cu7VH0XKZgkiNspqvbX7/dkFGMyndtoB55KhIcRQ96kefqaPH/5kHe2FjWYTXiWTqXxnkfNjKQl171FhCkKraNG78G6RcAUvgoGqex2g9GNAJTFZASCBgrBLgNZl4xMg4aH5e8cHKKOGrSP803K4lYdYINPVGR63tcAWTUkoBo5KGngkg3xTMxO2t1pSjhtKiXXA== and derivation_key=<redacted> and add_count=1;",
+    "encrypted_locator_rows": [
+      [
+        "sJ4GYvaw7H4hiZWo02lWxw==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8dyIAnsV+I/G36B07gAAABEwUPA8iDJ1BmpFt5zJ4jHCXQMPqOVKfl7XsCAQngxXmX4="
+      ]
+    ],
+    "authenticated_rids": [
+      "fc957071f01a9458ba0303f2888fb332"
+    ],
+    "reinsert_rids": [
+      "fc957071f01a9458ba0303f2888fb332"
+    ],
+    "fetch_rids": [
+      "fc957071f01a9458ba0303f2888fb332"
+    ],
+    "returned_rids": [
+      "fc957071f01a9458ba0303f2888fb332"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 18,
+    "search_request": "fides_v1_select * from public.week_demo_index where token=xqnRzfdrSzK9iopZiHhblG0fr4TxjRcT0RK6N0yYRsFjWNC7Ha8g5YK20zXtLSCfbilRVeD64lN5fNsXaesVDKv05e/C9p2dFHzRpvAlUOZSTGcLrjnYQ7cq3O7vPEuZuU4JmwUAPJTOuV9CTFsF6LzX6U2Nd3qRWEFRu1Hp9N4SGRgm2dZK4o6vIwycidFa61u0g8U6G7Ex2TamQn3Ev8EKLeTASb2C4PinU0N4JNgL8KCuSGjBz+UaCIWOjKEyIwJ6TFth9T1V+v1IAYUV+Z62H6NLoZ3u/4e6q9vEuVAdNwEbQxROBTudIO2ZNvw87FV3vYAeXHeye4LKIXDZ8Q== and derivation_key=<redacted> and add_count=1;",
+    "encrypted_locator_rows": [
+      [
+        "aSD8GGfojD11eAtNj+fzBg==",
+        "U1NFMQECIQfpKNTYwP/suLjVit0r8YgjfCTuDfX1SXxvWAAAABHzhe2kPx8yk+kBZCF945OK4X4RLnz0mKjO1txoMYtmC0I="
+      ]
+    ],
+    "authenticated_rids": [
+      "a89e987cd77bd583b05587f59cdd8c27"
+    ],
+    "reinsert_rids": [
+      "a89e987cd77bd583b05587f59cdd8c27"
+    ],
+    "fetch_rids": [
+      "a89e987cd77bd583b05587f59cdd8c27"
+    ],
+    "returned_rids": [
+      "a89e987cd77bd583b05587f59cdd8c27"
+    ],
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  }
+]

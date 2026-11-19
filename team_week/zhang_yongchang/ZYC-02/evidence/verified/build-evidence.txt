@@ -1,0 +1,11 @@
+WSL CentOS7 native incremental build / install
+tested_tools_commit=3bce830c9f428e8e3d76336e4170e5dbeb056a31
+MAKE_EXIT=0
+INSTALL_EXIT=0
+Build: make -j6
+Install: make install prefix="$PWD/dest"
+Same checkout, old C++ ABI, GCC 7.3, project OpenSSL; public helpers compiled by delivered entry.
+fb8165c9128d8d7a0b2389ace28bca0b3234970725d240717b8908c59763a003  dest/bin/gsql
+9bbfce3be6c54628486647fc01b91b6ee10d34d4f293fa6e6969168927b11365  dest/bin/gaussdb
+f5a124cdd195fbffc5f889fda173e425f99387ce6e6320eaf7147c461ecb73c6  dest/lib/libpq_ce.so.5.5
+5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34  sse_sql/SSE_v1.sql

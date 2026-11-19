@@ -1,0 +1,56 @@
+make[2]: 进入目录“/home/yonghu/shy03_build/src/common/backend/snowball”
+make[2]: 对“all”无需做任何事。
+make[2]: 离开目录“/home/yonghu/shy03_build/src/common/backend/snowball”
+make -C include all
+make[2]: 进入目录“/home/yonghu/shy03_build/src/include”
+make[2]: 对“all”无需做任何事。
+make[2]: 离开目录“/home/yonghu/shy03_build/src/include”
+make -C common/pl all
+make[2]: 进入目录“/home/yonghu/shy03_build/src/common/pl”
+make -C plpgsql all
+make[3]: 进入目录“/home/yonghu/shy03_build/src/common/pl/plpgsql”
+make -C src all
+make[4]: 进入目录“/home/yonghu/shy03_build/src/common/pl/plpgsql/src”
+make[4]: 对“all”无需做任何事。
+make[4]: 离开目录“/home/yonghu/shy03_build/src/common/pl/plpgsql/src”
+make[3]: 离开目录“/home/yonghu/shy03_build/src/common/pl/plpgsql”
+make[2]: 离开目录“/home/yonghu/shy03_build/src/common/pl”
+make -C makefiles all
+make[2]: 进入目录“/home/yonghu/shy03_build/src/makefiles”
+make[2]: 对“all”无需做任何事。
+make[2]: 离开目录“/home/yonghu/shy03_build/src/makefiles”
+make -C test/regress all
+make[2]: 进入目录“/home/yonghu/shy03_build/src/test/regress”
+/opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/bin/g++ -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0 -fsigned-char -DSTREAMPLAN -DPGXC -mcx16 -msse4.2 -O0 -Wall -Wpointer-arith -Wno-write-strings -fnon-call-exceptions -fno-common -freg-struct-return -pipe -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -g -DENABLE_GSTRACE -fno-aggressive-loop-optimizations -Wno-attributes -fno-omit-frame-pointer -fno-expensive-optimizations -Wno-unused-but-set-variable -fstack-protector -Wl,-z,relro,-z,now -Wl,-z,noexecstack -std=c++14 -pthread  -D_REENTRANT -D_THREAD_SAFE -D_POSIX_PTHREAD_SEMANTICS -fpic -I../../../src/include -I../../../src/lib/gstrace -D_GNU_SOURCE -I/opt/og/binarylibs/dependency/install_tools_centos7.6_x86_64/unixodbc/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/libobs/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/libcgroup/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/openssl/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/liborc/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/libparquet/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/protobuf/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/grpc/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/boost/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/llvm/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/kerberos/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/postgresql-hll/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/cjson/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/libedit/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/numactl/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/zlib1.2.11/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/lz4/comm/include -I/opt/og/binarylibs/dependency/centos7.6_x86_64/libcurl/comm/include -fPIC -I../../../src/common/port '-DHOST_TUPLE="x86_64-unknown-linux-gnu"' '-DMAKEPROG="make"' '-DSHELLPROG="/bin/sh"' '-DDLSUFFIX=".so"'  -c -o pg_regress.o pg_regress.cpp
+make -C ../../../src/common/port all
+make[3]: 进入目录“/home/yonghu/shy03_build/src/common/port”
+make -C ../../gausskernel submake-errcodes
+make -C ../../gausskernel submake-lwlocknames
+make[4]: 进入目录“/home/yonghu/shy03_build/src/gausskernel”
+make[4]: 对“submake-lwlocknames”无需做任何事。
+make[4]: 离开目录“/home/yonghu/shy03_build/src/gausskernel”
+make[4]: 进入目录“/home/yonghu/shy03_build/src/gausskernel”
+make[4]: 对“submake-errcodes”无需做任何事。
+make[4]: 离开目录“/home/yonghu/shy03_build/src/gausskernel”
+make[3]: 离开目录“/home/yonghu/shy03_build/src/common/port”
+g++ -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0 -fsigned-char -DSTREAMPLAN -DPGXC -mcx16 -msse4.2 -O0 -Wall -Wpointer-arith -Wno-write-strings -fnon-call-exceptions -fno-common -freg-struct-return -pipe -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -g -DENABLE_GSTRACE -fno-aggressive-loop-optimizations -Wno-attributes -fno-omit-frame-pointer -fno-expensive-optimizations -Wno-unused-but-set-variable -fPIC pg_regress.o pg_regress_main.o -L../../../src/common/port -pthread -L/opt/og/binarylibs/dependency/centos7.6_x86_64/zlib1.2.11/comm/lib -I/opt/og/binarylibs/dependency/centos7.6_x86_64/zlib1.2.11/comm/include -L/opt/og/binarylibs/dependency/centos7.6_x86_64/libedit/comm/lib -L/opt/og/binarylibs/platform/centos7.6_x86_64/Huawei_Secure_C/comm/lib -L/opt/og/binarylibs/dependency/centos7.6_x86_64/openssl/comm/lib -L/opt/og/binarylibs/buildtools/centos7.6_x86_64/libstd/gcc7.3.0/comm/lib -L/opt/og/binarylibs/dependency/centos7.6_x86_64/libcgroup/comm/lib -L -L/opt/og/binarylibs/dependency/install_tools_centos7.6_x86_64/unixodbc/lib -L/opt/og/binarylibs/dependency/centos7.6_x86_64/libobs/comm/lib -L/opt/og/binarylibs/dependency/centos7.6_x86_64/kerberos/comm/lib -L../../../src/gstrace//common -L/opt/og/binarylibs/dependency/centos7.6_x86_64/numactl/comm/lib -L/opt/og/binarylibs/dependency/centos7.6_x86_64/libcurl/comm/lib  -L/opt/og/binarylibs/dependency/centos7.6_x86_64/jemalloc/debug/lib  -lpgport -lcrypt -ldl -lm  -ledit -lssl -lcrypto  -lsecurec -pthread -D_REENTRANT -lrt -lz -lminiunz -o pg_regress
+chmod +x ./smartmatch.pl
+make[2]: 离开目录“/home/yonghu/shy03_build/src/test/regress”
+make[1]: 离开目录“/home/yonghu/shy03_build/src”
+All of openGauss successfully made. Ready to install.
+---INSTALL---
+/bin/mkdir -p '/home/yonghu/shy03_build/dest/share/postgresql/extension'
+/bin/sh ../../config/install-sh -c -m 755  hstore.so '/home/yonghu/shy03_build/dest/lib/postgresql/hstore.so'
+/bin/sh ../../config/install-sh -c -m 644 ./hstore.control '/home/yonghu/shy03_build/dest/share/postgresql/extension/'
+/bin/sh ../../config/install-sh -c -m 644 ./hstore--1.1.sql ./hstore--1.0--1.1.sql ./hstore--unpackaged--1.0.sql  '/home/yonghu/shy03_build/dest/share/postgresql/extension/'
+make[1]: 离开目录“/home/yonghu/shy03_build/contrib/hstore”
+make -C contrib/gsredistribute install
+make[1]: 进入目录“/home/yonghu/shy03_build/contrib/gsredistribute”
+/bin/mkdir -p '/home/yonghu/shy03_build/dest/lib/postgresql'
+/bin/mkdir -p '/home/yonghu/shy03_build/dest/share/postgresql/extension'
+/bin/mkdir -p '/home/yonghu/shy03_build/dest/share/postgresql/extension'
+/bin/sh ../../config/install-sh -c -m 755  gsredistribute.so '/home/yonghu/shy03_build/dest/lib/postgresql/gsredistribute.so'
+/bin/sh ../../config/install-sh -c -m 644 ./gsredistribute.control '/home/yonghu/shy03_build/dest/share/postgresql/extension/'
+/bin/sh ../../config/install-sh -c -m 644 ./gsredistribute--1.0.sql ./gsredistribute--unpackaged--1.0.sql  '/home/yonghu/shy03_build/dest/share/postgresql/extension/'
+make[1]: 离开目录“/home/yonghu/shy03_build/contrib/gsredistribute”
+openGauss installation complete.

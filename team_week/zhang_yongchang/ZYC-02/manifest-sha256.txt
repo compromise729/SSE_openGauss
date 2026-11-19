@@ -1,0 +1,10 @@
+# SHA-256 manifest ZYC-02
+generated: 2026-11-19T10:57:56.013026Z
+
+f0b13beb612715f206a72bcad6cbff0cce7002e91974bae9d346a41d1c0b8bb9 *./evidence/build-evidence.txt
+bca9558b7a0e774b99e2ce9cc8a98dbb86de50130d98e3d39429f89a9b5e7dd8 *./evidence/build-log-tail.txt
+88e584af32edcc1f42da0b17c20accac4ed13e8b15cf20f2f78e8feef89f629d *./evidence/verified/build-evidence.txt
+0be86b656d4d7678f24ac87a1b1917450666537de4eb7395bf7c123fbfdb1dc8 *./evidence/write-session.log
+5bb8bb5eea5517cfb866c60c2ee19aa17af71d64f08d9b81e5ddc38c67ac2bb0 *./handoff.md
+5678e1827ad077e8d1b2d422bf9e19b095989cc644bcf51a49489c17107aa0d2 *./insert-report.md
+fc740d8ccb9534dae712152ac591468a7adb255b891223e9ce5f8b5a1a75746b *./sql/zyc02-verify-cases.sql
