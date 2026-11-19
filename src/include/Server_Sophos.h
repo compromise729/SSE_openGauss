@@ -51,7 +51,7 @@ public:
 	SophosServer(const std::string& tdp_pk);
     std::string public_key() const;
 	~SophosServer();
-	std::string search(new_server_SearchRequest sreq, std::string tableName);
+	std::string search(new_server_SearchRequest sreq, std::string tableName, bool row_aead_v1 = false);
 private:
 	sse::crypto::TdpMultPool public_tdp_;
 };

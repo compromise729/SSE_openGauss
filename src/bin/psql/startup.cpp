@@ -9,6 +9,8 @@
 #include "init_crypto.h"
 #include "libpq/sse_common.h"
 #include "libpq/SSE_map.h"
+#include "libpq/row_state_catalog.h"
+#include <sys/stat.h>
 #include "libpq/Client_Sophos.h"
 #include "libpq/Client_Mitra.h"
 #include "libpq/Client_FBDSSE.h"
@@ -139,38 +141,57 @@ int main(int argc, char* argv[])
     std::string fides_filename = sse::sophos::storage_dir_path + "/" + sse::sophos::kTdpSkFile;
     std::string diana_filename = sse::sophos::storage_dir_path + "/" + sse::diana::MASTER_KEY_FILE;
     
-    tracker.start("SSE_MAP init");
-    std::ifstream sse_tablefile(sse_tablefilename);
-    if (sse_tablefile) {
-        table_map_init(sse_tablefilename.c_str());
-    }
-    tracker.stop("SSE_MAP init");
+    // V1 must validate persisted state before the legacy client can generate keys.
+    const bool v1_state = std::getenv("SSE_V1_STATE_DIR") != NULL || std::getenv("SSE_V1_MODE") != NULL;
+    if (v1_state) {
+        const auto local = sse_v1::validate_local_startup();
+        if (!local.ok()) {
+            fprintf(stderr, "Fides %s: %s\n", sse_v1::code_name(local.code), local.message.c_str());
+            return EXIT_FAILURE;
+        }
+    } else {
+        for (const char* name : {"deployment.v1", "environment.v1", "row_aead_tables.v1", "operation.v1"}) {
+            struct stat st;
+            const std::string path = sse::sophos::storage_dir_path + "/" + name;
+            if (lstat(path.c_str(), &st) == 0 || errno != ENOENT) {
+                fprintf(stderr, "Fides state_invalid: use explicit v1 mode for this state directory\n");
+                return EXIT_FAILURE;
+            }
+        }
+        tracker.start("SSE_MAP init");
+        std::ifstream sse_tablefile(sse_tablefilename);
+        if (sse_tablefile) {
+            table_map_init(sse_tablefilename.c_str());
+        }
+        tracker.stop("SSE_MAP init");
 
-    tracker.start("fides_client init");
-    std::ifstream fides_file(fides_filename);
-    if (fides_file) {
-        Sophos_client=sse::sophos::init_SophosClient();
-        std::cout<<"Sophos_client ok"<<std::endl;
-        fides_file.close();
-    }
-    else
-    {
-        sse::sophos::init_SophosClient_key();
-        std::cout<<"Sophos_key ok"<<std::endl;
-        Sophos_client=sse::sophos::init_SophosClient();
-        std::cout<<"Sophos_client ok"<<std::endl;
-    }
-    tracker.stop("fides_client init");
+        tracker.start("fides_client init");
+        std::ifstream fides_file(fides_filename);
+        if (fides_file) {
+            Sophos_client=sse::sophos::init_SophosClient();
+            std::cout<<"Sophos_client ok"<<std::endl;
+            fides_file.close();
+        }
+        else
+        {
+            sse::sophos::init_SophosClient_key();
+            std::cout<<"Sophos_key ok"<<std::endl;
+            Sophos_client=sse::sophos::init_SophosClient();
+            std::cout<<"Sophos_client ok"<<std::endl;
+        }
+        tracker.stop("fides_client init");
 
-    tracker.start("mitra_client init");
-    Mitra_client=new MitraClient(true);
-    std::cout<<"Mitra_client ok"<<std::endl;
-    tracker.stop("mitra_client init");
+        tracker.start("mitra_client init");
+        Mitra_client=new MitraClient(true);
+        std::cout<<"Mitra_client ok"<<std::endl;
+        tracker.stop("mitra_client init");
 
-    tracker.start("FBdsse_client init");
-    FBdsse_Client=init_FBDSSEClient();
-    std::cout<<"FBdsse_client ok"<<std::endl;
-    tracker.stop("FBdsse_client init");
+        tracker.start("FBdsse_client init");
+        FBdsse_Client=init_FBDSSEClient();
+        std::cout<<"FBdsse_client ok"<<std::endl;
+        tracker.stop("FBdsse_client init");
+
+    }
 
     // tracker.start("Orion_client init");
     // bool usehdd = false;
@@ -473,6 +494,18 @@ int main(int argc, char* argv[])
         fprintf(stderr, "%s: %s", pset.progname, PQerrorMessage(pset.db));
         PQfinish(pset.db);
         exit(EXIT_BADCONN);
+    }
+
+    if (v1_state) {
+        const auto status = sse_v1::set_catalog_reader([](const std::string& table, sse_v1::Catalog& catalog) {
+            return sse_v1::read_catalog(pset.db, table, catalog);
+        });
+        const auto checked = status.ok() ? sse_v1::validate_startup() : status;
+        if (!checked.ok()) {
+            fprintf(stderr, "Fides %s: %s\n", sse_v1::code_name(checked.code), checked.message.c_str());
+            PQfinish(pset.db);
+            return EXIT_FAILURE;
+        }
     }
 
     PQsetNoticeProcessor(pset.db, NoticeProcessor, NULL);

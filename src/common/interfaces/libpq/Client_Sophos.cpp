@@ -1,5 +1,8 @@
 #include "libpq/Client_Sophos.h"
 #include "libpq/sse_common.h"
+#include "libpq/row_state_v1.h"
+#include <stdexcept>
+#include <cstdlib>
 #include "../../../../sse/opensse-schemes/lib/include/sse/schemes/sophos/sophos_common.hpp"
 namespace sse {
 namespace sophos {
@@ -48,8 +51,27 @@ void filterRecords(std::vector<std::string> &records, std::vector<std::string> &
 
 }
 
+// Existing void interfaces propagate v1 errors as exceptions to the request caller.
+static void require_state(const sse_v1::Status& status)
+{
+    if (!status.ok())
+        throw std::runtime_error(std::string(sse_v1::code_name(status.code)) + ": " + status.message);
+}
+
+template <class Map>
+static void increment_v1(Map& keymap, const std::string& keyword, int& counter, bool persist)
+{
+    require_state(sse_v1::increment_counter(keyword, counter, persist));
+    keymap[keyword] = counter;
+}
+
 // 将字典内容覆盖写入文件
 void writeDictionary(const std::map<std::string, int>& dictionary, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        require_state(sse_v1::save_current_counters(sse_v1::Counters(dictionary.begin(), dictionary.end())));
+        return;
+    }
+
 	std::ofstream file(filename);
 	if (file.is_open()) {
 		for (const auto& pair : dictionary) {
@@ -64,6 +86,11 @@ void writeDictionary(const std::map<std::string, int>& dictionary, const std::st
 }
 
 void writeDictionary(const std::unordered_map<std::string, int>& dictionary, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        require_state(sse_v1::save_current_counters(sse_v1::Counters(dictionary.begin(), dictionary.end())));
+        return;
+    }
+
 	std::ofstream file(filename);
 	if (file.is_open()) {
 		for (const auto& pair : dictionary) {
@@ -77,6 +104,13 @@ void writeDictionary(const std::unordered_map<std::string, int>& dictionary, con
 
 // 向文件中追加写入一条字典记录
 void appendDictionaryEntry(const std::string& key, int value, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        int count = 0;
+        if (value != 1) throw std::runtime_error("state_invalid: new counter must start at one");
+        require_state(sse_v1::increment_counter(key, count, true));
+        return;
+    }
+
 	std::ofstream file(filename,std::ios::app);
 	if (file.is_open()) {
 		file << key << " " << value << std::endl;
@@ -91,7 +125,13 @@ SophosClient::SophosClient(const std::string& tdp_private_key, crypto::Key<kKeyS
     : k_prf_(std::move(derivation_master_key)), inverse_tdp_(tdp_private_key),
       rsa_prg_(std::move(rsa_prg_key))
 {
-	counter_map = wrapped_loadDictionary2("/opt/og/openGauss-server/sse_storage/fides_client.mat");
+	if (sse_v1::v1_state_selected()) {
+	    sse_v1::Counters counters;
+	    require_state(sse_v1::current_operation_counters(counters));
+	    counter_map.insert(counters.begin(), counters.end());
+	} else {
+	    counter_map = wrapped_loadDictionary2("/opt/og/openGauss-server/sse_storage/fides_client.mat");
+	}
 }
 
 SophosClient::~SophosClient()
@@ -192,6 +232,11 @@ std::string SophosClient::get_keyword_index(const std::string& kw)
 
 void SophosClient::get_and_increment(std::map<std::string, int>& keymap, std::string keyword, int& kw_counter)
 {
+    if (sse_v1::v1_state_selected()) {
+        increment_v1(keymap, keyword, kw_counter, true);
+        return;
+    }
+
 	auto it = keymap.find(keyword);
 	if (it != keymap.end())
 	{
@@ -208,6 +253,11 @@ void SophosClient::get_and_increment(std::map<std::string, int>& keymap, std::st
 
 void SophosClient::get_and_increment(std::map<std::string, int>& keymap, std::string keyword, int& kw_counter, bool update_file)
 {
+    if (sse_v1::v1_state_selected()) {
+        increment_v1(keymap, keyword, kw_counter, update_file);
+        return;
+    }
+
 	auto it = keymap.find(keyword);
 	if (it != keymap.end())
 	{
@@ -227,6 +277,11 @@ void SophosClient::get_and_increment(std::map<std::string, int>& keymap, std::st
 
 void SophosClient::get_and_increment(std::unordered_map<std::string, int>& keymap, std::string keyword, int& kw_counter)
 {
+    if (sse_v1::v1_state_selected()) {
+        increment_v1(keymap, keyword, kw_counter, true);
+        return;
+    }
+
 	auto it = keymap.find(keyword);
 	if (it != keymap.end())
 	{
@@ -243,6 +298,11 @@ void SophosClient::get_and_increment(std::unordered_map<std::string, int>& keyma
 
 void SophosClient::get_and_increment(std::unordered_map<std::string, int>& keymap, std::string keyword, int& kw_counter, bool update_file)
 {
+    if (sse_v1::v1_state_selected()) {
+        increment_v1(keymap, keyword, kw_counter, update_file);
+        return;
+    }
+
     auto it = keymap.find(keyword);
     if (it != keymap.end())
     {

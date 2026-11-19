@@ -1,5 +1,7 @@
 #include "libpq/sse_common.h"
 #include "libpq/SSE_map.h"
+#include "libpq/row_state_v1.h"
+#include <stdexcept>
 #include <strings.h>
 #include <regex>
 #include <iomanip>
@@ -526,7 +528,18 @@ namespace sse::sophos {
 }
 
 // 将字典内容覆盖写入文件
+static void require_v1_state(const sse_v1::Status& status)
+{
+    if (!status.ok())
+        throw std::runtime_error(std::string(sse_v1::code_name(status.code)) + ": " + status.message);
+}
+
 void writeDictionary(const std::map<std::string, int>& dictionary, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        require_v1_state(sse_v1::save_current_counters(sse_v1::Counters(dictionary.begin(), dictionary.end())));
+        return;
+    }
+
 	std::ofstream file(filename);
 	if (file.is_open()) {
 		for (const auto& pair : dictionary) {
@@ -541,6 +554,11 @@ void writeDictionary(const std::map<std::string, int>& dictionary, const std::st
 }
 
 void writeDictionary(const std::unordered_map<std::string, int>& dictionary, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        require_v1_state(sse_v1::save_current_counters(sse_v1::Counters(dictionary.begin(), dictionary.end())));
+        return;
+    }
+
     std::ofstream file(filename);
     if (file.is_open()) {
         for (const auto& pair : dictionary) {
@@ -555,6 +573,13 @@ void writeDictionary(const std::unordered_map<std::string, int>& dictionary, con
 
 // 向文件中追加写入一条字典记录
 void appendDictionaryEntry(const std::string& key, int value, const std::string& filename) {
+    if (sse_v1::v1_state_selected()) {
+        int count = 0;
+        if (value != 1) throw std::runtime_error("state_invalid: new counter must start at one");
+        require_v1_state(sse_v1::increment_counter(key, count, true));
+        return;
+    }
+
 	std::ofstream file(filename,std::ios::app);
 	if (file.is_open()) {
 		file << key << " " << value << std::endl;
@@ -568,6 +593,12 @@ void appendDictionaryEntry(const std::string& key, int value, const std::string&
 
 void get_and_increment(const std::string& filename, std::map<std::string, int>& keymap, std::string keyword, int& kw_counter)
 {
+    if (sse_v1::v1_state_selected()) {
+        require_v1_state(sse_v1::increment_counter(keyword, kw_counter, true));
+        keymap[keyword] = kw_counter;
+        return;
+    }
+
 	auto it = keymap.find(keyword);
 	if (it != keymap.end())
 	{

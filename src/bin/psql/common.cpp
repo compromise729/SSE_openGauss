@@ -1,3 +1,5 @@
+#include "libpq/row_request_v1.h"
+#include "libpq/row_state_v1.h"
 /*
  * psql - the PostgreSQL interactive terminal
  *
@@ -6,6 +8,7 @@
  * src/bin/psql/common.c
  */
 #include "libpq/sse_common.h"
+#include "libpq/fides_sql_literal.h"
 #include "libpq/Client_Sophos.h"
 #include "libpq/Client_Mitra.h"
 #include "libpq/Client_FBDSSE.h"
@@ -20,6 +23,7 @@
 #include "common.h"
 
 #include <ctype.h>
+#include <regex>
 #include <signal.h>
 #ifndef WIN32
 #include <unistd.h>   /* for write() */
@@ -1487,6 +1491,22 @@ bool GetPrintResult(PGresult** results, bool is_explain, bool is_print, const ch
 
 bool SendQuery(const char* query, bool is_print, bool print_error)
 {
+    if (sse_v1::v1_state_selected() || (query && strcasestr(query, "sse_storage"))) {
+        bool handled = false;
+        PGresult* protected_result = NULL;
+        const auto status = sse_v1::execute_request(pset.db, query, handled, protected_result);
+        if (!status.ok()) {
+            if (print_error) psql_error("Fides %s: %s\n", sse_v1::code_name(status.code), status.message.c_str());
+            PQclear(protected_result);
+            return false;
+        }
+        if (handled) {
+            const bool success = !is_print || PrintQueryResults(protected_result);
+            PQclear(protected_result);
+            return success;
+        }
+    }
+
     //set flag and extract keyword
     common_sseflag.resetSSEflags();
     common_delsseflag.resetSSEdelflags();
@@ -1503,6 +1523,128 @@ bool SendQuery(const char* query, bool is_print, bool print_error)
 
 
     string table_name= getTableNameFromSQL(querystr_lower);
+    /*
+     * 4.1 Minimal-baseline guard for Fides user input.
+     * Runs BEFORE any SSE prefix injection, flag change, counter update or
+     * request generation. Only plain single-table SELECT on a registered
+     * Fides table is examined; JOIN / DELETE / INSERT / UPDATE, ordinary
+     * non-SSE tables, internal re-insert requests and physical _data table
+     * lookups never enter this branch.
+     */
+    if (qs_seven == "select " && getTableNameFromJoinSQL(querystr_lower).empty()) {
+        auto zyc_map_it = sse_table_map.find(table_name);
+        if (zyc_map_it != sse_table_map.end()) {
+            std::string zyc_mode;
+            std::string zyc_sse_col = "keyword";
+            for (const auto& zyc_col : zyc_map_it->second) {
+                if (zyc_col.kind != sse_kind::UNDEFINED) {
+                    zyc_mode = sse_kind_to_string(zyc_col.kind);
+                    zyc_sse_col = zyc_col.col_name;
+                    break;
+                }
+            }
+            std::transform(zyc_mode.begin(), zyc_mode.end(), zyc_mode.begin(),
+                           (int(*)(int))tolower);
+            std::transform(zyc_sse_col.begin(), zyc_sse_col.end(), zyc_sse_col.begin(),
+                           (int(*)(int))tolower);
+            if (zyc_mode == "fides") {
+                /* Mask everything inside single quotes so that words such as
+                 * AND / OR / LIKE inside a keyword are not treated as SQL
+                 * operators. Both strings keep identical length and offsets. */
+                std::string zyc_outside;
+                bool zyc_in_quote = false;
+                for (std::string::size_type i = 0; i < querystr_lower.size(); ++i) {
+                    if (querystr_lower[i] == '\'') {
+                        zyc_in_quote = !zyc_in_quote;
+                        zyc_outside += ' ';
+                    } else {
+                        zyc_outside += zyc_in_quote ? ' ' : querystr_lower[i];
+                    }
+                }
+
+                /* A comma in the projection is not a comma-separated FROM list. */
+                const auto zyc_from = zyc_outside.find(" from ");
+                static const std::regex zyc_comma_from(
+                    R"(^[ \t\r\n]*[a-z0-9_.]+(?:[ \t\r\n]+(?:as[ \t\r\n]+)?[a-z0-9_]+)?[ \t\r\n]*,)");
+                const bool zyc_multi_table = zyc_from != std::string::npos &&
+                    std::regex_search(zyc_outside.cbegin() + zyc_from + 6, zyc_outside.cend(), zyc_comma_from);
+                if (zyc_outside.find(" join ") == std::string::npos && !zyc_multi_table) {
+                    const char* zyc_reason = NULL;
+
+                    /* (1) projection must be SELECT * */
+                    std::string::size_type zyc_sel = zyc_outside.find("select");
+                    if (zyc_sel == std::string::npos || zyc_from == std::string::npos) {
+                        zyc_reason = "not a plain single-table SELECT";
+                    } else {
+                        std::string zyc_proj =
+                            zyc_outside.substr(zyc_sel + 6, zyc_from - zyc_sel - 6);
+                        std::string::size_type pa = zyc_proj.find_first_not_of(" \t\r\n");
+                        std::string::size_type pb = zyc_proj.find_last_not_of(" \t\r\n");
+                        std::string zyc_proj_trim =
+                            (pa == std::string::npos) ? "" : zyc_proj.substr(pa, pb - pa + 1);
+                        if (zyc_proj_trim != "*")
+                            zyc_reason = "column projection is not supported";
+                    }
+
+                    /* (2) WHERE must be exactly one <sse_col>='<string>' equality */
+                    if (zyc_reason == NULL) {
+                        std::string::size_type zyc_where = zyc_outside.find(" where ");
+                        if (zyc_where == std::string::npos) {
+                            zyc_reason = "missing WHERE <keyword>='...' condition";
+                        } else if (zyc_outside.find(" and ", zyc_where) != std::string::npos ||
+                                   zyc_outside.find(" or ", zyc_where) != std::string::npos ||
+                                   zyc_outside.find(" like ", zyc_where) != std::string::npos) {
+                            zyc_reason = "compound condition / LIKE is not supported";
+                        } else {
+                            std::string zyc_cond = querystr_lower.substr(zyc_where + 7);
+                            std::string::size_type zyc_eq = zyc_cond.find('=');
+                            if (zyc_eq == std::string::npos) {
+                                zyc_reason = "only equality on the SSE keyword column is supported";
+                            } else {
+                                std::string zyc_lhs = zyc_cond.substr(0, zyc_eq);
+                                std::string::size_type la = zyc_lhs.find_first_not_of(" \t\r\n");
+                                std::string::size_type lb = zyc_lhs.find_last_not_of(" \t\r\n");
+                                std::string zyc_lhs_trim =
+                                    (la == std::string::npos) ? "" : zyc_lhs.substr(la, lb - la + 1);
+                                bool zyc_col_ok = (zyc_lhs_trim == zyc_sse_col);
+                                if (!zyc_col_ok && zyc_lhs_trim.size() > zyc_sse_col.size() + 1) {
+                                    std::string::size_type off =
+                                        zyc_lhs_trim.size() - zyc_sse_col.size();
+                                    zyc_col_ok = (zyc_lhs_trim[off - 1] == '.' &&
+                                                  zyc_lhs_trim.compare(off, zyc_sse_col.size(),
+                                                                       zyc_sse_col) == 0);
+                                }
+                                std::string::size_type zyc_q1 = zyc_cond.find('\'', zyc_eq + 1);
+                                if (!zyc_col_ok || zyc_q1 == std::string::npos ||
+                                    zyc_cond.find_first_not_of(" \t\r\n", zyc_eq + 1) != zyc_q1) {
+                                    zyc_reason = "keyword value must be a quoted string";
+                                } else {
+                                    std::string keyword;
+                                    const auto zyc_q2 = read_fides_sql_literal(zyc_cond, zyc_q1, keyword);
+                                    if (zyc_q2 == std::string::npos) {
+                                        zyc_reason = "unterminated quoted keyword";
+                                    } else {
+                                        std::string zyc_tail = zyc_cond.substr(zyc_q2 + 1);
+                                        if (zyc_tail.find_first_not_of(" \t\r\n;") !=
+                                            std::string::npos)
+                                            zyc_reason =
+                                                "extra conditions / clauses are not supported";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (zyc_reason != NULL) {
+                        psql_error("unsupported SSE single-table input (%s); "
+                                   "rejected before any request was sent: %s\n",
+                                   zyc_reason, query);
+                        return false;
+                    }
+                }
+            }
+        }
+    }
     if(qs_seven=="insert ")
     {
         // table_name=getTableNameFromInsertSQL(querystr_lower);
@@ -1687,10 +1829,10 @@ bool SendQuery(const char* query, bool is_print, bool print_error)
         {
             common_tableName=getTableNameFromSelectSQL(querystr_lower);
             common_sseflag.fides=true;
-            int keyword_begin = querystr_lower.find("'");
-		    int keyword_end = querystr_lower.find("'", keyword_begin + 1);
-    	    string keyword(querystr, keyword_begin + 1, keyword_end - keyword_begin - 1);
-            common_keyword=keyword;
+            if (read_fides_sql_literal(querystr, querystr.find('\''), common_keyword) == std::string::npos) {
+                psql_error("invalid Fides search keyword literal\n");
+                return false;
+            }
         }
         else if(qs_12 == "mitra_select")
         {
@@ -2415,7 +2557,30 @@ bool SendQuery(const char* query, bool is_print, bool print_error)
                 else
                 {
                     const char* fides_query_re_insert=fides_temp.c_str(); 
-                    PQexec(pset.db, fides_query_re_insert);
+                    PGresult* zyc_re_insert_res = PQexec(pset.db, fides_query_re_insert);
+                    /* 4.2: distinguish "got a result object" from "SQL succeeded". */
+                    if (zyc_re_insert_res == NULL) {
+                        psql_error("Fides re-insert returned no result; "
+                                   "business data lookup was NOT executed. %s\n",
+                                   PQerrorMessage(pset.db));
+                        PQclear(results);
+                        ResetCancelConn();
+                        return false;
+                    }
+                    if (PQresultStatus(zyc_re_insert_res) != PGRES_COMMAND_OK &&
+                        PQresultStatus(zyc_re_insert_res) != PGRES_TUPLES_OK) {
+                        psql_error("Fides re-insert failed (%s); "
+                                   "business data lookup was NOT executed.\n",
+                                   PQresStatus(PQresultStatus(zyc_re_insert_res)));
+                        psql_error("%s", PQresultErrorMessage(zyc_re_insert_res));
+                        /* Keep the error result for the common display path,
+                         * and stop here: no fides_query_search is issued, so
+                         * no successful business rows can be printed. */
+                        PQclear(results);
+                        results = zyc_re_insert_res;
+                        break;
+                    }
+                    PQclear(zyc_re_insert_res);
                     const char* fides_query_search=fides_temp2.c_str(); 
                     results=PQexec(pset.db, fides_query_search);
                 }
