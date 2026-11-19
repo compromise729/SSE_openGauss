@@ -1,6 +1,6 @@
 # ZYC-03：索引检索到本地明文展示
 
-实际工具提交：`a0f563fe586cca1c72384b40397dc614954e0080`；应用基线 `c631fbc2be747e3611f00ff521ae4dd306cc2789`。契约为 SHY-02 v1.0 与 SHY-03 搜索事务/计数约定。最终结果、程序/工具字节指纹见 [verified/summary.json](evidence/verified/summary.json)。
+实际工具提交：`3bce830c9f428e8e3d76336e4170e5dbeb056a31`；应用基线 `c631fbc2be747e3611f00ff521ae4dd306cc2789`。契约为 SHY-02 v1.0 与 SHY-03 搜索事务/计数约定。最终结果、程序/工具字节指纹见 [verified/summary.json](evidence/verified/summary.json)。
 
 ## 链路与验证方式
 
