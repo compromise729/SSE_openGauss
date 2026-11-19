@@ -74,4 +74,4 @@ mkdir "$out/requests"
 cp "$live/evidence/live/"* "$out/requests/"
 python3 "$here/zyc_evidence.py" "$repo" "$out"
 grep -E '^(PASS ZYC|ADDITIONAL_RESULT=|ISOLATED_SERVER_STOPPED)' "$out/zyc-live.log"
-printf 'ZYC_RESULT=PASS MODULE_CASES=18 BASELINE_LIVE_CASES=18 ZYC_CASES=12\n'
+printf 'ZYC_RESULT=PASS MODULE_CASES=18 BASELINE_LIVE_CASES=18 ZYC_CASES=13\n'

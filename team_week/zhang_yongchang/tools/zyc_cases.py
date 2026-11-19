@@ -232,18 +232,22 @@ def stopped_failure(p, events, directory, error):
 
 def insert_failure():
     target = copy_state('review-insert-failure')
-    raw("CREATE FUNCTION public.review_fail_insert() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'review injected write failure'; END; $$;")
+    size = int(next(s[6:] for s in raw("SELECT 'COUNT='||count(*) FROM public.week_demo_data;") if s.startswith('COUNT=')))
+    raw("CREATE FUNCTION public.review_fail_insert() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN "
+        "IF (SELECT count(*) FROM public.week_demo_data) > %d THEN RAISE EXCEPTION 'review injected second-row failure'; "
+        "END IF; RETURN NEW; END; $$;" % size)
     raw("CREATE TRIGGER review_fail_insert BEFORE INSERT ON public.week_demo_data FOR EACH ROW EXECUTE PROCEDURE public.review_fail_insert();")
     server = snapshot_server()
     try:
-        p, events = client("INSERT INTO week_demo VALUES ('fail','apple','must rollback');", target)
+        p, events = client("INSERT INTO week_demo VALUES ('first','apple','must rollback first'),('second','apple','injected failure');", target)
         require(p.returncode != 0 and b'db_failed' in p.stderr, 'write failure returned success')
         require((target/'operation.v1').exists() and server == snapshot_server(), 'write failure not atomic/marked')
         again, events = client("SELECT * FROM week_demo WHERE keyword='apple';", target)
         require(again.returncode != 0 and b'incomplete_operation' in again.stderr, 'write failure restart not blocked')
     finally:
         raw('DROP TRIGGER review_fail_insert ON public.week_demo_data; DROP FUNCTION public.review_fail_insert();')
-    return {'write_nonzero': True, 'database_unchanged': True, 'marker_retained': True, 'reopen_blocked': True}
+    return {'second_row_failure_rolls_back_entire_batch': True, 'write_nonzero': True,
+            'database_unchanged': True, 'marker_retained': True, 'reopen_blocked': True}
 
 def last_row_authentication():
     target = copy_state('review-auth-failure')
@@ -324,6 +328,25 @@ def verify_wire_phases():
     return {'validated_searches': len(phases), 'business_sql_only_ciphertext': True,
             'no_plaintext_keyword_predicate': True, 'independent_locator_and_fetch_set_checks': True}
 
+def registration_failure():
+    target = copy_state('review-registration-failure')
+    before = snapshot_files(state)
+    raw("ALTER TABLE public.sse_v1_catalog ADD CONSTRAINT review_registration CHECK (logical_table <> 'week_demo');")
+    sql = "CREATE TABLE week_demo (ind text, keyword text SSE='FIDES', payload text) WITH (sse_storage='ROW_AEAD_V1');"
+    try:
+        p, events = client(sql, target)
+        require(p.returncode != 0 and b'db_failed' in p.stderr, 'registration failure returned success')
+        require((target/'operation.v1').exists(), 'failed registration marker absent')
+        require('META=0:0' in raw("SELECT 'META='||(SELECT count(*) FROM public.sse_v1_catalog)||':'||"
+            "(SELECT count(*) FROM pg_class WHERE relname IN ('week_demo_data','week_demo_index'));"), 'failed registration left physical objects/catalog')
+        again, _ = client(sql, target)
+        require(again.returncode != 0 and b'incomplete_operation' in again.stderr, 'failed create not blocked on reopen')
+        require(before == snapshot_files(state), 'create failure modified healthy state')
+    finally:
+        raw('ALTER TABLE public.sse_v1_catalog DROP CONSTRAINT review_registration;')
+    return {'events': events, 'physical_create_and_catalog_rolled_back': True, 'marker_retained': True, 'reopen_blocked': True}
+
+case('ZYC-00-registration-failure', registration_failure)
 case('ZYC-01-create', create)
 case('ZYC-02-insert-three', insert)
 case('ZYC-03-physical-ciphertext', physical_ciphertext)
@@ -336,4 +359,4 @@ case('ZYC-09-write-failure', insert_failure)
 case('ZYC-10-last-row-authentication', last_row_authentication)
 case('ZYC-11-missing-fetched-row', missing_business_row)
 case('ZYC-12-wire-phases', verify_wire_phases)
-print('ADDITIONAL_RESULT=PASS CASES=12', flush=True)
+print('ADDITIONAL_RESULT=PASS CASES=13', flush=True)

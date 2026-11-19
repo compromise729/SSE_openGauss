@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import shutil
 
 HERE = Path(__file__).resolve().parent
 ENTRY = HERE / 'zyc_live_verify_all.sh'
@@ -39,6 +40,33 @@ class DeliveryEntryTest(unittest.TestCase):
             self.assertNotIn('NO_PLAINTEXT_IN_DATA_OK', output)
             self.assertNotIn('NO_PLAINTEXT_IN_INDEX_OK', output)
             self.assertNotIn('ZYC_RESULT=PASS', output)
+
+    @unittest.skipUnless(os.geteuid() == 0, 'outer root entry requires Linux root')
+    def test_outer_entry_propagates_failed_validation_stage(self):
+        # Only the expensive external validation boundary is replaced; the
+        # delivered entry, option parsing, process execution and ERR path run.
+        with tempfile.TemporaryDirectory(prefix='zyc-bootstrap-') as name:
+            root = Path(name)
+            files = ['dest/bin/gsql', 'dest/bin/gaussdb', 'dest/lib/libpq_ce.so.5.5',
+                     'sse_sql/SSE_v1.sql', 'team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp',
+                     'team_week/liu_zhuoming/LZM-01/isolated.sh',
+                     'team_week/zhang_yongchang/tools/zyc_session.sh',
+                     'team_week/zhang_yongchang/tools/test_zyc_delivery.py']
+            for relative in files:
+                path = root/relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('', encoding='utf-8')
+            stage = root/'team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh'
+            stage.write_text('#!/bin/bash\necho injected_validation_failure\nexit 23\n', encoding='utf-8')
+            env = dict(os.environ, CXX=shutil.which('g++'))
+            env.pop('ISOLATED_RUN_DIR', None)
+            p = subprocess.run(['bash', str(ENTRY), '--project-root', str(root),
+                                '--evidence-dir', str(root/'report')], env=env,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.assertEqual(p.returncode, 23, p.stderr.decode(errors='replace'))
+            self.assertNotIn(b'ZYC_RESULT=PASS', p.stdout)
+            self.assertFalse((root/'report/summary.json').exists())
+            self.assertIn('injected_validation_failure', (root/'report/baseline.log').read_text())
 
 
 if __name__ == '__main__':
