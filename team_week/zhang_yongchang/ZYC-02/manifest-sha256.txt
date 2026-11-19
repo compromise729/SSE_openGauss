@@ -1,9 +1,10 @@
-# SHA-256 manifest (ZYC-02)
-generated: 2026-11-19 16:23:46 +0800
+# SHA-256 manifest ZYC-02
+generated: 2026-11-19T10:47:41.459808Z
 
 f0b13beb612715f206a72bcad6cbff0cce7002e91974bae9d346a41d1c0b8bb9 *./evidence/build-evidence.txt
 bca9558b7a0e774b99e2ce9cc8a98dbb86de50130d98e3d39429f89a9b5e7dd8 *./evidence/build-log-tail.txt
+1670618e30dfe8a47b9469c23bedd33613c3f37d21af3ce6dfca8f618c512131 *./evidence/verified/build-evidence.txt
 0be86b656d4d7678f24ac87a1b1917450666537de4eb7395bf7c123fbfdb1dc8 *./evidence/write-session.log
-cfa8c0bfca8ff06dadcb544fb064c11a791c3f59266be05ddd62f603edf1d656 *./handoff.md
-9e6a16357c3603e60afaadc12df7faf9b56995e835eb8078368104ea24da0943 *./insert-report.md
-23a0e4721d3defb6731a6c6dda3811526f2e76a2613c71290e8ff94879b3caf1 *./sql/zyc02-verify-cases.sql
+00420d6ae73c641479981271e26b8ce14235e6468c8de84ef378393bf210bc78 *./handoff.md
+0ceaf1edff5382f7edb6d2e1dd0cef78395d0ecf2cda30a89d114dd42e8da0c1 *./insert-report.md
+fc740d8ccb9534dae712152ac591468a7adb255b891223e9ce5f8b5a1a75746b *./sql/zyc02-verify-cases.sql

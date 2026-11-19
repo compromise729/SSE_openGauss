@@ -1,0 +1,382 @@
+[
+  {
+    "request": 1,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "create_sent"
+    ]
+  },
+  {
+    "request": 2,
+    "exit": 1,
+    "events": []
+  },
+  {
+    "request": 3,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "create_sent",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 4,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 5,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 6,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 7,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 8,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "unknown_empty"
+    ]
+  },
+  {
+    "request": 9,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 10,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 11,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 12,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 13,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 14,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 15,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 16,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 17,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "insert_sent",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 18,
+    "exit": 0,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent",
+      "rows_authenticated",
+      "search_commit",
+      "state_saved",
+      "complete_durable"
+    ]
+  },
+  {
+    "request": 19,
+    "exit": 3,
+    "events": [
+      "keys_loaded"
+    ]
+  },
+  {
+    "request": 20,
+    "exit": 3,
+    "events": [
+      "keys_loaded"
+    ]
+  },
+  {
+    "request": 21,
+    "exit": 3,
+    "events": [
+      "keys_loaded"
+    ]
+  },
+  {
+    "request": 22,
+    "exit": 3,
+    "events": []
+  },
+  {
+    "request": 23,
+    "exit": 3,
+    "events": []
+  },
+  {
+    "request": 24,
+    "exit": 3,
+    "events": []
+  },
+  {
+    "request": 25,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "begin_durable",
+      "counter_advanced",
+      "counter_advanced",
+      "insert_sent"
+    ]
+  },
+  {
+    "request": 26,
+    "exit": 1,
+    "events": []
+  },
+  {
+    "request": 27,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent"
+    ]
+  },
+  {
+    "request": 28,
+    "exit": 1,
+    "events": []
+  },
+  {
+    "request": 29,
+    "exit": 3,
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent"
+    ]
+  },
+  {
+    "request": 30,
+    "exit": 1,
+    "events": []
+  }
+]

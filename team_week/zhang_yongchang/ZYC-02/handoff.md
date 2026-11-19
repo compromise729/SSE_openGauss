@@ -1,20 +1,18 @@
-# ZYC-02 交接记录：完成用户 SQL 到密文写入
+# ZYC-02 交接记录
 
-|项|内容|
+|项|本轮交付|
 |---|---|
-|前置任务编号|**SHY-03**（已验收 PASS；README 明示 ZYC-02 从含 `8111044` 的最新 main 接续）|
-|实际输入提交号|`c631fbc2be74…`（main）；含 SHY-03 正式发布 `8111044852770529bfacde4de5af5690dd6a8322`（PR #12）|
-|合同版本|SHY-02 v1.0（`sse_v1_contract.hpp`, kProtocolVersion=1）；SHY-03 搜索/计数约定|
-|本人输出提交号/补丁|无独立源码提交（接入代码已在上述 main 提交中，由 SHY-03/LZM-03 落地并经我逐项核对）；本目录交付验收报告 + 证据。`SSE_v1.sql` SHA256 `5c1f413d…bf34` 与 SHY-03 官方一致，可作为本次输入指纹。**Git 交付分支 `feature/ZYC-02-encrypted-write`，输出提交 `3a22a5311c6af8b7aad77958f8516588667ca451`，PR [#14](https://github.com/compromise729/SSE_openGauss/pull/14)**（提交内容为验收材料与可复跑脚本，不含源码改写）|
-|改动文件及原因|本轮不改源码。`row_request_v1.cpp`/`common.cpp` 的写入实现、本人 ZYC-01 的两份防护补丁均已在输入提交；逐项核对确认无重复植入、无与契约符号冲突|
-|构建命令|独立可写副本 `/home/yonghu/shy03_build`，GCC7.3 环境：`make -j6` → `make install prefix=$PWD/dest`；结果 `MAKE_EXIT=0`/`INSTALL_EXIT=0`|
-|测试输入与预期/实际|建表、三行 INSERT、中文/空格、SQL 转义、物理表明文扫描——全部 PASS，详见 `insert-report.md` 第 5 节与 `evidence/`|
-|原始日志路径|`evidence/build-evidence.txt`（产物 SHA256/退出码）、`evidence/build-log-tail.txt`；检索与建表同会话日志在 `../ZYC-03/evidence/live-full.log`|
-|未完成项|跨端索引恢复、多表并发隔离、重启延续、历史遗留 SSE 方案问题——见 `insert-report.md` 第 6 节|
-|接手人|组长施骅洋验收；张永昌接续 ZYC-03（同批已完成）；李孟德、严子涵协助定位|
-|复现命令|见 `insert-report.md` 第 7 节；隔离实例用 `LZM-01/isolated.sh init --port 55439`|
+|前置|SHY-03：`8111044852770529bfacde4de5af5690dd6a8322` 已包含于应用基线 `c631fbc2be747e3611f00ff521ae4dd306cc2789`|
+|被测工具提交|`a0f563fe586cca1c72384b40397dc614954e0080`；完整程序/工具指纹见 `../ZYC-03/evidence/verified/summary.json`|
+|协议|SHY-02 v1.0，SHY-03 请求、额度、搜索事务约定|
+|源码归属|复用已发布客户端/密码/状态/服务端实现；本轮只修复验收工具、证据和说明|
+|修复|LF、源码定位、辅助程序自动编译、失败非零退出、精确结果及阶段断言|
+|实际验证|3 入口回归、18 模块、18 上游真实请求、13 ZYC 实库场景；详见报告和 verified 证据|
+|写入要点|三条真实入库并由独立进程解密；登记失败无物理残留；第二行错误整批回滚；长度/输入拒绝无副作用|
+|构建|同批原生 `make -j6` 与 `make install`；本轮为已配置独立副本的增量构建|
+|复跑|外层 root：`bash "$repo/team_week/zhang_yongchang/tools/zyc_live_verify_all.sh" --project-root "$repo"`|
+|版本|[PR #14](https://github.com/compromise729/SSE_openGauss/pull/14)，`feature/ZYC-02-encrypted-write` 同批交付 ZYC-02/03；文档提交可晚于被测工具提交|
+|限制|单客户端单新版逻辑表；无自动跨端恢复、密钥恢复/轮换、服务端重启或多表并发验收|
+|接续|组长复核并发布 SHY-04 输入；张永昌接续查询/联合问题，三名模块负责人支持|
 
-## 签收区（接手人填写）
-
-- 接收状态：待组长填写「已接收」或「退回原因」。
-- 复核要点：确认输入提交 `c631fbc2` 含 `8111044` 与本人 ZYC-01 补丁；核对 `SSE_v1.sql` 指纹；按复现命令重跑建表与三行写入。
+接收人核对 summary 的提交和工具 SHA、运行总入口、核对新证据后填写团队签收；本次 Git 修复未代写飞书签名。历史作者交付仍保留于 Git 历史和原 evidence 文件。

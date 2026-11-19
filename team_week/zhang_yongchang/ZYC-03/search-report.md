@@ -1,74 +1,42 @@
-# ZYC-03｜索引检索到本地明文展示 报告（search-report.md）
+# ZYC-03：索引检索到本地明文展示
 
-> 任务：ZYC-03（截止 2026-11-19 18:00，前置 ZYC-02）。负责人：张永昌。
-> 结论：**在 ZYC-02 同一集成提交与同一实测会话上完成检索链路验收，放行条件全部通过。**
+实际工具提交：`a0f563fe586cca1c72384b40397dc614954e0080`；应用基线 `c631fbc2be747e3611f00ff521ae4dd306cc2789`。契约为 SHY-02 v1.0 与 SHY-03 搜索事务/计数约定。最终结果、程序/工具字节指纹见 [verified/summary.json](evidence/verified/summary.json)。
 
-## 1. 输入与版本
+## 链路与验证方式
 
-|项|内容|
+沿用 `row_request_v1.cpp` 的真实客户端入口：关键词本地生成 Fides 令牌，服务端取出 `ut,locator_blob`；客户端认证恢复完整字符串 rid 并去重；重插认证位置；按 rid 定向回查；核对位置/返回集合并认证全部业务行；提交、持久化状态及清标记完成后统一展示。
+
+本轮新增公开夹具的 libpq 边界记录及独立 `zyc-decode` 工具。真实调用发生前后保留请求/结果；派生密钥值用 `<redacted>` 代替；记录器仅在测试显式启用。正常应用构建与日志逻辑未改动。
+
+## 本轮实库覆盖
+
+|用例|断言|
 |---|---|
-|前置|ZYC-02（本目录同批验收 PASS），源提交 `c631fbc2`（SHY-03 main，含 `8111044`）|
-|契约|SHY-02 v1.0；SHY-03 搜索事务约定（同一 DB 事务内取出索引→校验 UT→认证位置→重插→按 rid 回查→提交→清标记→展示）|
-|本次 RUN_DIR|`/var/tmp/fides-isolated.rAJ5U9Lm`（写入与检索同一会话；实例正常停机）|
-|原始日志|`evidence/live-full.log`（210 行，含每步 stdout/stderr）|
+|ZYC-04|apple 完整行 1/2 各一次、banana 行 3 一次；未知词正常空集且状态/数据库不变；每次使用新 gsql 进程|
+|ZYC-05|追加 apple 后连续三次查询完整行 1/2/4，不丢不重；索引重插不增加业务行|
+|ZYC-06|中文、空格、SQL 双单引号、引号内 AND/OR、空字段均完整恢复|
+|ZYC-07|45,144 字符最大合法业务封装往返，三字段完整相等|
+|ZYC-08|字段超限、含 NULL 批次、复合条件和投影非零拒绝；无业务请求/计数/物理表副作用|
+|ZYC-09|第二行业务写失败导致整批回滚，保留标记，重开阻断|
+|ZYC-10|真实 fetch 外加故障夹具，前两行正常、最后返回行标签篡改；认证失败非零退出、零部分明文、数据库回滚、重开阻断|
+|ZYC-11|实际删除一个已知 apple 业务行并保留索引，查询报不一致；零部分明文、重开阻断；测试后恢复夹具密文|
+|ZYC-12|真实 Fides 请求、加密位置、独立恢复的 rid、重插和定向 fetch 集合逐请求一致；无明文关键词谓词或原始业务 VALUES|
 
-## 2. 检索链路实际核对（源码级）
+上游 18 项真实请求复跑另验证：健康未知词、坏状态、缺钥、异常空 token/derivation、标记写失败、额度不足以及真实重插 SQL 失败。重插失败确认数据库事务回滚、停止回查/展示、保留标记且重开阻断。18 项模块用例中的模拟发送单独计数，未替代实库请求。
 
-`row_request_v1.cpp` 的 SELECT 分支（`execute_request()` 尾部）逐项覆盖任务书 8 项要求：
+## 分阶段原始证据
 
-|任务书要求|实现落点|
-|---|---|
-|本地关键词生成令牌|`client->search_request(keyword)`；校验 `token/derivation_key` 非空、`add_count` 与持锁计数一致|
-|服务端索引返回 + 位置认证解密|`fides_v1_select … token/derivation_key/add_count` 返回 `ut,locator_blob`；校验 UT 属于 `expected_tokens(request)` 且不重复；`decrypt_locator(scope,blob,keys,decoded)`，操作必须 0|
-|保留 Fides 重插 + 检查返回状态|`SearchTransaction` 包住取出/重插/回查；重插 `sse_v1_reinsert` 经 `query()` 检查 PGresult 状态，失败 `db_failed` 并回滚|
-|按 rid 回查 + 集合核对|`sse_v1_fetch` 返回 rid/data_blob；`unique_rids.erase(rid)!=1` 或残留 → `inconsistent_result`|
-|全部认证成功后才打印|所有行 `decrypt_row` + keyword 核对完成 → 构造 `row_result` → `complete_operation` → `output`，`common.cpp:1504` 才 `PrintQueryResults`|
-|未知词 / 坏状态 / 空令牌分类|`preflight` 未登记词 → 直接 `row_result(conn,{})` 空集（`unknown_empty`）；已登记但空 token → `protocol_invalid`；状态损坏 → `state_invalid`|
-|Enc(rid,op) 解密接新过滤器|位置封装认证解密得原始 16 字节 rid + op；按**完整 32 hex 字符串 rid** 去重，不经旧 `stoi`；`Client_Sophos.cpp` 状态读写由刘卓明负责，本轮未改其区域|
-|关键词只在客户端生成令牌|SQL 只携带 token/derivation_key/add_count，无明文 keyword 谓词；命中经真实 Fides 索引，不下载整表筛选|
+- [phases.json](evidence/verified/requests/phases.json)：每次成功查询的实际令牌请求、加密位置返回、独立认证后的 rid、重新加密位置的 rid、fetch 请求及返回集合、阶段事件。
+- 同目录 `request-NN.wire.jsonl`：实际 libpq 请求 SQL/绑定参数、状态及加密位置/业务封装结果。业务写入、重插只允许封装参数；fetch 只按恢复出的 rid 定向调用。
+- `request-NN.stdout/stderr`：真实 gsql 输出、错误退出及顺序事件；[requests.json](evidence/verified/requests/requests.json) 记录请求编号与退出码。
+- [results.json](evidence/verified/requests/results.json)：13 项任务场景的断言结论；[independent-decode.json](evidence/verified/requests/independent-decode.json) 保存三条公开行与位置的独立认证结果。
 
-## 3. 真实检索验收结果
+这些证据来自本次实际调用和密码接口，不再用源码行存在或查询前快照替代阶段实测。记录范围是 libpq 调用边界，不作为网络抓包、传输加密或完整安全证明。
 
-|用例|输入|预期|实际|结论|
-|---|---|---|---|---|
-|apple|`SELECT * FROM week_demo WHERE keyword='apple'`|完整行 2 条|编号 1/2 各一次：red apple、green apple，rc=0|PASS|
-|banana|`… keyword='banana'`|1 条|编号 3：yellow banana，rc=0|PASS|
-|未知词|`… keyword='zyc_unknown_20261119'` / `not_registered_zyc`|0 行|`(0 rows)`，rc=0（正常空集，非错误）|PASS|
-|重复查询|再查 apple|不丢不重|仍 2 行（1、2 各一次），rc=0|PASS|
-|中文+空格|`… keyword='中文 苹果 space'`|2 行|编号 4/5：red 苹果、green 苹果，rc=0|PASS|
-|SQL 转义|`… keyword='it''s OR not'`|1 行|`it's OR not` / `o'brien apple`，rc=0|PASS|
-|未支持语法 AND|`WHERE keyword='apple' AND payload='red apple'`|发送前拒绝|rc=3（非零），无明文输出|PASS|
-|未支持投影|`SELECT ind FROM week_demo WHERE keyword='apple'`|发送前拒绝|rc=3（非零）|PASS|
-|服务端明文泄露|扫描 data/index 全表 blob|无明文|`NO_PLAINTEXT_IN_DATA_OK` / `NO_PLAINTEXT_IN_INDEX_OK`|PASS|
-|批处理退出码|ON_ERROR_STOP=1 下错误语句|非零传播|AND/投影 rc=3|PASS|
+## 复跑与限制
 
-放行条件对照：apple 完整行两条 ✅、banana 一条 ✅、未知词零条 ✅、重复查询不丢不重 ✅、无业务明文进入服务器 ✅。
+用 [总入口](../README-ZYC-02-03.md) 在全新实例运行；只有退出 0 且最终 `ZYC_RESULT=PASS` 才视为通过。`sql/zyc03-verify-cases.sql` 是基础成功交互夹具，预期拒绝场景由自动工具分别调用并检查非零退出。
 
-## 4. 分阶段证据（同一会话）
+本轮已实测末行认证失败、缺业务行和重插失败；这些不再列为未执行项。跨端自动恢复、服务端重启延续、第二客户端竞争、跨表/跨库计数命名空间、密钥恢复/轮换、历史 SSE 算法故障仍未在本任务解决。正常客户端重开不等于服务端重启。
 
-`evidence/live-full.log` 中各阶段可定位：
-- 令牌请求/索引取出：`SELECT apple` 段（token/derivation_key 由客户端生成，日志不记密钥）
-- 加密位置返回：STEP6 `week_demo_index` 的 `ut,locator_blob` 三行密文
-- 认证后 rid 集合与回查：`decrypt_locator`/`decrypt_row` 在返回明文段前完成（源码核对 + 结果一致性）
-- 最终明文：STEP7/8/9/10 与 ROUND2 各 SELECT 的输出
-- 重插：位于 `execute_request` SELECT 分支的 `sse_v1_reinsert`（成功路径 rc=0，索引维持 3 行）
-
-## 5. 未完成项 / 边界（不得宣称已解决）
-
-- **重插失败后的索引缺口**：检出/阻断/保留标记已在 SHY-03 实现（其 LIVE-15 验证），但自动恢复、跨端原子提交、崩溃恢复、安全重试**未实现**。本轮正常闭环未注入该故障，相关结论引用 SHY-03 证据，不记为本人新增实测。
-- 最后一行标签篡改、缺业务行等 fault-injection（YZH-02/LMD-03/ZYC-04 范围）本轮未逐一注入；不在 ZYC-03 放行清单。
-- 服务端重启后状态延续、第二客户端竞争、持久化写故障注入属后续任务；本轮未验证。
-- Client_Sophos.cpp 状态读写与过滤逻辑分属刘卓明，本轮未改其文件；新版字符串 rid 过滤在 `row_request_v1.cpp` 内完成。
-
-## 6. 复现命令（摘要）
-
-```bash
-# 承接 ZYC-02 的隔离实例与 v1 状态
-state="$ISOLATED_RUN_DIR/evidence/v1-state"
-vsql(){ SSE_V1_STATE_DIR="$state" "$B/dest/bin/gsql" -X \
-  -h "$ISOLATED_RUN_DIR/socket" -p 55439 -d postgres -U omm -v ON_ERROR_STOP=1 "$@"; }
-vsql -c "SELECT * FROM week_demo WHERE keyword='apple';"    # 2 行
-vsql -c "SELECT * FROM week_demo WHERE keyword='banana';"   # 1 行
-vsql -c "SELECT * FROM week_demo WHERE keyword='unknown';"  # 0 行
-vsql -c "SELECT * FROM week_demo WHERE keyword='apple';"    # 仍 2 行
-```
+原 `evidence/live-full.log`、`live-round1.log` 为作者首次正常闭环的历史输出。当前放行结果使用 `evidence/verified/`，两类证据不混用。
