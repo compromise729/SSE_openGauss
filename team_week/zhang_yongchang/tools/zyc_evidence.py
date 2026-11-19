@@ -5,16 +5,24 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from zyc_checks import validate_request_coverage
+
+def require(ok, message):
+    if not ok:
+        raise ValueError(message)
 
 repo, out = [Path(p).resolve() for p in sys.argv[1:]]
 baseline = json.loads((out/'baseline-release.json').read_text(encoding='utf-8'))
 results = json.loads((out/'requests/results.json').read_text(encoding='utf-8'))
 phases = json.loads((out/'requests/phases.json').read_text(encoding='utf-8'))
-assert baseline['release_result'] == 'PASS' and baseline['module_cases'] == 18 and baseline['real_request_cases'] == 18
-assert len(results['cases']) == 13 and all(c['result'] == 'PASS' for c in results['cases'])
-assert len(phases) >= 8
-assert baseline['instance_stopped'] and not (Path(baseline['isolated_run'])/'db/instance/postmaster.pid').exists()
-assert 'ISOLATED_SERVER_STOPPED' in (out/'zyc-live.log').read_text(encoding='utf-8')
+require(baseline['release_result'] == 'PASS' and baseline['module_cases'] == 18 and baseline['real_request_cases'] == 18, 'baseline did not pass')
+require(len(results['cases']) == 13 and all(c['result'] == 'PASS' for c in results['cases']), 'ZYC cases did not pass')
+requests = json.loads((out/'requests/requests.json').read_text(encoding='utf-8'))
+validate_request_coverage(requests, out/'requests')
+expected = {r['request'] for r in requests if r['exit'] == 0 and r['expected_kind'] == 'search'}
+require(expected and len(phases) == len(expected) and {p['request'] for p in phases} == expected, 'search phase coverage incomplete')
+require(baseline['instance_stopped'] and not (Path(baseline['isolated_run'])/'db/instance/postmaster.pid').exists(), 'baseline instance not stopped')
+require('ISOLATED_SERVER_STOPPED' in (out/'zyc-live.log').read_text(encoding='utf-8'), 'ZYC instance not stopped')
 hashes = {}
 paths = [repo/p for p in ('dest/bin/gsql', 'dest/bin/gaussdb', 'dest/lib/libpq_ce.so.5.5', 'sse_sql/SSE_v1.sql')]
 paths += sorted(p for p in (repo/'team_week/zhang_yongchang/tools').iterdir() if p.is_file())
@@ -29,7 +37,8 @@ dirty = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-fi
     'src/bin/psql/common.cpp', 'src/common/interfaces/libpq', 'sse_sql/SSE_v1.sql',
     'team_week/zhang_yongchang/tools'], cwd=str(repo)).decode()
 summary = {'result': 'PASS', 'tested_head': head, 'modified_tracked_inputs': bool(dirty),
-           'module_cases': 18, 'baseline_live_cases': 18, 'zyc_cases': 13, 'entry_regressions': 3,
+           'python_optimized': bool(sys.flags.optimize),
+           'module_cases': 18, 'baseline_live_cases': 18, 'zyc_cases': 13, 'entry_regressions': 5,
            'successful_search_traces': len(phases), 'instances_stopped': True,
            'public_synthetic_fixtures_only': True, 'derivation_key_values': 'redacted', 'input_sha256': hashes}
 (out/'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')

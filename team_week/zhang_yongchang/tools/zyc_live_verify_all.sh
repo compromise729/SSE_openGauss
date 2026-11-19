@@ -2,6 +2,7 @@
 # Outer Linux root entry. Only public synthetic-fixture evidence is exported.
 set -Eeuo pipefail
 umask 077
+unset PYTHONOPTIMIZE
 here=$(cd -- "$(dirname -- "$0")" && pwd -P)
 repo=${OPENGAUSS_PROJECT_ROOT:-$here/../../..}
 out=

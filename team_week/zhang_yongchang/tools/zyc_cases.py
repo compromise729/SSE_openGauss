@@ -3,6 +3,7 @@
 import json
 import base64
 from collections import Counter
+from zyc_checks import validate_request_coverage
 import os
 import shutil
 import stat
@@ -107,7 +108,7 @@ def search():
 _base_client = client
 issued_requests = []
 
-def client(sql, directory=None, fault=None):
+def client(sql, directory=None, fault=None, expected_kind=None):
     number = sequence + 1
     path = output / ('request-%02d.wire.jsonl' % number)
     saved = {name: os.environ.get(name) for name in ('ZYC_TRACE_FILE', 'ZYC_PUBLIC_FIXTURE')}
@@ -120,7 +121,9 @@ def client(sql, directory=None, fault=None):
                 os.environ.pop(name, None)
             else:
                 os.environ[name] = value
-    issued_requests.append({'request': number, 'exit': p.returncode, 'events': events})
+    if expected_kind is None:
+        expected_kind = {'CREATE': 'create', 'INSERT': 'insert', 'SELECT': 'search'}.get(sql.lstrip().split()[0].upper(), 'unsupported')
+    issued_requests.append({'request': number, 'exit': p.returncode, 'events': events, 'expected_kind': expected_kind})
     return p, events
 
 def independently_decode(kind, values):
@@ -137,7 +140,7 @@ def rows(p):
     return Counter(line for line in p.stdout.decode('utf-8').splitlines() if '|' in line)
 
 def expect_rows(sql, expected, directory=None):
-    p, events = client(sql, directory)
+    p, events = client(sql, directory, expected_kind='search' if expected else 'unknown')
     succeeded(p)
     require(rows(p) == Counter('|'.join(row) for row in expected), 'complete row multiset differs')
     return events
@@ -286,12 +289,12 @@ def missing_business_row():
 def verify_wire_phases():
     import re
     phases = []
+    calls_by_request = validate_request_coverage(issued_requests, output)
     def array(value):
         require(value.startswith('{') and value.endswith('}'), 'invalid bound SQL array')
         return json.loads('['+value[1:-1]+']')
     for request in issued_requests:
-        path = output/('request-%02d.wire.jsonl' % request['request'])
-        calls = [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines()] if path.exists() else []
+        calls = calls_by_request[request['request']]
         for call in calls:
             require(not re.search(r'\bkeyword\s*=', call['sql'], re.I), 'plaintext keyword predicate sent')
             require('INSERT INTO week_demo VALUES' not in call['sql'], 'original business VALUES sent')
@@ -302,7 +305,7 @@ def verify_wire_phases():
                 require(all(base64.b64decode(b, validate=True)[:6] == b'SSE1\x01\x01' for b in blobs), 'non-row ciphertext bound')
                 require(all(base64.b64decode(b, validate=True)[:6] == b'SSE1\x01\x02' for b in positions), 'non-locator ciphertext bound')
         searches = [c for c in calls if c['sql'].startswith('fides_v1_select ')]
-        if request['exit'] or not searches:
+        if request['exit'] or request['expected_kind'] != 'search':
             continue
         require(len(searches) == 1, 'wrong Fides search request count')
         search = searches[0]
@@ -322,7 +325,8 @@ def verify_wire_phases():
                        'encrypted_locator_rows': search['rows'], 'authenticated_rids': sorted(expected_rids),
                        'reinsert_rids': sorted(x['rid'] for x in reinserted), 'fetch_rids': requested,
                        'returned_rids': returned, 'events': request['events']})
-    require(len(phases) >= 8, 'missing actual successful search phase traces')
+    expected_searches = sum(r['exit'] == 0 and r['expected_kind'] == 'search' for r in issued_requests)
+    require(expected_searches > 0 and len(phases) == expected_searches, 'missing actual successful search phase traces')
     (output/'phases.json').write_text(json.dumps(phases, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     (output/'requests.json').write_text(json.dumps(issued_requests, indent=2)+'\n', encoding='utf-8')
     return {'validated_searches': len(phases), 'business_sql_only_ciphertext': True,
