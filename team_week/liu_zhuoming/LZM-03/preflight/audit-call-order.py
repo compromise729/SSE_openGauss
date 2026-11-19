@@ -19,14 +19,17 @@ def inspect(root):
         client += "\n" + files[routed_module]
     # Remove comments so examples/comments cannot count as call sites.
     code = re.sub(r"/\*.*?\*/|//[^\n]*", "", client, flags=re.S)
-    calls = {name: bool(re.search(r"\b" + name + r"\s*\(", code))
-             for name in ("preflight", "begin_operation", "complete_operation")}
+    calls = {name: bool(re.search(pattern, code)) for name, pattern in (
+        ("preflight", r"\bpreflight\s*\("),
+        ("begin_operation", r"\bbegin_(?:checked_)?operation\s*\("),
+        ("complete_operation", r"\bcomplete_operation\s*\("),
+    )}
     startup_gate = "v1 request routing requires the ZYC integration" in files[paths[2]]
     empty_guard = "sreq.token.empty() || sreq.derivation_key.empty()" in files[paths[1]]
     reinsert_guard = ("PQresultStatus(zyc_re_insert_res)" in files[paths[0]] and
                       "if (zyc_re_insert_res == NULL)" in files[paths[0]])
     evidence = []
-    patterns = re.compile(r"begin_operation|complete_operation|preflight\(|"
+    patterns = re.compile(r"begin_(?:checked_)?operation|complete_operation|preflight\(|"
                           r"search_request\(keyword\)|get_and_increment\(counter_map|"
                           r"sreq\.token\.empty|zyc_invalid_sse_request|"
                           r"zyc_re_insert_res|fides_query_search|v1 request routing|"

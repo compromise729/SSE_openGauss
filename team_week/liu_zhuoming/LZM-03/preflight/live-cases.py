@@ -79,7 +79,8 @@ def case(name,action):
             'request_path':'actual gsql SendQuery -> execute_request -> real Fides -> isolated database'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 def create():
-    p,e=client("CREATE TABLE week_demo (ind text, keyword text SSE='FIDES', payload text);");succeeded(p)
+    p,e=client("CREATE TABLE week_demo (ind text, keyword text SSE='FIDES', payload text)\n"
+               "WITH (sse_storage='ROW_AEAD_V1');");succeeded(p)
     ordered(e,['keys_loaded','begin_durable','create_sent','state_saved','complete_durable'])
     require(not (state/'operation.v1').exists(),'create marker not cleared')
     return {'events':e}
@@ -93,7 +94,8 @@ def search():
     before=count('apple')
     keys_before={p.name:p.read_bytes() for p in state.glob('*.key*')}
     p,e=client("SELECT * FROM week_demo WHERE keyword='apple';");succeeded(p);apple_result(p)
-    ordered(e,['preflight','begin_durable','token_generated','search_take_sent','counter_advanced','reinsert_sent','fetch_sent','rows_authenticated','state_saved','complete_durable'])
+    ordered(e,['preflight','begin_durable','token_generated','search_take_sent','counter_advanced','reinsert_sent',
+               'fetch_sent','rows_authenticated','search_commit','state_saved','complete_durable'])
     require(count('apple')==before+2,'wrong real search/reinsert counter change')
     require(snapshot_server().startswith('SNAP=3:3:'),'search changed business/index row counts')
     require(keys_before=={p.name:p.read_bytes() for p in state.glob('*.key*')},'real keys changed across process reopen')
@@ -144,17 +146,19 @@ def empty(fault):
     return {'status':'protocol_invalid','events':e,'restart_status':'incomplete_operation','database_unchanged':True}
 def reinsert_failure():
     target=copy_state('reinsert-failure')
+    server=snapshot_server()
     raw("CREATE FUNCTION public.fail_reinsert() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected reinsert failure'; END; $$;")
     raw("CREATE TRIGGER fail_reinsert BEFORE INSERT ON public.week_demo_index FOR EACH ROW EXECUTE PROCEDURE public.fail_reinsert();")
     p,e=client("SELECT * FROM week_demo WHERE keyword='apple';",target)
     require(p.returncode!=0 and b'Fides db_failed' in p.stderr,'real SQL reinsert failure not propagated')
     ordered(e,['begin_durable','search_take_sent','counter_advanced','reinsert_sent'])
-    require('fetch_sent' not in e and 'complete_durable' not in e and b'red apple' not in p.stdout,'reinsert failure continued/displayed')
+    require('fetch_sent' not in e and 'search_commit' not in e and 'complete_durable' not in e and b'red apple' not in p.stdout,
+            'reinsert failure continued/displayed')
     require((target/'operation.v1').exists(),'real SQL failure lost marker')
-    require(snapshot_server().startswith('SNAP=4:2:'),'expected two apple indexes removed, other two indexes retained')
+    require(snapshot_server()==server,'failed reinsert did not roll back index removal')
     again,_=client("SELECT * FROM week_demo WHERE keyword='apple';",target)
     require(again.returncode!=0 and b'Fides incomplete_operation' in again.stderr,'real SQL failure not blocked on restart')
-    return {'status':'db_failed','events':e,'data_rows':4,'remaining_index_rows':2,'restart_status':'incomplete_operation'}
+    return {'status':'db_failed','events':e,'database_unchanged':True,'restart_status':'incomplete_operation'}
 
 def quoted_keyword():
     p,e=client("INSERT INTO week_demo VALUES ('4','red AND green','it''s 中文');");succeeded(p)
@@ -165,6 +169,68 @@ def quoted_keyword():
         ordered(e,['begin_durable','search_take_sent','counter_advanced','complete_durable'])
         require(count('red AND green')==round_number+1,'space keyword counter snapshot not reloaded')
     return {'keyword':'red AND green','counter_after':3,'rounds':2,'utf8_and_sql_quote_preserved':True}
+
+def ordinary_sql():
+    raw('CREATE SCHEMA ordinary;')
+    p,e=client('CREATE TABLE ordinary.week_demo (sse int, week_demo text);');succeeded(p);no_business_events(e)
+    raw("INSERT INTO ordinary.week_demo VALUES (1,'ordinary value');")
+    for sql,expected in (
+        ('SELECT 1 FROM pg_catalog.pg_class LIMIT 1;', b'1'),
+        ('SELECT week_demo FROM ordinary.week_demo;', b'ordinary value'),
+        ('SELECT week_demo FROM "ordinary"."week_demo";', b'ordinary value'),
+        ("SELECT $$FROM week_demo$$;", b'FROM week_demo'),
+        ('SELECT 1 /* FROM week_demo */;', b'1'),
+    ):
+        p,e=client(sql);succeeded(p);no_business_events(e)
+        require(expected in p.stdout,'ordinary SQL returned an unexpected result: '+sql)
+
+def protected_rejection():
+    before=snapshot_files(state);server=snapshot_server()
+    for sql in (
+        "SELECT payload FROM week_demo WHERE keyword='apple';",
+        "SELECT * FROM public.\"week_demo\" WHERE keyword='apple';",
+        r"""SELECT * FROM public.U&"week\005fdemo" WHERE keyword='apple';""",
+        "SELECT * FROM week_demo WHERE keyword=E'apple';",
+        "UPDATE week_demo SET payload='changed';",
+        "DELETE FROM ONLY public.week_demo;",
+        "SELECT * FROM pg_catalog.pg_class c, public.week_demo;",
+        "WITH sample AS (SELECT * FROM week_demo) SELECT * FROM sample;",
+        "CREATE TABLE extra (id int) WITH (sse_storage='unrecognized');",
+    ):
+        p,e=client(sql)
+        require(p.returncode!=0 and b'Fides unsupported' in p.stderr,'protected SQL not rejected locally: '+sql)
+        no_business_events(e)
+    require(before==snapshot_files(state) and server==snapshot_server(),'rejected SQL changed state/database')
+    p,e=client("INSERT INTO week_demo VALUES ('x','apple','line\nbreak');")
+    require(p.returncode!=0 and b'Fides invalid_input' in p.stderr,'line break in business data not rejected')
+    no_business_events(e)
+    require(before==snapshot_files(state) and server==snapshot_server(),'invalid business input changed state/database')
+
+def capacity():
+    target=copy_state('capacity')
+    counter=target/'fides_client.mat'
+    counter.write_text('apple 4095\nbanana 1\nedge 4094\nred AND green 3\n')
+    before=snapshot_files(target);server=snapshot_server()
+    p,e=client("INSERT INTO week_demo VALUES ('5','apple','one'),('6','apple','two');", target)
+    require(p.returncode!=0 and b'Fides unsupported' in p.stderr,'over-cap batch not rejected')
+    no_business_events(e)
+    require(before==snapshot_files(target) and server==snapshot_server(),'over-cap insert changed state/database')
+    p,e=client("SELECT * FROM week_demo WHERE keyword='apple';", target)
+    require(p.returncode!=0 and b'Fides unsupported' in p.stderr,'over-cap reinsert not rejected')
+    require('budget_rollback_durable' in e and 'reinsert_sent' not in e and 'counter_advanced' not in e and b'|apple|' not in p.stdout,
+            'over-cap search advanced counters, reinserted or displayed data')
+    require(before==snapshot_files(target) and server==snapshot_server(),'over-cap search changed state/database')
+    p,e=client("INSERT INTO week_demo VALUES ('5','edge','at limit');", target);succeeded(p)
+    require('edge 4095\n' in counter.read_text(),'near-cap insert did not advance once')
+    p,e=client("SELECT * FROM week_demo WHERE keyword='edge';", target);succeeded(p)
+    require(b'5|edge|at limit' in p.stdout and 'edge 4096\n' in counter.read_text(),
+            'exact remaining search budget was not accepted')
+    before=snapshot_files(target);server=snapshot_server()
+    p,e=client("SELECT * FROM week_demo WHERE keyword='edge';", target)
+    require(p.returncode!=0 and b'Fides unsupported' in p.stderr,'exhausted search was not rejected')
+    no_business_events(e)
+    require(before==snapshot_files(target) and server==snapshot_server(),'exhausted search changed state/database')
+    return {'rejected_batch_unchanged':True,'rejected_search_unchanged':True,'exact_limit':4096}
 
 case('LIVE-01-create',create)
 case('LIVE-02-insert',insert)
@@ -179,5 +245,8 @@ for i,name in enumerate(('row_aead_v1.key','locator_aead_v1.key','row_aead_v1.ke
 case('LIVE-12-empty-token',lambda:empty('empty-token'))
 case('LIVE-13-empty-derivation',lambda:empty('empty-derivation'))
 case('LIVE-14-quoted-keyword',quoted_keyword)
+case('LIVE-16-ordinary-sql',ordinary_sql)
+case('LIVE-17-protected-rejection',protected_rejection)
+case('LIVE-18-counter-capacity',capacity)
 case('LIVE-15-reinsert-failure',reinsert_failure)
 print('LIVE_RESULT=PASS',flush=True)

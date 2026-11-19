@@ -1491,7 +1491,7 @@ bool GetPrintResult(PGresult** results, bool is_explain, bool is_print, const ch
 
 bool SendQuery(const char* query, bool is_print, bool print_error)
 {
-    if (sse_v1::v1_state_selected()) {
+    if (sse_v1::v1_state_selected() || (query && strcasestr(query, "sse_storage"))) {
         bool handled = false;
         PGresult* protected_result = NULL;
         const auto status = sse_v1::execute_request(pset.db, query, handled, protected_result);

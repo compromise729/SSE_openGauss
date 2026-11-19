@@ -26,12 +26,17 @@ using KeyInitializer = std::function<Status(const std::string&, KeySet&)>;
 Status set_catalog_reader(const CatalogReader&);
 Status validate_local_startup();
 Status validate_startup();
+Status registered_table(std::string&);
 Status local_scope(const std::string& table, Scope&, bool& table_registered);
 const char* code_name(Code);
 
 // Explicit setup only. The caller provides the SHY-02 key initializer.
 // No startup or preflight path invokes it implicitly.
 Status initialize_state(const std::string& database_oid, const KeyInitializer&);
+using CounterCheck = std::function<Status(const Counters&)>;
+Status begin_checked_operation(const Scope&, const std::string&, Operation&, const CounterCheck&);
+// Use only after the caller has verified rollback of the database transaction.
+Status cancel_unmodified_search(const Operation&);
 Status operation_counters(const Operation&, Counters&);
 // Request adapters construct the Fides object only after begin succeeds.
 Status current_operation_counters(Counters&);
