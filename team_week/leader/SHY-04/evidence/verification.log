@@ -1,0 +1,18 @@
+ZYC_EVIDENCE_DIR=/opt/og/shy04-review.4qBQFWOp/live
+EVIDENCE_VALIDATED=PASS
+PASS ZYC-00-registration-failure
+PASS ZYC-01-create
+PASS ZYC-02-insert-three
+PASS ZYC-03-physical-ciphertext
+PASS ZYC-04-normal-reopen-unknown
+PASS ZYC-05-append-and-repeat
+PASS ZYC-06-utf8-quote-empty
+PASS ZYC-07-maximum-payload
+PASS ZYC-08-reject-before-effects
+PASS ZYC-09-write-failure
+PASS ZYC-10-last-row-authentication
+PASS ZYC-11-missing-fetched-row
+PASS ZYC-12-wire-phases
+ADDITIONAL_RESULT=PASS CASES=13
+ISOLATED_SERVER_STOPPED
+ZYC_RESULT=PASS MODULE_CASES=18 BASELINE_LIVE_CASES=18 ZYC_CASES=13

@@ -1,0 +1,5 @@
+CentOS Linux release 7.9.2009 (Core)
+GCC 7.3.0
+gsql (GaussDB Kernel V500R001C20 build ecfd9dfa) compiled at 2026-10-12 10:06:34 commit 0 last mr  debug
+gaussdb (GaussDB Kernel V500R001C20 build ecfd9dfa) compiled at 2026-10-12 10:06:34 commit 0 last mr  debug
+	libpq_ce.so.5 => /opt/og/openGauss-server/dest/lib/libpq_ce.so.5

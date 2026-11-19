@@ -1,0 +1,4 @@
+a5eba5da80d68c7a75d1a9e6679d1cd28169cd14fbf32473e2a633e34a52d0b5  dest/bin/gsql
+9820a86ce1a6d2b261f6a3631daf1cfce223aa71a9c29b487d92dbec5ea9fd8c  dest/bin/gaussdb
+7cd62db3f6f5ddf733efd985880d3c2f1867acbbe1123ccf97cb7e4ec21307af  dest/lib/libpq_ce.so.5.5
+5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34  sse_sql/SSE_v1.sql
