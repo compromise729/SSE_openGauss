@@ -1,0 +1,502 @@
+{
+  "release_result": "PASS",
+  "module_cases": 18,
+  "real_request_cases": 15,
+  "module_evidence": "/var/tmp/state-crypto-test.EfWf2Wax",
+  "live_evidence": "/var/tmp/state-live-evidence.6dVdG2eV",
+  "isolated_run": "/var/tmp/fides-isolated.KvNT98Su",
+  "client_path": "gsql SendQuery -> execute_request -> actual Fides and isolated SQL",
+  "installed_programs_and_libraries_unchanged": true,
+  "original_state_unchanged": true,
+  "instance_stopped": true,
+  "fixed_baseline": "eae777379d0aa81f8d9467fce6a44298e595215a",
+  "source_changes": "working-tree request/state fixes; not yet committed",
+  "module_cases_detail": [
+    {
+      "case": "FLOW-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "normal_empty_result",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight"
+      ]
+    },
+    {
+      "case": "FLOW-02",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "broken_state_failure",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight"
+      ]
+    },
+    {
+      "case": "FLOW-03",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "protocol_invalid",
+      "classification": "registered_empty_token_failure",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "token_protocol_invalid"
+      ]
+    },
+    {
+      "case": "FLOW-04",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "protocol_invalid",
+      "classification": "registered_empty_token_failure",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "token_protocol_invalid"
+      ]
+    },
+    {
+      "case": "FLOW-05",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "db_failed",
+      "classification": "mock_reinsert_failure_marker_retained",
+      "mock_sends": 2,
+      "mock_index_rows": 0,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "mock_extract_index",
+        "counter_saved",
+        "mock_reinsert_failed"
+      ]
+    },
+    {
+      "case": "HOOK-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "marker_failed_before_effects",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_failed"
+      ]
+    },
+    {
+      "case": "KEY-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "real_keys_state_crypto_compatible",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-02",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "repeat_and_process_reopen_unchanged",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-03",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-04",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-05",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-06",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-07",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-08",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "partial_init_blocked",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "ORDER-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "marker_failed_before_effects",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_failed"
+      ]
+    },
+    {
+      "case": "ORDER-02",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "marker_failed_before_effects",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_failed"
+      ]
+    },
+    {
+      "case": "ORDER-03",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "ordered_fixture_success",
+      "mock_sends": 1,
+      "mock_index_rows": 2,
+      "displays": 1,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "counter_saved",
+        "mock_insert_success",
+        "real_decrypt_success",
+        "complete_durable",
+        "fixture_display_allowed"
+      ]
+    },
+    {
+      "case": "ORDER-04",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "ordered_fixture_success",
+      "mock_sends": 2,
+      "mock_index_rows": 2,
+      "displays": 1,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "mock_extract_index",
+        "counter_saved",
+        "mock_reinsert_success",
+        "real_decrypt_success",
+        "complete_durable",
+        "fixture_display_allowed"
+      ]
+    }
+  ],
+  "real_cases_detail": [
+    {
+      "case": "LIVE-01-create",
+      "result": "PASS",
+      "events": [
+        "keys_loaded",
+        "begin_durable",
+        "create_sent",
+        "state_saved",
+        "complete_durable"
+      ],
+      "requests": [
+        1
+      ]
+    },
+    {
+      "case": "LIVE-02-insert",
+      "result": "PASS",
+      "events": [
+        "keys_loaded",
+        "begin_durable",
+        "counter_advanced",
+        "counter_advanced",
+        "counter_advanced",
+        "insert_sent",
+        "state_saved",
+        "complete_durable"
+      ],
+      "apple_counter": 2,
+      "database_rows": 3,
+      "index_rows": 3,
+      "requests": [
+        2
+      ]
+    },
+    {
+      "case": "LIVE-03-search",
+      "result": "PASS",
+      "events": [
+        "keys_loaded",
+        "preflight",
+        "begin_durable",
+        "token_generated",
+        "fides_setup",
+        "search_take_sent",
+        "counter_advanced",
+        "counter_advanced",
+        "reinsert_sent",
+        "fetch_sent",
+        "rows_authenticated",
+        "state_saved",
+        "complete_durable"
+      ],
+      "counter_before": 2,
+      "counter_after": 4,
+      "rows": [
+        "1",
+        "2"
+      ],
+      "key_bytes_unchanged": true,
+      "requests": [
+        3
+      ]
+    },
+    {
+      "case": "LIVE-04-reopen-search",
+      "result": "PASS",
+      "events": [
+        "keys_loaded",
+        "preflight",
+        "begin_durable",
+        "token_generated",
+        "fides_setup",
+        "search_take_sent",
+        "counter_advanced",
+        "counter_advanced",
+        "reinsert_sent",
+        "fetch_sent",
+        "rows_authenticated",
+        "state_saved",
+        "complete_durable"
+      ],
+      "counter_before": 4,
+      "counter_after": 6,
+      "rows": [
+        "1",
+        "2"
+      ],
+      "key_bytes_unchanged": true,
+      "requests": [
+        4
+      ]
+    },
+    {
+      "case": "LIVE-05-unknown",
+      "result": "PASS",
+      "events": [
+        "keys_loaded",
+        "preflight",
+        "unknown_empty"
+      ],
+      "state_unchanged": true,
+      "database_unchanged": true,
+      "requests": [
+        5
+      ]
+    },
+    {
+      "case": "LIVE-06-marker-insert",
+      "result": "PASS",
+      "events": [
+        "keys_loaded"
+      ],
+      "exit_code": 3,
+      "state_unchanged": true,
+      "database_unchanged": true,
+      "requests": [
+        6
+      ]
+    },
+    {
+      "case": "LIVE-07-marker-search",
+      "result": "PASS",
+      "events": [
+        "keys_loaded",
+        "preflight"
+      ],
+      "exit_code": 3,
+      "state_unchanged": true,
+      "database_unchanged": true,
+      "requests": [
+        7
+      ]
+    },
+    {
+      "case": "LIVE-08-broken-state",
+      "result": "PASS",
+      "status": "state_invalid",
+      "events": [],
+      "requests": [
+        8
+      ]
+    },
+    {
+      "case": "LIVE-09-missing-key",
+      "result": "PASS",
+      "status": "key_invalid",
+      "events": [],
+      "not_recreated": true,
+      "requests": [
+        9
+      ]
+    },
+    {
+      "case": "LIVE-10-missing-key",
+      "result": "PASS",
+      "status": "key_invalid",
+      "events": [],
+      "not_recreated": true,
+      "requests": [
+        10
+      ]
+    },
+    {
+      "case": "LIVE-11-missing-key",
+      "result": "PASS",
+      "status": "key_invalid",
+      "events": [],
+      "not_recreated": true,
+      "requests": [
+        11
+      ]
+    },
+    {
+      "case": "LIVE-12-empty-token",
+      "result": "PASS",
+      "status": "protocol_invalid",
+      "events": [
+        "keys_loaded",
+        "preflight",
+        "begin_durable",
+        "token_generated"
+      ],
+      "restart_status": "incomplete_operation",
+      "database_unchanged": true,
+      "requests": [
+        12,
+        13
+      ]
+    },
+    {
+      "case": "LIVE-13-empty-derivation",
+      "result": "PASS",
+      "status": "protocol_invalid",
+      "events": [
+        "keys_loaded",
+        "preflight",
+        "begin_durable",
+        "token_generated"
+      ],
+      "restart_status": "incomplete_operation",
+      "database_unchanged": true,
+      "requests": [
+        14,
+        15
+      ]
+    },
+    {
+      "case": "LIVE-14-quoted-keyword",
+      "result": "PASS",
+      "keyword": "red AND green",
+      "counter_after": 3,
+      "rounds": 2,
+      "utf8_and_sql_quote_preserved": true,
+      "requests": [
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "case": "LIVE-15-reinsert-failure",
+      "result": "PASS",
+      "status": "db_failed",
+      "events": [
+        "keys_loaded",
+        "preflight",
+        "begin_durable",
+        "token_generated",
+        "fides_setup",
+        "search_take_sent",
+        "counter_advanced",
+        "counter_advanced",
+        "reinsert_sent"
+      ],
+      "data_rows": 4,
+      "remaining_index_rows": 2,
+      "restart_status": "incomplete_operation",
+      "requests": [
+        19,
+        20
+      ]
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "result": "REVIEW_REQUIRED",
+  "exit_code": 4,
+  "client_calls": {
+    "preflight": true,
+    "begin_operation": true,
+    "complete_operation": true
+  },
+  "startup_gate": false,
+  "gsql_routes_to_request_module": true,
+  "existing_zyc_guards": {
+    "empty_token_before_send": true,
+    "reinsert_result_check": true
+  },
+  "gaps": [],
+  "evidence": [
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2560,
+      "text": "PGresult* zyc_re_insert_res = PQexec(pset.db, fides_query_re_insert);"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2562,
+      "text": "if (zyc_re_insert_res == NULL) {"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2570,
+      "text": "if (PQresultStatus(zyc_re_insert_res) != PGRES_COMMAND_OK &&"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2571,
+      "text": "PQresultStatus(zyc_re_insert_res) != PGRES_TUPLES_OK) {"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2574,
+      "text": "PQresStatus(PQresultStatus(zyc_re_insert_res)));"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2575,
+      "text": "psql_error(\"%s\", PQresultErrorMessage(zyc_re_insert_res));"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2577,
+      "text": "* and stop here: no fides_query_search is issued, so"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2580,
+      "text": "results = zyc_re_insert_res;"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2583,
+      "text": "PQclear(zyc_re_insert_res);"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2584,
+      "text": "const char* fides_query_search=fides_temp2.c_str();"
+    },
+    {
+      "path": "src/bin/psql/common.cpp",
+      "line": 2585,
+      "text": "results=PQexec(pset.db, fides_query_search);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/fe-exec.cpp",
+      "line": 1246,
+      "text": "bool zyc_invalid_sse_request = false; /* section 5: empty-token request guard */"
+    },
+    {
+      "path": "src/common/interfaces/libpq/fe-exec.cpp",
+      "line": 1675,
+      "text": "sreq = Sophos_client->search_request(keyword);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/fe-exec.cpp",
+      "line": 1678,
+      "text": "if (sreq.token.empty() || sreq.derivation_key.empty()) {"
+    },
+    {
+      "path": "src/common/interfaces/libpq/fe-exec.cpp",
+      "line": 1681,
+      "text": "zyc_invalid_sse_request = true;"
+    },
+    {
+      "path": "src/common/interfaces/libpq/fe-exec.cpp",
+      "line": 2012,
+      "text": "sreq = Diana_client->search_request(keyword);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/fe-exec.cpp",
+      "line": 2217,
+      "text": "if (zyc_invalid_sse_request) {"
+    },
+    {
+      "path": "src/common/interfaces/libpq/Client_Sophos.cpp",
+      "line": 236,
+      "text": "increment_v1(keymap, keyword, kw_counter, true);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/Client_Sophos.cpp",
+      "line": 257,
+      "text": "increment_v1(keymap, keyword, kw_counter, update_file);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/Client_Sophos.cpp",
+      "line": 281,
+      "text": "increment_v1(keymap, keyword, kw_counter, true);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/Client_Sophos.cpp",
+      "line": 302,
+      "text": "increment_v1(keymap, keyword, kw_counter, update_file);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/Client_Sophos.cpp",
+      "line": 351,
+      "text": "get_and_increment(counter_map, keyword, kw_counter);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/Client_Sophos.cpp",
+      "line": 388,
+      "text": "get_and_increment(counter_map, keyword, kw_counter, update_file);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 205,
+      "text": "checked(encrypt_locator(scope,{rid,0},keys,position)); checked(preflight(scope,row.keyword).status);"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 209,
+      "text": "const auto before = preflight(scope, keyword); checked(before.status); event(\"preflight\");"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 212,
+      "text": "Operation op; checked(begin_operation(scope, create ? \"create\" : (kind == \"insert\" ? \"insert\" : \"search\"), op)); event(\"begin_durable\");"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 218,
+      "text": "checked(complete_operation(op)); event(\"complete_durable\"); output=result.release(); return {Code::ok,\"\"};"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 230,
+      "text": "checked(complete_operation(op)); event(\"complete_durable\"); output=result.release(); return {Code::ok,\"\"};"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 232,
+      "text": "const auto request=client->search_request(keyword); event(\"token_generated\");"
+    },
+    {
+      "path": "src/common/interfaces/libpq/row_request_v1.cpp",
+      "line": 271,
+      "text": "checked(complete_operation(op)); event(\"complete_durable\"); output=result.release(); return {Code::ok,\"\"};"
+    }
+  ],
+  "source_sha256": {
+    "src/bin/psql/common.cpp": "63f8fc98056c8648cd3e395644a6d7628cc422bd2203e5c470b93b41edadf8f4",
+    "src/common/interfaces/libpq/fe-exec.cpp": "7c59751346270b84cb96324f998d69970bdc20a7e76c854f88fbea7dcc53f8b0",
+    "src/bin/psql/startup.cpp": "221059ab511da5340c36cdc219c11ff63451e3e6310f2fd07625a916386879e4",
+    "src/common/interfaces/libpq/Client_Sophos.cpp": "5522b6dde5d7769b8966915ee73761bb2b6e0f272bdc714508a5956bfad6b100"
+  },
+  "note": "Static evidence only. Added calls require actual runtime traces before release."
+}

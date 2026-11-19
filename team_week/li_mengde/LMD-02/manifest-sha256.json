@@ -1,0 +1,13 @@
+{
+  "task": "LMD-02",
+  "algorithm": "SHA-256",
+  "files": {
+    "fides-roundtrip-probe.cpp": "6ebe6feba1ffa8ae3335ff094c8a3d657dc09c73e6dabf2f7e140d40b77423f4",
+    "handoff.md": "5b84971500be50fd24e34f9b1b5bd2749c40442878982b8c5038b7ccea105101",
+    "LMD-02-roundtrip.patch": "df0bcbabd68f60cfb2e99b5f9ee86b0ca897cee8a5faaef5cc0b5398dcb793ff",
+    "results.json": "39e0dbb7b0ad7078aeddb62c2ed68a03e9aa42d25b2432ae5cd8e0ceddf08b72",
+    "roundtrip-fixture.sql": "9fdcb4c3b19bbba4f187217fa8f38b43cf4f340f6a6e714eee0ac76f3fe3c984",
+    "roundtrip-test.log": "83f81ef2502d70f91a3185016f0fa6c4efb18840682193c1c4ab5bb5e0af9585",
+    "run-roundtrip.sh": "a2c08857709f0c30bb745bf138b9799b2125194e38189469aaa87c791faddd89"
+  }
+}

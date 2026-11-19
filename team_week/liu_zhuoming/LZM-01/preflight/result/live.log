@@ -1,0 +1,12 @@
+EVIDENCE_DIR=/var/tmp/fides-isolation-check.oZy9oKrf
+PASS LIVE-01: empty state, exit=3; Unix socket ready and TCP disabled
+PASS LIVE-02: registered table and keyword, exit=0
+PASS LIVE-03: unregistered keyword, exit=1
+PASS LIVE-04: missing --keyword, exit=2
+PASS LIVE-05: isolated state snapshots match
+PASS LIVE-06: same state on resume; apple IDs 1 and 2 once each, counter 2 -> 4
+PASS LIVE-07: missing, exit=3; state snapshots match
+PASS LIVE-08: truncated, exit=3; state snapshots match
+PASS LIVE-09: missing-key, exit=4; state snapshots match
+PASS LIVE-10: exit=29 preserved and instance stopped
+PASS: original state directory snapshots match

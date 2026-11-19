@@ -1,0 +1,9 @@
+
+PATCH=/mnt/c/Study/创新训练计划/team_week/leader/SHY-01/patches/YZH-short-key.patch
+checking file src/common/interfaces/libpq/sse_common.cpp
+
+PATCH=/mnt/c/Study/创新训练计划/team_week/leader/SHY-01/patches/ZYC-common.patch
+checking file src/bin/psql/common.cpp
+
+PATCH=/mnt/c/Study/创新训练计划/team_week/leader/SHY-01/patches/ZYC-fe-exec.patch
+checking file src/common/interfaces/libpq/fe-exec.cpp

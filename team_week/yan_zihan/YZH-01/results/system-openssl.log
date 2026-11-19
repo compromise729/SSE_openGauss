@@ -1,0 +1,250 @@
+$ bash build.sh
+built librow_aead_v1.so (g++ (GCC) 7.3.0)
+$ ldd build/librow_aead_v1.so
+	linux-vdso.so.1 =>  (0x00007fffbdd8b000)
+	libcrypto.so.10 => /lib64/libcrypto.so.10 (0x00007fca92a87000)
+	libstdc++.so.6 => /opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/lib64/libstdc++.so.6 (0x00007fca92704000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007fca92402000)
+	libgcc_s.so.1 => /opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/lib64/libgcc_s.so.1 (0x00007fca921ea000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fca91e1c000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x00007fca91c18000)
+	libz.so.1 => /lib64/libz.so.1 (0x00007fca91a02000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fca930f3000)
+$ bash run.sh
+PASS load absent directory refuses
+PASS absent load clears output and creates nothing
+PASS generate keys explicitly
+PASS generated key lengths and distinct purposes
+PASS 0600 /row_aead_v1.key
+PASS 0600 /locator_aead_v1.key
+PASS 0600 /row_aead_v1.keyid
+PASS second initialization refuses
+PASS failure leaves no key output
+PASS load after initialization
+PASS second initialization never overwrites
+PASS generated keys usable
+PASS generated keys decrypt
+PASS generated key roundtrip bytes
+PASS fixture holds key directory lock
+PASS load during initialization refuses
+PASS release fixture lock
+PASS fixture remove locator key
+PASS existing state missing key
+PASS existing state cannot replace missing key
+PASS missing key never auto-created
+PASS reject key length 0
+PASS invalid key length clears output
+PASS reject key length 16
+PASS invalid key length clears output
+PASS reject key length 31
+PASS invalid key length clears output
+PASS reject key length 33
+PASS invalid key length clears output
+PASS short key ID refused
+PASS fixture unsafe file mode
+PASS unsafe file mode refused
+PASS fixture symlink
+PASS key symlink refused
+PASS CRYPTO-01 row 1 encode
+PASS CRYPTO-01 row 1 decode
+PASS CRYPTO-01 row 1 codec exact bytes=27
+PASS CRYPTO-01 row 1 different ciphertexts Base64=108
+PASS CRYPTO-01 row 1 decrypt first
+PASS CRYPTO-01 row 1 first exact
+PASS CRYPTO-01 row 1 decrypt second
+PASS CRYPTO-01 row 1 second exact
+PASS CRYPTO-01 row 2 encode
+PASS CRYPTO-01 row 2 decode
+PASS CRYPTO-01 row 2 codec exact bytes=29
+PASS CRYPTO-01 row 2 different ciphertexts Base64=112
+PASS CRYPTO-01 row 2 decrypt first
+PASS CRYPTO-01 row 2 first exact
+PASS CRYPTO-01 row 2 decrypt second
+PASS CRYPTO-01 row 2 second exact
+PASS CRYPTO-01 row 3 encode
+PASS CRYPTO-01 row 3 decode
+PASS CRYPTO-01 row 3 codec exact bytes=32
+PASS CRYPTO-01 row 3 different ciphertexts Base64=116
+PASS CRYPTO-01 row 3 decrypt first
+PASS CRYPTO-01 row 3 first exact
+PASS CRYPTO-01 row 3 decrypt second
+PASS CRYPTO-01 row 3 second exact
+PASS CRYPTO-02 all fields empty encode
+PASS CRYPTO-02 all fields empty decode
+PASS CRYPTO-02 all fields empty codec exact bytes=12
+PASS CRYPTO-02 all fields empty different ciphertexts Base64=88
+PASS CRYPTO-02 all fields empty decrypt first
+PASS CRYPTO-02 all fields empty first exact
+PASS CRYPTO-02 all fields empty decrypt second
+PASS CRYPTO-02 all fields empty second exact
+PASS CRYPTO-02 Chinese, spaces and trailing NULs encode
+PASS CRYPTO-02 Chinese, spaces and trailing NULs decode
+PASS CRYPTO-02 Chinese, spaces and trailing NULs codec exact bytes=31
+PASS CRYPTO-02 Chinese, spaces and trailing NULs different ciphertexts Base64=116
+PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt first
+PASS CRYPTO-02 Chinese, spaces and trailing NULs first exact
+PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt second
+PASS CRYPTO-02 Chinese, spaces and trailing NULs second exact
+PASS CRYPTO-02 payload 15 encode
+PASS CRYPTO-02 payload 15 decode
+PASS CRYPTO-02 payload 15 codec exact bytes=27
+PASS CRYPTO-02 payload 15 different ciphertexts Base64=108
+PASS CRYPTO-02 payload 15 decrypt first
+PASS CRYPTO-02 payload 15 first exact
+PASS CRYPTO-02 payload 15 decrypt second
+PASS CRYPTO-02 payload 15 second exact
+PASS CRYPTO-02 payload 16 encode
+PASS CRYPTO-02 payload 16 decode
+PASS CRYPTO-02 payload 16 codec exact bytes=28
+PASS CRYPTO-02 payload 16 different ciphertexts Base64=112
+PASS CRYPTO-02 payload 16 decrypt first
+PASS CRYPTO-02 payload 16 first exact
+PASS CRYPTO-02 payload 16 decrypt second
+PASS CRYPTO-02 payload 16 second exact
+PASS CRYPTO-02 payload 17 encode
+PASS CRYPTO-02 payload 17 decode
+PASS CRYPTO-02 payload 17 codec exact bytes=29
+PASS CRYPTO-02 payload 17 different ciphertexts Base64=112
+PASS CRYPTO-02 payload 17 decrypt first
+PASS CRYPTO-02 payload 17 first exact
+PASS CRYPTO-02 payload 17 decrypt second
+PASS CRYPTO-02 payload 17 second exact
+PASS CRYPTO-02 payload 63 encode
+PASS CRYPTO-02 payload 63 decode
+PASS CRYPTO-02 payload 63 codec exact bytes=75
+PASS CRYPTO-02 payload 63 different ciphertexts Base64=172
+PASS CRYPTO-02 payload 63 decrypt first
+PASS CRYPTO-02 payload 63 first exact
+PASS CRYPTO-02 payload 63 decrypt second
+PASS CRYPTO-02 payload 63 second exact
+PASS CRYPTO-02 payload 64 encode
+PASS CRYPTO-02 payload 64 decode
+PASS CRYPTO-02 payload 64 codec exact bytes=76
+PASS CRYPTO-02 payload 64 different ciphertexts Base64=176
+PASS CRYPTO-02 payload 64 decrypt first
+PASS CRYPTO-02 payload 64 first exact
+PASS CRYPTO-02 payload 64 decrypt second
+PASS CRYPTO-02 payload 64 second exact
+PASS CRYPTO-02 payload 65 encode
+PASS CRYPTO-02 payload 65 decode
+PASS CRYPTO-02 payload 65 codec exact bytes=77
+PASS CRYPTO-02 payload 65 different ciphertexts Base64=176
+PASS CRYPTO-02 payload 65 decrypt first
+PASS CRYPTO-02 payload 65 first exact
+PASS CRYPTO-02 payload 65 decrypt second
+PASS CRYPTO-02 payload 65 second exact
+PASS CRYPTO-02 all fields at limit encode
+PASS CRYPTO-02 all fields at limit decode
+PASS CRYPTO-02 all fields at limit codec exact bytes=33804
+PASS CRYPTO-02 all fields at limit different ciphertexts Base64=45144
+PASS CRYPTO-02 all fields at limit decrypt first
+PASS CRYPTO-02 all fields at limit first exact
+PASS CRYPTO-02 all fields at limit decrypt second
+PASS CRYPTO-02 all fields at limit second exact
+PASS payload over 16384
+PASS overlength payload clears ciphertext
+PASS keyword over 1024
+PASS trailing bytes in serialized row
+PASS bad codec does not emit partial fields
+PASS fresh rid
+PASS second fresh rid
+PASS rid is 16 random bytes as lowercase hex
+PASS CRYPTO-03 locator size, randomization and no plaintext rid|add
+PASS re-encrypted locator authenticates
+PASS locator exact rid and op=0
+PASS v1 same-scope valid locator substitution
+PASS v1 contract has no ut or expected rid in locator AAD
+PASS row cross-table
+PASS row cross-table no plaintext
+PASS locator cross-table
+PASS locator cross-table no locator
+PASS row cross-database
+PASS row cross-database no plaintext
+PASS locator cross-database
+PASS locator cross-database no locator
+PASS row cross-deployment
+PASS row cross-deployment no plaintext
+PASS locator cross-deployment
+PASS locator cross-deployment no locator
+PASS row cross-record
+PASS row cross-record no plaintext
+PASS row empty rid
+PASS row empty rid no plaintext
+PASS locator empty rid
+PASS locator error clears output
+PASS unsupported locator op
+PASS wrong locator purpose
+PASS wrong locator purpose no locator
+PASS wrong row purpose
+PASS wrong row purpose no plaintext
+PASS row version
+PASS row version no plaintext
+PASS locator version
+PASS locator version no locator
+PASS row purpose byte
+PASS row purpose byte no plaintext
+PASS row magic
+PASS row magic no plaintext
+PASS row length field
+PASS row length field no plaintext
+PASS locator length field
+PASS locator length field no locator
+PASS row key_id
+PASS row key_id no plaintext
+PASS locator key_id
+PASS locator key_id no locator
+PASS row truncated
+PASS row truncated no plaintext
+PASS locator truncated
+PASS locator truncated no locator
+PASS row Base64 whitespace
+PASS row Base64 whitespace no plaintext
+PASS locator invalid Base64 padding
+PASS locator invalid Base64 padding no locator
+PASS row tamper offset 32
+PASS row tamper offset 32 no plaintext
+PASS locator tamper offset 32
+PASS locator tamper offset 32 no locator
+PASS row tamper offset 56
+PASS row tamper offset 56 no plaintext
+PASS locator tamper offset 56
+PASS locator tamper offset 56 no locator
+PASS row tamper offset 88
+PASS row tamper offset 88 no plaintext
+PASS locator tamper offset 88
+PASS locator tamper offset 88 no locator
+PASS row missing key
+PASS row missing key no plaintext
+PASS locator missing key
+PASS locator missing key no locator
+PASS row wrong key same ID
+PASS row wrong key same ID no plaintext
+PASS locator wrong key same ID
+PASS locator wrong key same ID no locator
+PASS row key isolation
+PASS row key isolation no plaintext
+PASS locator key isolation
+PASS locator key isolation no locator
+PASS public vector file readable
+PASS known answer row
+PASS row exact plaintext
+PASS known answer row_repeat
+PASS row_repeat exact plaintext
+PASS known answer locator
+PASS locator exact public vector
+PASS valid tag then malformed row
+PASS valid tag then malformed row no plaintext
+PASS valid tag then invalid locator op
+PASS valid tag then invalid locator op no locator
+PASS all 5 public vectors verified
+PASS total=226
+PASS key-generation RNG failure
+PASS RNG failure leaves no key file or output
+PASS rid RNG failure
+PASS rid RNG failure clears output
+PASS row nonce RNG failure
+PASS row RNG failure clears output
+PASS locator nonce RNG failure
+PASS locator RNG failure clears output
+PASS total=8
+PASS standalone batch fixture: last tag damaged, exit=17 stdout_bytes=0 stderr=auth_failed

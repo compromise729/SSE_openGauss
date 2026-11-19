@@ -1,0 +1,61 @@
+{
+  "task": "SHY-03",
+  "result": "PASS",
+  "source_integration_commit": "ee5775ac8857e6847ad3f4b8ffcf80a477cc7dee",
+  "released_main_commit": "8111044852770529bfacde4de5af5690dd6a8322",
+  "source_and_main_trees_equal": true,
+  "release_pr": "https://github.com/compromise729/SSE_openGauss/pull/12",
+  "build": {
+    "environment": "CentOS 7, GCC 7.3",
+    "native_build_exit_code": 0,
+    "install_exit_code": 0,
+    "mode": "native relink after recompiling changed modules in isolated configured build",
+    "gsql": "/opt/og/lzm03-pr11-review.Gtp3l3v2/source/dest/bin/gsql",
+    "gsql_loaded_libpq": "/opt/og/lzm03-pr11-review.Gtp3l3v2/source/dest/lib/libpq_ce.so.5",
+    "running_server": "/opt/og/lzm03-pr11-review.Gtp3l3v2/source/dest/bin/gaussdb",
+    "artifact_sha256": {
+      "dest/bin/gaussdb": "ad72726ee9dc4c431120120104da4c01213fa396c247ab3898421d11f6d08b31",
+      "dest/bin/gsql": "df2af950a0dcb5fe9d93aee6723858f70e19fc0a324f85f9716e5d989110fae2",
+      "dest/lib/libpq_ce.so.5": "56fdca5372e68a3eebba5a748bae82253423f390c4ee8abe10fe0c193ed9cc50",
+      "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34"
+    }
+  },
+  "acceptance": {
+    "YZH-01": {
+      "result": "PASS",
+      "standard_assertions": 226,
+      "rng_failure_assertions": 8,
+      "public_vectors": 5,
+      "last_row_failure_atomic_output": true
+    },
+    "LMD-01": {
+      "result": "PASS",
+      "transaction_registration_audit_and_protocol_limits": true
+    },
+    "LMD-02": {
+      "result": "PASS",
+      "real_fides_search_rounds": 5,
+      "maximum_plaintext_field_sizes_roundtrip": true
+    },
+    "LZM-02/LZM-03": {
+      "result": "PASS",
+      "state_crypto_cases": 18,
+      "native_live_cases": 18
+    },
+    "ZYC-01": {
+      "result": "PASS",
+      "centos_live_cases": 11,
+      "windows_python_offline_cases": 16
+    }
+  },
+  "isolated_instances_stopped": true,
+  "centos_logs": {
+    "build": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-build.log",
+    "install": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-install.log",
+    "loaded_libraries": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-gsql-ldd.log",
+    "native": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-native.log",
+    "storage": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-storage.log",
+    "roundtrip": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-roundtrip.log",
+    "legacy_client": "/opt/og/lzm03-pr11-review.Gtp3l3v2/shy03-zyc-live.log"
+  }
+}

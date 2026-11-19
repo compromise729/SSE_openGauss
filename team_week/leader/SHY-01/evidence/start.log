@@ -1,0 +1,5 @@
+[2026-11-17 09:21:36.641][155325][][gs_ctl]: gs_ctl started,datadir is /opt/og/shy01-20261117.JNA4yJmS/db 
+[2026-11-17 09:21:36.711][155325][][gs_ctl]: waiting for server to start...
+.
+[2026-11-17 09:21:37.733][155325][][gs_ctl]:  done
+[2026-11-17 09:21:37.734][155325][][gs_ctl]: server started (/opt/og/shy01-20261117.JNA4yJmS/db)

@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-19",
+  "fixed_baseline": "eae777379d0aa81f8d9467fce6a44298e595215a",
+  "baseline_confirmed_by_user": true,
+  "source_branch": "integration/SHY-03",
+  "tested_version": "fixed baseline plus request/state changes; contents verified identical to output commit 0671a79d068b8c3535b7c511c4aeefe76710a032",
+  "output_commit": "0671a79d068b8c3535b7c511c4aeefe76710a032",
+  "git_operations": "user created the task branch and committed; assistant did not execute Git commands",
+  "contract": "SHY-02 v1.0",
+  "source_changes": [
+    "src/bin/psql/common.cpp",
+    "src/bin/psql/startup.cpp",
+    "src/common/interfaces/libpq/Client_Sophos.cpp",
+    "src/common/interfaces/libpq/row_state_v1.cpp",
+    "src/include/libpq/row_state_v1.h",
+    "src/common/interfaces/libpq/Makefile",
+    "src/common/interfaces/libpq/row_request_v1.cpp",
+    "src/include/libpq/row_request_v1.h"
+  ],
+  "source_sha256": {
+    "src/bin/psql/common.cpp": "63f8fc98056c8648cd3e395644a6d7628cc422bd2203e5c470b93b41edadf8f4",
+    "src/bin/psql/startup.cpp": "221059ab511da5340c36cdc219c11ff63451e3e6310f2fd07625a916386879e4",
+    "src/common/interfaces/libpq/Client_Sophos.cpp": "5522b6dde5d7769b8966915ee73761bb2b6e0f272bdc714508a5956bfad6b100",
+    "src/common/interfaces/libpq/row_state_v1.cpp": "1c6178f11933e7b0bdc687dbf4338009e6941fe26f70882d32dbf438b74af85c",
+    "src/include/libpq/row_state_v1.h": "8f7c2e5386c566b19ba033b26b766ad65b7067eca3404764b21038546f431987",
+    "src/common/interfaces/libpq/Makefile": "050bc2623a014a6531daa978c6546078ecfabb57bfa4e50175ca9fc76a2b3e5c",
+    "src/common/interfaces/libpq/row_request_v1.cpp": "09f9f138d8764f92ec27e4ecbc580ec244ef2756adb882971f0b47dbf39ad4f2",
+    "src/include/libpq/row_request_v1.h": "a5fbbc4b6ed8c8fb4750dd28a815315b68ab2f45a3770c513ac17fc1e09afae3",
+    "src/common/interfaces/libpq/row_state_catalog.cpp": "7d937c4ab911bc36df55bde88dfc81b420f559296951c261b316aafb3365c1c2",
+    "src/include/libpq/row_state_catalog.h": "4389c65e9d91512f5d53a3154c6e66e4869d28d2a3c421c5befb8b9e21bae101",
+    "src/include/libpq/sse_v1_contract.hpp": "1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371",
+    "team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp": "1b082b69f6103c46a380a1ad6eb698fdfc1a15be768acbb26cef92659a190fe1",
+    "team_week/yan_zihan/YZH-01/include/row_aead_v1.h": "5648cf56fac38070e7224bdc49f6620e06399d79901881975c35ea3e89aa514f",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34",
+    "src/gausskernel/process/tcop/postgres.cpp": "c904340489e2f377d79d4ee6c0f7d6db0a02a90c941098a9ff0b8223f1fae827",
+    "src/gausskernel/process/tcop/Server_Sophos.cpp": "62693631eb747c43b7b53892ac5c24d66d25aa2a147455927b1e81f9010c23f2",
+    "src/include/Server_Sophos.h": "d64212976ad5acab988235d2e1ba98dd27ede2ba52ac3b39c2bacdfb23da2378",
+    "src/include/sse_v1_search_limits.h": "5be25bda4ba9e5f62e66965480e0053c108529a4b74c7f373aa618b9ba0206a8"
+  },
+  "tool_sha256": {
+    "team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py": "b592ec4e6981c122fa414c09ce76bfe513b564ddc30180c6906f2bd92305450e",
+    "team_week/liu_zhuoming/LZM-03/preflight/build-live.py": "d59f1a44eb87391b4181d1e5df4669ab7b36853268af5e724a60020e935a734c",
+    "team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp": "2aa4db42fb4713077478284fc4847d9eb41be1bf524ec9470c570c3b100d406b",
+    "team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp": "57da960442af4e5d59d8023192a1a51f72e4fe9dc26faeb421a54281719cc329",
+    "team_week/liu_zhuoming/LZM-03/preflight/live-cases.py": "cfc0fb306c1ee04cc91836e30fcd88bb1dda519f19053ccdb42b81ba370af987",
+    "team_week/liu_zhuoming/LZM-03/preflight/live-fault-hook.cpp": "a8f4031382d3c1b94633164f3c98a3723ce0f1d9c1a78517c14d062f81a9dded",
+    "team_week/liu_zhuoming/LZM-03/preflight/run-live.sh": "9b1021c60604b1fffe97645654840a633c1d7587eadac008e97838e4640a63fd",
+    "team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp": "13f539f2e0b6fbc713a7927b7e5f4ac9d5de46a3e813bd0719ee8b407546df66",
+    "team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh": "93dbe3e2553390426406738f1ce14becb632b0cc31c4b5537e6ee04878551e89",
+    "team_week/liu_zhuoming/LZM-03/preflight/verify.sh": "ea945b488963655854d51ab094f564266d9150ad75fbe4fbef22f39e83650a0c"
+  },
+  "build_artifact_sha256": {
+    "gaussdb": "d09128e50e3849044524c0a1c4af81370e76874d79a4e89f2a1b7ac197ced345",
+    "gsql": "4393271b860d67874c0d4ac565286a83daecf8961532f1f1458a0250606057d3",
+    "librow_request_verify.so": "9358b7e8cad991017bd5c5f49d24d332c831adc5489ed6822d30ed64f604dc86",
+    "live-fault-hook.so": "74c33e78bb297d3d354f33ba897b74b98134888b43812ff098e7f7a23f51ab6e",
+    "initialize-live": "95fb0e7d3fa837862bd980e366828c3606ffe17e2322e679946c8c99804c7bb1"
+  },
+  "installed_libpq_sha256": "599afb9bd136d0fa825ac5c774f5e4db9f85fa6fee67709803e7da5d8960af06",
+  "release_evidence_dir": "/var/tmp/state-release-check.AjvXiziG",
+  "module_evidence_dir": "/var/tmp/state-crypto-test.EfWf2Wax",
+  "live_evidence_dir": "/var/tmp/state-live-evidence.6dVdG2eV",
+  "isolated_run": "/var/tmp/fides-isolated.KvNT98Su",
+  "test_counts": {
+    "module": 18,
+    "real_gsql_requests": 15,
+    "existing_zyc_rule_models": 16
+  },
+  "full_exit_code": 0,
+  "release_result": "PASS",
+  "instance_stopped": true,
+  "installed_programs_and_libraries_unchanged": true,
+  "original_client_server_state_unchanged": true,
+  "handoff_to": [
+    "张永昌",
+    "组长"
+  ],
+  "acceptance_receipt": "to be recorded by recipients in Feishu",
+  "native_build_rules_verified": [
+    "row_request_v1.o",
+    "row_crypto_v1.o"
+  ],
+  "pr_target": "integration/SHY-03",
+  "output_branch": "test/LZM-03-state-crypto",
+  "delivery": {
+    "commit": "0671a79d068b8c3535b7c511c4aeefe76710a032",
+    "branch": "test/LZM-03-state-crypto",
+    "pr_target": "integration/SHY-03",
+    "parent_commit": "eae777379d0aa81f8d9467fce6a44298e595215a",
+    "committed_source_files": 8,
+    "committed_tool_files": 10,
+    "local_commit_verified": true,
+    "committed_contents_match_tested_inputs": true,
+    "verification_log": "result/commit-check.log",
+    "remote_publication": "not queried during documentation update",
+    "full_tests_rerun_for_commit_update": false
+  }
+}

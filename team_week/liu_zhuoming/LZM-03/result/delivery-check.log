@@ -1,0 +1,591 @@
+LZM-03 final delivery check | 2026-11-19
+PASS tested fingerprint src/bin/psql/common.cpp
+PASS tested fingerprint src/bin/psql/startup.cpp
+PASS tested fingerprint src/common/interfaces/libpq/Client_Sophos.cpp
+PASS tested fingerprint src/common/interfaces/libpq/row_state_v1.cpp
+PASS tested fingerprint src/include/libpq/row_state_v1.h
+PASS tested fingerprint src/common/interfaces/libpq/Makefile
+PASS tested fingerprint src/common/interfaces/libpq/row_request_v1.cpp
+PASS tested fingerprint src/include/libpq/row_request_v1.h
+PASS tested fingerprint src/common/interfaces/libpq/row_state_catalog.cpp
+PASS tested fingerprint src/include/libpq/row_state_catalog.h
+PASS tested fingerprint src/include/libpq/sse_v1_contract.hpp
+PASS tested fingerprint team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+PASS tested fingerprint team_week/yan_zihan/YZH-01/include/row_aead_v1.h
+PASS tested fingerprint sse_sql/SSE_v1.sql
+PASS tested fingerprint src/gausskernel/process/tcop/postgres.cpp
+PASS tested fingerprint src/gausskernel/process/tcop/Server_Sophos.cpp
+PASS tested fingerprint src/include/Server_Sophos.h
+PASS tested fingerprint src/include/sse_v1_search_limits.h
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/build-live.py
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/live-cases.py
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/live-fault-hook.cpp
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/run-live.sh
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh
+PASS tested fingerprint team_week/liu_zhuoming/LZM-03/preflight/verify.sh
+PASS 8 production source changes listed
+PASS 10 reproducible tools present
+PASS Git baseline unchanged
+PASS document link env.md -> result/
+PASS document link env.md -> fault-injection.md
+PASS document link handoff.md -> result/input.json
+PASS document link handoff.md -> ../../../src/bin/psql/common.cpp
+PASS document link handoff.md -> ../../../src/bin/psql/startup.cpp
+PASS document link handoff.md -> ../../../src/common/interfaces/libpq/Client_Sophos.cpp
+PASS document link handoff.md -> ../../../src/common/interfaces/libpq/row_state_v1.cpp
+PASS document link handoff.md -> ../../../src/include/libpq/row_state_v1.h
+PASS document link handoff.md -> ../../../src/common/interfaces/libpq/Makefile
+PASS document link handoff.md -> ../../../src/common/interfaces/libpq/row_request_v1.cpp
+PASS document link handoff.md -> ../../../src/include/libpq/row_request_v1.h
+PASS document link handoff.md -> preflight/verify-all.sh
+PASS document link handoff.md -> preflight/verify.sh
+PASS document link handoff.md -> preflight/state-crypto-cases.cpp
+PASS document link handoff.md -> preflight/audit-call-order.py
+PASS document link handoff.md -> preflight/build-live.py
+PASS document link handoff.md -> preflight/initialize-live.cpp
+PASS document link handoff.md -> preflight/live-cases.py
+PASS document link handoff.md -> preflight/run-live.sh
+PASS document link handoff.md -> preflight/fault-hook.cpp
+PASS document link handoff.md -> preflight/live-fault-hook.cpp
+PASS document link handoff.md -> README.md
+PASS document link handoff.md -> env.md
+PASS document link handoff.md -> call-order.md
+PASS document link handoff.md -> fault-injection.md
+PASS document link handoff.md -> result/cases/
+PASS document link handoff.md -> result/module-results.json
+PASS document link handoff.md -> result/live-cases.json
+PASS document link handoff.md -> result/live/
+PASS document link handoff.md -> result/results.json
+PASS document link handoff.md -> result/release.json
+PASS document link handoff.md -> result/verify.log
+PASS document link handoff.md -> result/environment.log
+PASS document link fault-injection.md -> result/live-cases.json
+PASS document link fault-injection.md -> result/live/
+PASS document link fault-injection.md -> env.md
+PASS document link call-order.md -> result/live-cases.json
+PASS document link call-order.md -> result/live/
+PASS document link call-order.md -> result/release.json
+PASS document link README.md -> result/input.json
+PASS document link README.md -> handoff.md
+PASS document link README.md -> env.md
+PASS document link README.md -> call-order.md
+PASS document link README.md -> fault-injection.md
+PASS document link README.md -> preflight/
+PASS document link README.md -> result/results.json
+PASS document link README.md -> result/live-cases.json
+PASS document link README.md -> result/before-integration/
+PASS shell syntax run-live.sh
+PASS shell syntax verify.sh
+PASS shell syntax verify-all.sh
+PASS final machine release PASS with 18+15 cases
+PASS 15 actual request results PASS
+PASS 18 module results PASS
+PASS full-run output contains final PASS
+PASS original state digest comparison passed
+PASS installed program/library digest comparison passed
+PASS installed libpq unchanged
+PASS isolated instance stopped
+PASS original blocked-version evidence preserved
+PASS public artifact type verify.log
+PASS public artifact type live-cases.json
+PASS public artifact type zyc-model.log
+PASS public artifact type source-input.sha256
+PASS public artifact type call-order.log
+PASS public artifact type call-order.json
+PASS public artifact type results.json
+PASS public artifact type input.json
+PASS public artifact type live-summary.log
+PASS public artifact type module-results.json
+PASS public artifact type release.json
+PASS public artifact type build.log
+PASS public artifact type environment.log
+PASS public artifact type module-verify.log
+PASS public artifact type delivery-check.log
+PASS public artifact type live/request-08.stderr
+PASS public artifact type live/request-15.stderr
+PASS public artifact type live/request-10.stderr
+PASS public artifact type live/request-01.stderr
+PASS public artifact type live/request-14.stdout
+PASS public artifact type live/request-03.stdout
+PASS public artifact type live/request-19.stdout
+PASS public artifact type live/request-14.stderr
+PASS public artifact type live/request-07.stderr
+PASS public artifact type live/request-19.stderr
+PASS public artifact type live/request-12.stdout
+PASS public artifact type live/request-08.stdout
+PASS public artifact type live/request-11.stdout
+PASS public artifact type live/request-02.stdout
+PASS public artifact type live/request-16.stdout
+PASS public artifact type live/request-15.stdout
+PASS public artifact type live/request-05.stdout
+PASS public artifact type live/request-11.stderr
+PASS public artifact type live/request-09.stderr
+PASS public artifact type live/request-17.stdout
+PASS public artifact type live/request-09.stdout
+PASS public artifact type live/request-06.stderr
+PASS public artifact type live/request-03.stderr
+PASS public artifact type live/request-04.stderr
+PASS public artifact type live/request-18.stdout
+PASS public artifact type live/request-02.stderr
+PASS public artifact type live/request-05.stderr
+PASS public artifact type live/request-10.stdout
+PASS public artifact type live/request-16.stderr
+PASS public artifact type live/request-07.stdout
+PASS public artifact type live/request-17.stderr
+PASS public artifact type live/request-13.stdout
+PASS public artifact type live/request-13.stderr
+PASS public artifact type live/request-01.stdout
+PASS public artifact type live/request-06.stdout
+PASS public artifact type live/request-20.stderr
+PASS public artifact type live/request-04.stdout
+PASS public artifact type live/request-12.stderr
+PASS public artifact type live/request-18.stderr
+PASS public artifact type live/request-20.stdout
+PASS public artifact type cases/KEY-04.json
+PASS public artifact type cases/ORDER-01.json
+PASS public artifact type cases/KEY-06.json
+PASS public artifact type cases/FLOW-02.json
+PASS public artifact type cases/ORDER-04.json
+PASS public artifact type cases/ORDER-03.json
+PASS public artifact type cases/KEY-01.json
+PASS public artifact type cases/KEY-07.json
+PASS public artifact type cases/KEY-03.json
+PASS public artifact type cases/KEY-02.json
+PASS public artifact type cases/FLOW-04.json
+PASS public artifact type cases/HOOK-01.json
+PASS public artifact type cases/ORDER-02.json
+PASS public artifact type cases/KEY-08.json
+PASS public artifact type cases/FLOW-03.json
+PASS public artifact type cases/FLOW-01.json
+PASS public artifact type cases/FLOW-05.json
+PASS public artifact type cases/KEY-05.json
+PASS public artifact type before-integration/verify.log
+PASS public artifact type before-integration/zyc-model.log
+PASS public artifact type before-integration/source-input.sha256
+PASS public artifact type before-integration/call-order.log
+PASS public artifact type before-integration/call-order.json
+PASS public artifact type before-integration/results.json
+PASS public artifact type before-integration/input.json
+PASS public artifact type before-integration/environment.log
+PASS public artifact type before-integration/delivery-check.log
+PASS public artifact type before-integration/cases/KEY-04.json
+PASS public artifact type before-integration/cases/ORDER-01.json
+PASS public artifact type before-integration/cases/KEY-06.json
+PASS public artifact type before-integration/cases/FLOW-02.json
+PASS public artifact type before-integration/cases/ORDER-04.json
+PASS public artifact type before-integration/cases/ORDER-03.json
+PASS public artifact type before-integration/cases/KEY-01.json
+PASS public artifact type before-integration/cases/KEY-07.json
+PASS public artifact type before-integration/cases/KEY-03.json
+PASS public artifact type before-integration/cases/KEY-02.json
+PASS public artifact type before-integration/cases/FLOW-04.json
+PASS public artifact type before-integration/cases/HOOK-01.json
+PASS public artifact type before-integration/cases/ORDER-02.json
+PASS public artifact type before-integration/cases/KEY-08.json
+PASS public artifact type before-integration/cases/FLOW-03.json
+PASS public artifact type before-integration/cases/FLOW-01.json
+PASS public artifact type before-integration/cases/FLOW-05.json
+PASS public artifact type before-integration/cases/KEY-05.json
+PASS original native Makefile rules compile request/crypto objects into temporary paths
+RELEASE_RESULT=PASS
+SOURCE_CHANGES=8 TOOL_FILES=10 MODULE_CASES=18 REAL_REQUEST_CASES=15
+No Git commands or installed environment changes performed.
+
+Report3 documentation update | 2026-11-19
+PASS 6 delivery documents and report/report3.md links resolve
+PASS tested source/tool fingerprints unchanged
+Native release build/package/deployment remains pending; verified function-test result preserved.
+Only report and delivery document files updated; no Git commands performed.
+
+LZM-03 pre-submission delivery audit | 2026-11-19
+PASS tested file src/bin/psql/common.cpp
+PASS tested file src/bin/psql/startup.cpp
+PASS tested file src/common/interfaces/libpq/Client_Sophos.cpp
+PASS tested file src/common/interfaces/libpq/row_state_v1.cpp
+PASS tested file src/include/libpq/row_state_v1.h
+PASS tested file src/common/interfaces/libpq/Makefile
+PASS tested file src/common/interfaces/libpq/row_request_v1.cpp
+PASS tested file src/include/libpq/row_request_v1.h
+PASS tested file src/common/interfaces/libpq/row_state_catalog.cpp
+PASS tested file src/include/libpq/row_state_catalog.h
+PASS tested file src/include/libpq/sse_v1_contract.hpp
+PASS tested file team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+PASS tested file team_week/yan_zihan/YZH-01/include/row_aead_v1.h
+PASS tested file sse_sql/SSE_v1.sql
+PASS tested file src/gausskernel/process/tcop/postgres.cpp
+PASS tested file src/gausskernel/process/tcop/Server_Sophos.cpp
+PASS tested file src/include/Server_Sophos.h
+PASS tested file src/include/sse_v1_search_limits.h
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/build-live.py
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/live-cases.py
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/live-fault-hook.cpp
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/run-live.sh
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh
+PASS tested file team_week/liu_zhuoming/LZM-03/preflight/verify.sh
+PASS submission scope: 8 source files plus 10 tools
+PASS 7 Feishu documents present
+PASS link env.md -> result/
+PASS link env.md -> fault-injection.md
+PASS link handoff.md -> result/input.json
+PASS link handoff.md -> ../../../src/bin/psql/common.cpp
+PASS link handoff.md -> ../../../src/bin/psql/startup.cpp
+PASS link handoff.md -> ../../../src/common/interfaces/libpq/Client_Sophos.cpp
+PASS link handoff.md -> ../../../src/common/interfaces/libpq/row_state_v1.cpp
+PASS link handoff.md -> ../../../src/include/libpq/row_state_v1.h
+PASS link handoff.md -> ../../../src/common/interfaces/libpq/Makefile
+PASS link handoff.md -> ../../../src/common/interfaces/libpq/row_request_v1.cpp
+PASS link handoff.md -> ../../../src/include/libpq/row_request_v1.h
+PASS link handoff.md -> preflight/verify-all.sh
+PASS link handoff.md -> preflight/verify.sh
+PASS link handoff.md -> preflight/state-crypto-cases.cpp
+PASS link handoff.md -> preflight/audit-call-order.py
+PASS link handoff.md -> preflight/build-live.py
+PASS link handoff.md -> preflight/initialize-live.cpp
+PASS link handoff.md -> preflight/live-cases.py
+PASS link handoff.md -> preflight/run-live.sh
+PASS link handoff.md -> preflight/fault-hook.cpp
+PASS link handoff.md -> preflight/live-fault-hook.cpp
+PASS link handoff.md -> report3.md
+PASS link handoff.md -> 后续修改建议.md
+PASS link handoff.md -> README.md
+PASS link handoff.md -> env.md
+PASS link handoff.md -> call-order.md
+PASS link handoff.md -> fault-injection.md
+PASS link handoff.md -> result/cases/
+PASS link handoff.md -> result/module-results.json
+PASS link handoff.md -> result/live-cases.json
+PASS link handoff.md -> result/live/
+PASS link handoff.md -> result/results.json
+PASS link handoff.md -> result/release.json
+PASS link handoff.md -> result/verify.log
+PASS link handoff.md -> result/environment.log
+PASS link 后续修改建议.md -> result/results.json
+PASS link 后续修改建议.md -> handoff.md
+PASS link fault-injection.md -> result/live-cases.json
+PASS link fault-injection.md -> result/live/
+PASS link fault-injection.md -> env.md
+PASS link call-order.md -> result/live-cases.json
+PASS link call-order.md -> result/live/
+PASS link call-order.md -> result/release.json
+PASS link README.md -> result/input.json
+PASS link README.md -> 后续修改建议.md
+PASS link README.md -> report3.md
+PASS link README.md -> handoff.md
+PASS link README.md -> env.md
+PASS link README.md -> call-order.md
+PASS link README.md -> fault-injection.md
+PASS link README.md -> preflight/
+PASS link README.md -> result/results.json
+PASS link README.md -> result/live-cases.json
+PASS link README.md -> result/before-integration/
+PASS link report3.md -> result/live-cases.json
+PASS link report3.md -> result/results.json
+PASS link report3.md -> result/input.json
+PASS link report3.md -> result/live-cases.json
+PASS link report3.md -> call-order.md
+PASS link report3.md -> env.md
+PASS link report3.md -> fault-injection.md
+PASS link report3.md -> result/environment.log
+PASS link report3.md -> result/before-integration/
+PASS link report3.md -> handoff.md
+PASS recorded functional acceptance PASS
+PASS 18 recorded case results PASS
+PASS 15 recorded case results PASS
+PASS complete verification exit 0
+PASS 18 module case output files
+PASS actual request output 01.stdout
+PASS actual request output 01.stderr
+PASS actual request output 02.stdout
+PASS actual request output 02.stderr
+PASS actual request output 03.stdout
+PASS actual request output 03.stderr
+PASS actual request output 04.stdout
+PASS actual request output 04.stderr
+PASS actual request output 05.stdout
+PASS actual request output 05.stderr
+PASS actual request output 06.stdout
+PASS actual request output 06.stderr
+PASS actual request output 07.stdout
+PASS actual request output 07.stderr
+PASS actual request output 08.stdout
+PASS actual request output 08.stderr
+PASS actual request output 09.stdout
+PASS actual request output 09.stderr
+PASS actual request output 10.stdout
+PASS actual request output 10.stderr
+PASS actual request output 11.stdout
+PASS actual request output 11.stderr
+PASS actual request output 12.stdout
+PASS actual request output 12.stderr
+PASS actual request output 13.stdout
+PASS actual request output 13.stderr
+PASS actual request output 14.stdout
+PASS actual request output 14.stderr
+PASS actual request output 15.stdout
+PASS actual request output 15.stderr
+PASS actual request output 16.stdout
+PASS actual request output 16.stderr
+PASS actual request output 17.stdout
+PASS actual request output 17.stderr
+PASS actual request output 18.stdout
+PASS actual request output 18.stderr
+PASS actual request output 19.stdout
+PASS actual request output 19.stderr
+PASS actual request output 20.stdout
+PASS actual request output 20.stderr
+PASS original integration gaps retained
+PASS no private/generated artifact env.md
+PASS no private PEM env.md
+PASS no private/generated artifact handoff.md
+PASS no private PEM handoff.md
+PASS no private/generated artifact 后续修改建议.md
+PASS no private PEM 后续修改建议.md
+PASS no private/generated artifact fault-injection.md
+PASS no private PEM fault-injection.md
+PASS no private/generated artifact call-order.md
+PASS no private PEM call-order.md
+PASS no private/generated artifact README.md
+PASS no private PEM README.md
+PASS no private/generated artifact report3.md
+PASS no private PEM report3.md
+PASS no private/generated artifact preflight/live-fault-hook.cpp
+PASS no private PEM preflight/live-fault-hook.cpp
+PASS no private/generated artifact preflight/build-live.py
+PASS no private PEM preflight/build-live.py
+PASS no private/generated artifact preflight/run-live.sh
+PASS no private PEM preflight/run-live.sh
+PASS no private/generated artifact preflight/state-crypto-cases.cpp
+PASS no private PEM preflight/state-crypto-cases.cpp
+PASS no private/generated artifact preflight/verify.sh
+PASS no private PEM preflight/verify.sh
+PASS no private/generated artifact preflight/live-cases.py
+PASS no private PEM preflight/live-cases.py
+PASS no private/generated artifact preflight/fault-hook.cpp
+PASS no private PEM preflight/fault-hook.cpp
+PASS no private/generated artifact preflight/initialize-live.cpp
+PASS no private PEM preflight/initialize-live.cpp
+PASS no private/generated artifact preflight/verify-all.sh
+PASS no private PEM preflight/verify-all.sh
+PASS no private/generated artifact preflight/audit-call-order.py
+PASS no private PEM preflight/audit-call-order.py
+PASS no private/generated artifact result/verify.log
+PASS no private PEM result/verify.log
+PASS no private/generated artifact result/live-cases.json
+PASS no private PEM result/live-cases.json
+PASS no private/generated artifact result/zyc-model.log
+PASS no private PEM result/zyc-model.log
+PASS no private/generated artifact result/source-input.sha256
+PASS no private PEM result/source-input.sha256
+PASS no private/generated artifact result/call-order.log
+PASS no private PEM result/call-order.log
+PASS no private/generated artifact result/call-order.json
+PASS no private PEM result/call-order.json
+PASS no private/generated artifact result/results.json
+PASS no private PEM result/results.json
+PASS no private/generated artifact result/input.json
+PASS no private PEM result/input.json
+PASS no private/generated artifact result/live-summary.log
+PASS no private PEM result/live-summary.log
+PASS no private/generated artifact result/module-results.json
+PASS no private PEM result/module-results.json
+PASS no private/generated artifact result/release.json
+PASS no private PEM result/release.json
+PASS no private/generated artifact result/build.log
+PASS no private PEM result/build.log
+PASS no private/generated artifact result/environment.log
+PASS no private PEM result/environment.log
+PASS no private/generated artifact result/module-verify.log
+PASS no private PEM result/module-verify.log
+PASS no private/generated artifact result/delivery-check.log
+PASS no private PEM result/delivery-check.log
+PASS no private/generated artifact result/live/request-08.stderr
+PASS no private PEM result/live/request-08.stderr
+PASS no private/generated artifact result/live/request-15.stderr
+PASS no private PEM result/live/request-15.stderr
+PASS no private/generated artifact result/live/request-10.stderr
+PASS no private PEM result/live/request-10.stderr
+PASS no private/generated artifact result/live/request-01.stderr
+PASS no private PEM result/live/request-01.stderr
+PASS no private/generated artifact result/live/request-14.stdout
+PASS no private PEM result/live/request-14.stdout
+PASS no private/generated artifact result/live/request-03.stdout
+PASS no private PEM result/live/request-03.stdout
+PASS no private/generated artifact result/live/request-19.stdout
+PASS no private PEM result/live/request-19.stdout
+PASS no private/generated artifact result/live/request-14.stderr
+PASS no private PEM result/live/request-14.stderr
+PASS no private/generated artifact result/live/request-07.stderr
+PASS no private PEM result/live/request-07.stderr
+PASS no private/generated artifact result/live/request-19.stderr
+PASS no private PEM result/live/request-19.stderr
+PASS no private/generated artifact result/live/request-12.stdout
+PASS no private PEM result/live/request-12.stdout
+PASS no private/generated artifact result/live/request-08.stdout
+PASS no private PEM result/live/request-08.stdout
+PASS no private/generated artifact result/live/request-11.stdout
+PASS no private PEM result/live/request-11.stdout
+PASS no private/generated artifact result/live/request-02.stdout
+PASS no private PEM result/live/request-02.stdout
+PASS no private/generated artifact result/live/request-16.stdout
+PASS no private PEM result/live/request-16.stdout
+PASS no private/generated artifact result/live/request-15.stdout
+PASS no private PEM result/live/request-15.stdout
+PASS no private/generated artifact result/live/request-05.stdout
+PASS no private PEM result/live/request-05.stdout
+PASS no private/generated artifact result/live/request-11.stderr
+PASS no private PEM result/live/request-11.stderr
+PASS no private/generated artifact result/live/request-09.stderr
+PASS no private PEM result/live/request-09.stderr
+PASS no private/generated artifact result/live/request-17.stdout
+PASS no private PEM result/live/request-17.stdout
+PASS no private/generated artifact result/live/request-09.stdout
+PASS no private PEM result/live/request-09.stdout
+PASS no private/generated artifact result/live/request-06.stderr
+PASS no private PEM result/live/request-06.stderr
+PASS no private/generated artifact result/live/request-03.stderr
+PASS no private PEM result/live/request-03.stderr
+PASS no private/generated artifact result/live/request-04.stderr
+PASS no private PEM result/live/request-04.stderr
+PASS no private/generated artifact result/live/request-18.stdout
+PASS no private PEM result/live/request-18.stdout
+PASS no private/generated artifact result/live/request-02.stderr
+PASS no private PEM result/live/request-02.stderr
+PASS no private/generated artifact result/live/request-05.stderr
+PASS no private PEM result/live/request-05.stderr
+PASS no private/generated artifact result/live/request-10.stdout
+PASS no private PEM result/live/request-10.stdout
+PASS no private/generated artifact result/live/request-16.stderr
+PASS no private PEM result/live/request-16.stderr
+PASS no private/generated artifact result/live/request-07.stdout
+PASS no private PEM result/live/request-07.stdout
+PASS no private/generated artifact result/live/request-17.stderr
+PASS no private PEM result/live/request-17.stderr
+PASS no private/generated artifact result/live/request-13.stdout
+PASS no private PEM result/live/request-13.stdout
+PASS no private/generated artifact result/live/request-13.stderr
+PASS no private PEM result/live/request-13.stderr
+PASS no private/generated artifact result/live/request-01.stdout
+PASS no private PEM result/live/request-01.stdout
+PASS no private/generated artifact result/live/request-06.stdout
+PASS no private PEM result/live/request-06.stdout
+PASS no private/generated artifact result/live/request-20.stderr
+PASS no private PEM result/live/request-20.stderr
+PASS no private/generated artifact result/live/request-04.stdout
+PASS no private PEM result/live/request-04.stdout
+PASS no private/generated artifact result/live/request-12.stderr
+PASS no private PEM result/live/request-12.stderr
+PASS no private/generated artifact result/live/request-18.stderr
+PASS no private PEM result/live/request-18.stderr
+PASS no private/generated artifact result/live/request-20.stdout
+PASS no private PEM result/live/request-20.stdout
+PASS no private/generated artifact result/cases/KEY-04.json
+PASS no private PEM result/cases/KEY-04.json
+PASS no private/generated artifact result/cases/ORDER-01.json
+PASS no private PEM result/cases/ORDER-01.json
+PASS no private/generated artifact result/cases/KEY-06.json
+PASS no private PEM result/cases/KEY-06.json
+PASS no private/generated artifact result/cases/FLOW-02.json
+PASS no private PEM result/cases/FLOW-02.json
+PASS no private/generated artifact result/cases/ORDER-04.json
+PASS no private PEM result/cases/ORDER-04.json
+PASS no private/generated artifact result/cases/ORDER-03.json
+PASS no private PEM result/cases/ORDER-03.json
+PASS no private/generated artifact result/cases/KEY-01.json
+PASS no private PEM result/cases/KEY-01.json
+PASS no private/generated artifact result/cases/KEY-07.json
+PASS no private PEM result/cases/KEY-07.json
+PASS no private/generated artifact result/cases/KEY-03.json
+PASS no private PEM result/cases/KEY-03.json
+PASS no private/generated artifact result/cases/KEY-02.json
+PASS no private PEM result/cases/KEY-02.json
+PASS no private/generated artifact result/cases/FLOW-04.json
+PASS no private PEM result/cases/FLOW-04.json
+PASS no private/generated artifact result/cases/HOOK-01.json
+PASS no private PEM result/cases/HOOK-01.json
+PASS no private/generated artifact result/cases/ORDER-02.json
+PASS no private PEM result/cases/ORDER-02.json
+PASS no private/generated artifact result/cases/KEY-08.json
+PASS no private PEM result/cases/KEY-08.json
+PASS no private/generated artifact result/cases/FLOW-03.json
+PASS no private PEM result/cases/FLOW-03.json
+PASS no private/generated artifact result/cases/FLOW-01.json
+PASS no private PEM result/cases/FLOW-01.json
+PASS no private/generated artifact result/cases/FLOW-05.json
+PASS no private PEM result/cases/FLOW-05.json
+PASS no private/generated artifact result/cases/KEY-05.json
+PASS no private PEM result/cases/KEY-05.json
+PASS no private/generated artifact result/before-integration/verify.log
+PASS no private PEM result/before-integration/verify.log
+PASS no private/generated artifact result/before-integration/zyc-model.log
+PASS no private PEM result/before-integration/zyc-model.log
+PASS no private/generated artifact result/before-integration/source-input.sha256
+PASS no private PEM result/before-integration/source-input.sha256
+PASS no private/generated artifact result/before-integration/call-order.log
+PASS no private PEM result/before-integration/call-order.log
+PASS no private/generated artifact result/before-integration/call-order.json
+PASS no private PEM result/before-integration/call-order.json
+PASS no private/generated artifact result/before-integration/results.json
+PASS no private PEM result/before-integration/results.json
+PASS no private/generated artifact result/before-integration/input.json
+PASS no private PEM result/before-integration/input.json
+PASS no private/generated artifact result/before-integration/environment.log
+PASS no private PEM result/before-integration/environment.log
+PASS no private/generated artifact result/before-integration/delivery-check.log
+PASS no private PEM result/before-integration/delivery-check.log
+PASS no private/generated artifact result/before-integration/cases/KEY-04.json
+PASS no private PEM result/before-integration/cases/KEY-04.json
+PASS no private/generated artifact result/before-integration/cases/ORDER-01.json
+PASS no private PEM result/before-integration/cases/ORDER-01.json
+PASS no private/generated artifact result/before-integration/cases/KEY-06.json
+PASS no private PEM result/before-integration/cases/KEY-06.json
+PASS no private/generated artifact result/before-integration/cases/FLOW-02.json
+PASS no private PEM result/before-integration/cases/FLOW-02.json
+PASS no private/generated artifact result/before-integration/cases/ORDER-04.json
+PASS no private PEM result/before-integration/cases/ORDER-04.json
+PASS no private/generated artifact result/before-integration/cases/ORDER-03.json
+PASS no private PEM result/before-integration/cases/ORDER-03.json
+PASS no private/generated artifact result/before-integration/cases/KEY-01.json
+PASS no private PEM result/before-integration/cases/KEY-01.json
+PASS no private/generated artifact result/before-integration/cases/KEY-07.json
+PASS no private PEM result/before-integration/cases/KEY-07.json
+PASS no private/generated artifact result/before-integration/cases/KEY-03.json
+PASS no private PEM result/before-integration/cases/KEY-03.json
+PASS no private/generated artifact result/before-integration/cases/KEY-02.json
+PASS no private PEM result/before-integration/cases/KEY-02.json
+PASS no private/generated artifact result/before-integration/cases/FLOW-04.json
+PASS no private PEM result/before-integration/cases/FLOW-04.json
+PASS no private/generated artifact result/before-integration/cases/HOOK-01.json
+PASS no private PEM result/before-integration/cases/HOOK-01.json
+PASS no private/generated artifact result/before-integration/cases/ORDER-02.json
+PASS no private PEM result/before-integration/cases/ORDER-02.json
+PASS no private/generated artifact result/before-integration/cases/KEY-08.json
+PASS no private PEM result/before-integration/cases/KEY-08.json
+PASS no private/generated artifact result/before-integration/cases/FLOW-03.json
+PASS no private PEM result/before-integration/cases/FLOW-03.json
+PASS no private/generated artifact result/before-integration/cases/FLOW-01.json
+PASS no private PEM result/before-integration/cases/FLOW-01.json
+PASS no private/generated artifact result/before-integration/cases/FLOW-05.json
+PASS no private PEM result/before-integration/cases/FLOW-05.json
+PASS no private/generated artifact result/before-integration/cases/KEY-05.json
+PASS no private PEM result/before-integration/cases/KEY-05.json
+PASS installed libpq unchanged
+PASS test instance remains stopped
+RESULT: PASS (delivery completeness; previous test results and code fingerprints verified)
+Acceptance material: 7 documents and result/; Git material: 18 explicit source/tool files.
+Full tests not rerun for this documentation inspection. No Git commands executed.
+
+Output commit documentation update | 2026-11-19
+OUTPUT_BRANCH=test/LZM-03-state-crypto
+OUTPUT_COMMIT=0671a79d068b8c3535b7c511c4aeefe76710a032
+PASS local commit contains exactly 8 source files and 10 tools, identical to tested file bytes
+PASS all 7 delivery documents and report/report3.md record output commit and resolve links
+Original test baseline and raw logs retained; full tests not rerun for documentation update.
+No Git commands executed by assistant; remote publication not queried.

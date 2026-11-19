@@ -1,0 +1,14 @@
+# SHA-256 manifest (ZYC-01)
+generated: 2026-11-18 14:29:37 +0800
+
+9ee5e6c75659360122571eb8330fd5016c680c00abe884204fac57d7c62f0f29 *./03-调用点说明.md
+776b75aad6004acf6b3ad245f32e89dbb1761ef23766192ff3d1d50ced6bfd60 *./README.md
+7f6ca7cada757c4c829104478c29100651560db4f62a5934c671f42e36d32767 *./offline-regression.log
+30deb7ec293bc6463ead592b4102486c5fdd3cde28d1312201d1dbf3c7a490f4 *./patch-applicability.log
+7347fcf812c302a651f2d33d4584e2e8385eb567f778de76a4aa526a90bf1b86 *./handoff.md
+c672cfb86242791d27336feab33a923bdd151250ec5742ed99ef274bb7c7e5cd *./ZYC-01-common.cpp.patch
+e2cbe4a6f20d43f3c34d9008da7fbadb0777d8a8bba6e796febb9fdab47045db *./ZYC-01-fe-exec.cpp.patch
+c9a471e3ba6e3814c81a39fc9b7c26ba225b6a0c012f07f32a4515807cb069c4 *./zyc01-input-cases.sql
+2e8703c0d85ad01e44595fe3fcafeed28c5ec3ba401d9c343bbf2fd252913a1e *./reencrypt_result_guard.py
+c406690b8ef0097ea223b6dacd29aa9842269ce33743082539a3bf1e9e677a60 *./sql_input_guard.py
+0cfaf40379c1872bd96f00afb23371a86595b081b4b995feb301d11e4b260054 *./test_zyc01_regression.py

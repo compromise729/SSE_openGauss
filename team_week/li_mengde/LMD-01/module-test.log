@@ -1,0 +1,460 @@
+BASE=25489f563f25b522d0cd37a6c85865039e3f340f
+SERVER_COMMIT=f99e41872fc3f00f9199ed94b5828859e89ed27e
+LOCAL_TASK_BRANCH=feature/LMD-01-storage
+LOCAL_TASK_COMMIT=1294a76f37237196b1b208b9187bd7239365ef48
+83626a46fc4bb3697cdb05a91f3b6cce7d2dd0aa68fc879c794570f3b28acf31  /opt/og/lmd-week.yDi2bDj9/dest/bin/gaussdb
+0b28ec85b220a5c544695a8b52bf9db5fa64421f78f1e31c96eb33a9fb4ef140  sse_sql/SSE_v1.sql
+2fb705f1f5304fa55f49dac280499e33166505bc3b922279a84aee8bede08f73  team_week/li_mengde/LMD-01/run-module.sh
+RUN_DIR=/var/tmp/fides-isolated.RdGLIHGo
+PREFLIGHT_EXIT=3 RECORD=/var/tmp/fides-isolated.RdGLIHGo/pre-init.gRWb4830.json
+{"counter": {"path": "/var/tmp/fides-isolated.RdGLIHGo/client/fides_client.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "teamdemo20261012apple"}, "mapping": {"path": "/var/tmp/fides-isolated.RdGLIHGo/client/sse_table.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "team_fides_demo"}, "recommendation": "\u72b6\u6001\u5f02\u5e38\uff0c\u5148\u5904\u7406\u6587\u4ef6\u95ee\u9898\uff1b\u5982\u9884\u671f\u4e3a\u9996\u6b21\u521d\u59cb\u5316\uff0c\u8bf7\u4eba\u5de5\u6838\u5bf9\u5b9e\u9a8c\u524d\u63d0\u3002"}
+RUN_DIR=/var/tmp/fides-isolated.RdGLIHGo
+INSTANCE=/var/tmp/fides-isolated.RdGLIHGo/db/instance
+SOCKET=/var/tmp/fides-isolated.RdGLIHGo/socket
+PORT=55462
+CLIENT=/var/tmp/fides-isolated.RdGLIHGo/client (mounted at /opt/og/openGauss-server/sse_storage)
+SERVER=/var/tmp/fides-isolated.RdGLIHGo/server (mounted at /opt/og/openGauss-server/sse_server_storage)
+PID=412
+In this omm shell: isolated.sh gsql | preflight | stop; exit also stops the instance.
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+ current_database |                                                                                        version                                                                                        
+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ postgres         | PostgreSQL 9.2.4 (GaussDB Kernel V500R001C20 build ecfd9dfa) compiled at 2026-10-11 22:45:51 commit 0 last mr  debug on x86_64-unknown-linux-gnu, compiled by g++ (GCC) 7.3.0, 64-bit
+(1 row)
+
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+gsql:./team_week/li_mengde/LMD-01/../../../sse_sql/SSE_v1.sql:9: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "sse_v1_catalog_pkey" for table "sse_v1_catalog"
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+COMMIT
+total time: 64  ms
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+gsql:storage-fixture.sql:3: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_ordinary_pkey" for table "lmd_ordinary"
+CREATE TABLE
+INSERT 0 1
+ fides_setup 
+-------------
+ ok
+(1 row)
+
+ sse_create_tables2 
+--------------------
+ 
+(1 row)
+
+gsql:storage-fixture.sql:7: NOTICE:  fides_insert execution time: 00:00:00.003806
+ANONYMOUS BLOCK EXECUTE
+ ind |  keyword  |    payload     
+-----+-----------+----------------
+ 1   | lmdlegacy | legacy fixture
+(1 row)
+
+CREATE FUNCTION
+BEGIN
+gsql:storage-fixture.sql:18: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_create_rollback_data_pkey" for table "lmd_create_rollback_data"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_create_rollback_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+gsql:storage-fixture.sql:18: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_create_rollback_index_pkey" for table "lmd_create_rollback_index"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_create_rollback_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+ sse_v1_create 
+---------------
+ 
+(1 row)
+
+ROLLBACK
+gsql:storage-fixture.sql:48: NOTICE:  PASS DB-01 create rollback, legacy fencing, identifier checks and ordinary SQL
+ANONYMOUS BLOCK EXECUTE
+gsql:storage-fixture.sql:50: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_sample_data_pkey" for table "lmd_sample_data"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_sample_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+gsql:storage-fixture.sql:50: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_sample_index_pkey" for table "lmd_sample_index"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_sample_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+ sse_v1_create 
+---------------
+ 
+(1 row)
+
+gsql:storage-fixture.sql:146: NOTICE:  PASS synthetic envelopes round trip at 88 and 65624 bytes; 96 byte positions; take/miss/empty/reinsert
+gsql:storage-fixture.sql:146: NOTICE:  PASS rollback and errors; data before/after 9badd81b505dedaf1a50f0a49510773e/9badd81b505dedaf1a50f0a49510773e; index before/after af58ab9e297c2c7058ca2ebc03a3cd64/af58ab9e297c2c7058ca2ebc03a3cd64
+ANONYMOUS BLOCK EXECUTE
+total time: 496  ms
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+gsql:<stdin>:1: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_registration_ok_data_pkey" for table "lmd_registration_ok_data"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_registration_ok_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+gsql:<stdin>:1: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_registration_ok_index_pkey" for table "lmd_registration_ok_index"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_registration_ok_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+ sse_v1_create 
+---------------
+ 
+(1 row)
+
+total time: 60  ms
+11111111111111111111111111111111	14177	public	lmd_registration_ok	1
+lmd_registration_ok keyword|fides
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+ sse_v1_require_table 
+----------------------
+ 
+(1 row)
+
+PASS test caller registered both mappings after successful server create
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+ALTER TABLE
+PASS test caller received nonzero create status=3
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+gsql:<stdin>:1: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_registration_fail_data_pkey" for table "lmd_registration_fail_data"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_registration_fail_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+gsql:<stdin>:1: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "lmd_registration_fail_index_pkey" for table "lmd_registration_fail_index"
+CONTEXT:  SQL statement "CREATE TABLE public.lmd_registration_fail_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+gsql:<stdin>:1: ERROR:  new row for relation "sse_v1_catalog" violates check constraint "lmd_fixture_reject"
+DETAIL:  Failing row contains (public, lmd_registration_fail, 1).
+CONTEXT:  SQL statement "INSERT INTO public.sse_v1_catalog VALUES (schema_name, logical_name, 1)"
+PL/pgSQL function sse_v1_create(text,text) line 16 at SQL statement
+referenced column: sse_v1_create
+total time: 59  ms
+d428f1a661677887de00aa3f33a38b059fc213e9d67d5ddf6d11c00b171c988c  /tmp/tmp.qoN7rvjpSO/row_aead_tables.v1
+e9325549d190b0670be39aed28cc82ef14a85a92217e37316ea5ee02e6416fcc  /tmp/tmp.qoN7rvjpSO/sse_table.mat
+d428f1a661677887de00aa3f33a38b059fc213e9d67d5ddf6d11c00b171c988c  /tmp/tmp.qoN7rvjpSO/row_aead_tables.v1
+e9325549d190b0670be39aed28cc82ef14a85a92217e37316ea5ee02e6416fcc  /tmp/tmp.qoN7rvjpSO/sse_table.mat
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+gsql:<stdin>:10: NOTICE:  PASS catalog rejection rolled back both physical tables and left no catalog entry
+ANONYMOUS BLOCK EXECUTE
+BEGIN
+ALTER TABLE
+DROP TABLE
+DELETE 1
+COMMIT
+total time: 28  ms
+PASS failed create left both fixture mapping files byte-identical
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ database | connected_user | target_schema |   target   | profile  
+----------+----------------+---------------+------------+----------
+ postgres | omm            | public        | lmd_sample | fides_v1
+(1 row)
+
+SET
+SET
+SET
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_create expected (text, text) actual (text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_insert expected (text, text, text[], text[], text[], text[]) actual (text, text, text[], text[], text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_take expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_reinsert expected (text, text, text[], text[]) actual (text, text, text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_fetch expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_sample_data expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_sample_data expected [rid:text,data_blob:text] actual [rid:text,data_blob:text]
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_sample_index expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_sample_index expected [ut:text,locator_blob:text] actual [ut:text,locator_blob:text]
+gsql:李孟德-check.sql:184: NOTICE:  PASS public.lmd_sample_data rows 2 max_cipher_bytes 65624 invalid envelopes 0
+gsql:李孟德-check.sql:184: NOTICE:  PASS public.lmd_sample_index rows 2 max_cipher_bytes 96 invalid envelopes 0
+gsql:李孟德-check.sql:184: NOTICE:  PASS fides_v1 structure and registration
+ANONYMOUS BLOCK EXECUTE
+COMMIT
+total time: 93  ms
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ database | connected_user | target_schema |   target   | profile  
+----------+----------------+---------------+------------+----------
+ postgres | omm            | public        | lmd_sample | fides_v1
+(1 row)
+
+SET
+SET
+SET
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_create expected (text, text) actual (text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_insert expected (text, text, text[], text[], text[], text[]) actual (text, text, text[], text[], text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_take expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_reinsert expected (text, text, text[], text[]) actual (text, text, text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_fetch expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_sample_data expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_sample_data expected [rid:text,data_blob:text] actual [rid:text,data_blob:text]
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_sample_index expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_sample_index expected [ut:text,locator_blob:text] actual [ut:text,locator_blob:text]
+gsql:李孟德-check.sql:184: NOTICE:  PASS public.lmd_sample_data rows 2 max_cipher_bytes 65624 invalid envelopes 0
+gsql:李孟德-check.sql:184: NOTICE:  PASS public.lmd_sample_index rows 2 max_cipher_bytes 96 invalid envelopes 0
+gsql:李孟德-check.sql:184: NOTICE:  PASS fides_v1 structure and registration
+ANONYMOUS BLOCK EXECUTE
+COMMIT
+total time: 98  ms
+PASS audit preserved data, index and local counter/key file digests
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ database | connected_user | target_schema |   target   | profile 
+----------+----------------+---------------+------------+---------
+ postgres | omm            | public        | lmd_legacy | fides
+(1 row)
+
+SET
+SET
+SET
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_create_tables2 expected (text, text, text, text) actual (text, text, text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.fides_insert expected (text[], text[], text[], text, text) actual (text[], text[], text[], text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.fides_re_insert expected (text[], text[], text[], text) actual (text[], text[], text[], text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_legacy_data expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_legacy_data expected [ind:text,keyword:text,payload:text] actual [ind:text,keyword:text,payload:text]
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_legacy_index expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_legacy_index expected [ut:text,en_ind:text,join_col:text] actual [ut:text,en_ind:text,join_col:text]
+gsql:李孟德-check.sql:184: NOTICE:  ROWS public.lmd_legacy_data actual 1
+gsql:李孟德-check.sql:184: NOTICE:  ROWS public.lmd_legacy_index actual 1
+gsql:李孟德-check.sql:184: NOTICE:  DATA public.lmd_legacy_data {"ind":"1","keyword":"lmdlegacy","payload":"legacy fixture"}
+gsql:李孟德-check.sql:184: NOTICE:  PASS duplicate IDs public.lmd_legacy_data expected 0 actual 0
+gsql:李孟德-check.sql:184: NOTICE:  INDEX id 1 operation add UT length 24 auxiliary length 44 data exists t
+ANONYMOUS BLOCK EXECUTE
+COMMIT
+total time: 59  ms
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ database | connected_user | target_schema | target  | profile  
+----------+----------------+---------------+---------+----------
+ postgres | omm            | public        | missing | fides_v1
+(1 row)
+
+SET
+SET
+SET
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_create expected (text, text) actual (text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_insert expected (text, text, text[], text[], text[], text[]) actual (text, text, text[], text[], text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_take expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_reinsert expected (text, text, text[], text[]) actual (text, text, text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_fetch expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  FAIL table public.missing_data expected ordinary table actual missing
+gsql:李孟德-check.sql:184: NOTICE:  FAIL table public.missing_index expected ordinary table actual missing
+gsql:李孟德-check.sql:184: ERROR:  FAIL required schema checks failed, rows not inspected
+total time: 64  ms
+PASS audit rejected missing (fides_v1) with exit code 3
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ database | connected_user | target_schema |   target   | profile  
+----------+----------------+---------------+------------+----------
+ postgres | omm            | public        | lmd_legacy | fides_v1
+(1 row)
+
+SET
+SET
+SET
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_create expected (text, text) actual (text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_insert expected (text, text, text[], text[], text[], text[]) actual (text, text, text[], text[], text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_take expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_reinsert expected (text, text, text[], text[]) actual (text, text, text[], text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_v1_fetch expected (text, text, text[]) actual (text, text, text[])
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_legacy_data expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  FAIL columns public.lmd_legacy_data expected [rid:text,data_blob:text] actual [ind:text,keyword:text,payload:text]
+gsql:李孟德-check.sql:184: NOTICE:  FAIL primary key or nullable columns in public.lmd_legacy_data
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_legacy_index expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  FAIL columns public.lmd_legacy_index expected [ut:text,locator_blob:text] actual [ut:text,en_ind:text,join_col:text]
+gsql:李孟德-check.sql:184: NOTICE:  FAIL primary key or nullable columns in public.lmd_legacy_index
+gsql:李孟德-check.sql:184: ERROR:  FAIL required schema checks failed, rows not inspected
+total time: 71  ms
+PASS audit rejected lmd_legacy (fides_v1) with exit code 3
+ERROR:  unregistered sse_v1 table: lmd_legacy
+PASS v1 wire entry rejected the old Fides table
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+INSERT 0 1
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ database | connected_user | target_schema |   target   | profile 
+----------+----------------+---------------+------------+---------
+ postgres | omm            | public        | lmd_legacy | fides
+(1 row)
+
+SET
+SET
+SET
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.sse_create_tables2 expected (text, text, text, text) actual (text, text, text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.fides_insert expected (text[], text[], text[], text, text) actual (text[], text[], text[], text, text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS function public.fides_re_insert expected (text[], text[], text[], text) actual (text[], text[], text[], text)
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_legacy_data expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_legacy_data expected [ind:text,keyword:text,payload:text] actual [ind:text,keyword:text,payload:text]
+gsql:李孟德-check.sql:184: NOTICE:  PASS table public.lmd_legacy_index expected ordinary table actual present
+gsql:李孟德-check.sql:184: NOTICE:  PASS columns public.lmd_legacy_index expected [ut:text,en_ind:text,join_col:text] actual [ut:text,en_ind:text,join_col:text]
+gsql:李孟德-check.sql:184: NOTICE:  ROWS public.lmd_legacy_data actual 2
+gsql:李孟德-check.sql:184: NOTICE:  ROWS public.lmd_legacy_index actual 1
+gsql:李孟德-check.sql:184: NOTICE:  DATA public.lmd_legacy_data {"ind":"1","keyword":"fixture","payload":"duplicate"}
+gsql:李孟德-check.sql:184: NOTICE:  DATA public.lmd_legacy_data {"ind":"1","keyword":"lmdlegacy","payload":"legacy fixture"}
+gsql:李孟德-check.sql:184: NOTICE:  FAIL duplicate ID 1 in public.lmd_legacy_data actual count 2 expected 1
+gsql:李孟德-check.sql:184: ERROR:  FAIL duplicate IDs found in public.lmd_legacy_data
+total time: 65  ms
+PASS audit rejected lmd_legacy (fides) with exit code 3
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+NOTICE:  FAIL synthetic audit outcome
+ANONYMOUS BLOCK EXECUTE
+PASS summary rejected a FAIL notice despite successful gsql execution
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 1
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+NOTICE:  SKIP synthetic audit outcome
+ANONYMOUS BLOCK EXECUTE
+PASS summary rejected a SKIP notice despite successful gsql execution
+PASS module fixture, positive and negative read-only audits
+{"task":"LMD-01","phase":"complete","exit_code":0,"passed":true}
+ISOLATED_SERVER_STOPPED

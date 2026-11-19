@@ -1,0 +1,10 @@
+ M src/Makefile.global
+ M src/bin/gsqlerr/errmsg.log
+ M src/include/pg_config.h
+ D sse_server_storage/tdp_pk.key
+ D sse_storage/derivation_master.key
+ D sse_storage/join_secret_key.key
+ D sse_storage/kw_token_master.key
+ D sse_storage/master_derivation.key
+ D sse_storage/rsa_prg.key
+ D sse_storage/tdp_sk.key

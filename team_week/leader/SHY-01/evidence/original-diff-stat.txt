@@ -1,0 +1,4 @@
+ src/Makefile.global        |    24 +-
+ src/bin/gsqlerr/errmsg.log | 10549 ++++++++++++++++++++++++++++++++++++++++++-
+ src/include/pg_config.h    |     4 +-
+ 3 files changed, 10314 insertions(+), 263 deletions(-)

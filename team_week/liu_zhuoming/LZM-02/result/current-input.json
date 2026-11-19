@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-18",
+  "head": "7bace5b2182552f1e2fe5865ac66d58812435510",
+  "branch": "main",
+  "target_branch": "feature/LZM-02-state",
+  "pr_target": "integration/SHY-03",
+  "candidate_files_sha256": {
+    "src/Makefile.global": "f73566d0d575d3dc7567a49e904e50a2c4856e5405c68256779b9041ac7d5e46",
+    "src/bin/gsqlerr/errmsg.log": "b58ad871e799b1e065c79fafa4c04717230c66e2abc047877a0b817bb1c2b9e8",
+    "src/bin/psql/startup.cpp": "1cc30cd45c4676d79b23ac4c7e30b20aae540231e75618bde8fd00e478338be8",
+    "src/common/interfaces/libpq/Client_Sophos.cpp": "3b8a96296a8d2281c19923d9be8fee5ce63f3bd9ed39d4cf21f64ab69d54f71e",
+    "src/common/interfaces/libpq/Makefile": "6bee22ce964ba074c3bab91c85b1331c96d5e7b1c9ea260055e771a0a7d32a89",
+    "src/common/interfaces/libpq/SSE_map.cpp": "e9a9b3257f692626e17dda1480e40373d2c6de8d72dd50aacaa867ce692c79b0",
+    "src/common/interfaces/libpq/row_state_catalog.cpp": "7d937c4ab911bc36df55bde88dfc81b420f559296951c261b316aafb3365c1c2",
+    "src/common/interfaces/libpq/row_state_v1.cpp": "5c21badb94ce2ea95d43f74af8f8f8b547d06848ee325f8ab9a277f447131b71",
+    "src/common/interfaces/libpq/sse_common.cpp": "7ce1a28a7ef3b230d13f30b0013cc78866071eb31b86d14f7373d352eb2481f1",
+    "src/include/libpq/row_state_catalog.h": "4389c65e9d91512f5d53a3154c6e66e4869d28d2a3c421c5befb8b9e21bae101",
+    "src/include/libpq/row_state_v1.h": "88d671d5558281f8f9c8702fa6f2f1f8fb53d267bf74bf66886a743769188922",
+    "src/include/libpq/sse_v1_contract.hpp": "1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371",
+    "src/include/pg_config.h": "0a1eefc8058702325e6689043a8d82f15f48f910d92c7e1a894118ce49e22312"
+  },
+  "index_tree_before": ":100644 000000 a4d1dde... 0000000... D\tsse/Mitra/src/aux/db_generator.cpp\n:100644 000000 b9720dc... 0000000... D\tsse/Mitra/src/aux/db_generator.hpp\n",
+  "build_artifacts_sha256": {
+    "src/bin/psql/gsql": "52c62b0df34c46a3905a718db358cd8328ae7ecc397734566650e9abc88152d0",
+    "src/common/interfaces/libpq/libpq_ce.so.5": "3a9670879541704892f7e5910cf2d56b7f1b5ff3a10233cfad64e2f3fd7eeba3"
+  },
+  "sources_unchanged_after_tests": true,
+  "index_unchanged_after_tests": true,
+  "tests": {
+    "state.log": {
+      "result": "PASS",
+      "cases": [
+        "STATE-01",
+        "STATE-02",
+        "STATE-03",
+        "STATE-04",
+        "STATE-05",
+        "STATE-06",
+        "STATE-07",
+        "STATE-08",
+        "STATE-09",
+        "STATE-10",
+        "STATE-11",
+        "STATE-12"
+      ],
+      "evidence_dir": "/tmp/lzm02-state.BK7RGjG3"
+    },
+    "bridges.log": {
+      "result": "PASS",
+      "cases": [
+        "BRIDGE-01",
+        "BRIDGE-02",
+        "BRIDGE-03",
+        "BRIDGE-04"
+      ],
+      "evidence_dir": "/tmp/lzm02-bridges.5Z7oVGj0"
+    },
+    "catalog.log": {
+      "result": "PASS",
+      "cases": [
+        "CATALOG-01",
+        "CATALOG-02",
+        "CATALOG-03",
+        "CATALOG-04",
+        "CATALOG-05",
+        "CATALOG-06",
+        "CATALOG-07"
+      ],
+      "evidence_dir": "/tmp/lzm02-catalog.Jgxeaer7"
+    },
+    "prerequisites.log": {
+      "result": "PASS",
+      "cases": [
+        "CATALOG-08"
+      ],
+      "evidence_dir": "/tmp/lzm02-prerequisites.nv7jqajb"
+    }
+  },
+  "isolated_run": "/var/tmp/fides-isolated.qUUkjIlO",
+  "result": "PASS",
+  "delivery": {
+    "commit": "df1a7cc22dc03305aa9aaa463e210c2fb82178fb",
+    "branch": "feature/LZM-02-state",
+    "pr_target": "integration/SHY-03",
+    "local_commit_files_verified": 20,
+    "verification": "committed blob contents match all 20 delivery source/tool files",
+    "remote_publication": "not checked in this document verification",
+    "note": "head and branch above record the original test input, not the final delivery branch"
+  }
+}

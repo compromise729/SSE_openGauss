@@ -1,0 +1,3 @@
+PASS installed library file list and SHA-256 unchanged
+PASS installed programs/libraries unchanged
+PASS original client/server state bytes unchanged

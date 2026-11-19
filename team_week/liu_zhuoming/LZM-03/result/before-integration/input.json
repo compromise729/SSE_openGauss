@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-19",
+  "fixed_commit": "eae777379d0aa81f8d9467fce6a44298e595215a",
+  "fixed_commit_confirmed_by_user": true,
+  "source_branch": "integration/SHY-03",
+  "planned_tool_branch": "test/LZM-03-state-crypto",
+  "pr_target": "integration/SHY-03",
+  "contract": "SHY-02 v1.0",
+  "source_sha256": {
+    "src/common/interfaces/libpq/row_state_v1.cpp": "64581856f054c1a0590221bdfebbec0d9e64640576992f066920cc20ec754170",
+    "src/common/interfaces/libpq/row_state_catalog.cpp": "7d937c4ab911bc36df55bde88dfc81b420f559296951c261b316aafb3365c1c2",
+    "src/include/libpq/row_state_v1.h": "88d671d5558281f8f9c8702fa6f2f1f8fb53d267bf74bf66886a743769188922",
+    "src/include/libpq/sse_v1_contract.hpp": "1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371",
+    "src/bin/psql/common.cpp": "642d0fb6b8d2124108f8c53c01b0ccf777627bc07321b2a1ee87a9bec087efa5",
+    "src/bin/psql/startup.cpp": "1cc30cd45c4676d79b23ac4c7e30b20aae540231e75618bde8fd00e478338be8",
+    "src/common/interfaces/libpq/fe-exec.cpp": "7c59751346270b84cb96324f998d69970bdc20a7e76c854f88fbea7dcc53f8b0",
+    "src/common/interfaces/libpq/Client_Sophos.cpp": "3b8a96296a8d2281c19923d9be8fee5ce63f3bd9ed39d4cf21f64ab69d54f71e",
+    "src/common/interfaces/libpq/sse_common.cpp": "7ce1a28a7ef3b230d13f30b0013cc78866071eb31b86d14f7373d352eb2481f1",
+    "team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp": "1b082b69f6103c46a380a1ad6eb698fdfc1a15be768acbb26cef92659a190fe1",
+    "team_week/yan_zihan/YZH-01/include/row_aead_v1.h": "5648cf56fac38070e7224bdc49f6620e06399d79901881975c35ea3e89aa514f",
+    "team_week/yan_zihan/YZH-01/include/sse_v1_contract.hpp": "1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371"
+  },
+  "tool_sha256": {
+    "team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py": "48edf771daaf9f7a33c743801909ab80734364b54581f0dc361200f51154140f",
+    "team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp": "2aa4db42fb4713077478284fc4847d9eb41be1bf524ec9470c570c3b100d406b",
+    "team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp": "13f539f2e0b6fbc713a7927b7e5f4ac9d5de46a3e813bd0719ee8b407546df66",
+    "team_week/liu_zhuoming/LZM-03/preflight/verify.sh": "ea945b488963655854d51ab094f564266d9150ad75fbe4fbef22f39e83650a0c"
+  },
+  "private_evidence_dir": "/var/tmp/state-crypto-test.02T0ctHr/private",
+  "evidence_dir": "/var/tmp/state-crypto-test.02T0ctHr",
+  "installed_libpq_sha256": "599afb9bd136d0fa825ac5c774f5e4db9f85fa6fee67709803e7da5d8960af06",
+  "installed_library_files_compared": 171,
+  "installed_libraries_unchanged": true,
+  "baseline_state_sources_unchanged": true,
+  "module_result": "PASS",
+  "module_case_count": 18,
+  "zyc01_rule_models": {
+    "result": "PASS",
+    "tests": 16,
+    "runtime": "existing Windows Python 3.12",
+    "scope": "rule models, not production database requests"
+  },
+  "full_verification_exit": 3,
+  "client_order_result": "FAIL",
+  "release_result": "NOT_RELEASED",
+  "full_database_chain": "not executed: v1 routing gate and missing operation calls",
+  "source_fixes": [],
+  "git_operations": "not performed",
+  "output_commit": "not yet committed",
+  "handoff_to": [
+    "张永昌",
+    "组长"
+  ],
+  "temporary_binary_sha256": {
+    "state-crypto-cases": "39477c09b8d408056defe04eb27e0b0c79f2ae611aab82cf33586895ea81630f",
+    "fault-hook.so": "13b8636b2c9d12fa1d9a7a0bcc167be0a527f8d001b66d05dc212a1ffb7f98ad"
+  }
+}

@@ -1,0 +1,24 @@
+$ bash verify_storage_fixture.sh
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_data_pkey" for table "week_demo_data"
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_index_pkey" for table "week_demo_index"
+PASS SQL write/read stored exactly three row blobs and three locator blobs (one resealed)
+PASS database read row 1
+PASS database row authentication
+PASS database row recovers full original bytes
+PASS database read row 2
+PASS database row authentication
+PASS database row recovers full original bytes
+PASS database read row 3
+PASS database row authentication
+PASS database row recovers full original bytes
+PASS database read locator 1
+PASS database locator authentication
+PASS database locator recovers rid and op
+PASS database read locator 2
+PASS database locator authentication
+PASS database locator recovers rid and op
+PASS database read locator 3
+PASS database locator authentication
+PASS database locator recovers rid and op
+PASS database returned only the six expected ciphertexts
+PASS isolated openGauss fixture stopped

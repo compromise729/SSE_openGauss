@@ -1,0 +1,1 @@
+{"case":"ORDER-04","result":"PASS","status":"ok","classification":"ordered_fixture_success","mock_sends":2,"mock_index_rows":2,"displays":1,"events":["preflight","begin_durable","mock_extract_index","counter_saved","mock_reinsert_success","real_decrypt_success","complete_durable","fixture_display_allowed"]}

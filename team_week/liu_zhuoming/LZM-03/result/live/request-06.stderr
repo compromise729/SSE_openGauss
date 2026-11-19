@@ -1,0 +1,5 @@
+[Warning]: The "libpq.so" loaded mismatch the version of gsql, please check it.
+expected: (GaussDB Kernel V500R001C20 build c551dd12) compiled at 2024-03-01 20:55:53 commit 0 last mr  debug
+result: (GaussDB Kernel V500R001C20 build 25489f56) compiled at 2026-10-12 18:01:33 commit 0 last mr  debug
+STATE_EVENT keys_loaded
+Fides state_invalid: rename operation.v1: Input/output error

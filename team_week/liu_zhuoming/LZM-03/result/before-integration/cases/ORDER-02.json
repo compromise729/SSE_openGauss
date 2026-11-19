@@ -1,0 +1,1 @@
+{"case":"ORDER-02","result":"PASS","status":"state_invalid","classification":"marker_failed_before_effects","mock_sends":0,"mock_index_rows":2,"displays":0,"events":["preflight","begin_failed"]}

@@ -1,0 +1,13 @@
+1c6178f11933e7b0bdc687dbf4338009e6941fe26f70882d32dbf438b74af85c  /opt/og/openGauss-server/src/common/interfaces/libpq/row_state_v1.cpp
+1b082b69f6103c46a380a1ad6eb698fdfc1a15be768acbb26cef92659a190fe1  /opt/og/openGauss-server/team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371  /opt/og/openGauss-server/src/include/libpq/sse_v1_contract.hpp
+b592ec4e6981c122fa414c09ce76bfe513b564ddc30180c6906f2bd92305450e  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py
+d59f1a44eb87391b4181d1e5df4669ab7b36853268af5e724a60020e935a734c  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/build-live.py
+2aa4db42fb4713077478284fc4847d9eb41be1bf524ec9470c570c3b100d406b  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp
+57da960442af4e5d59d8023192a1a51f72e4fe9dc26faeb421a54281719cc329  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp
+cfc0fb306c1ee04cc91836e30fcd88bb1dda519f19053ccdb42b81ba370af987  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/live-cases.py
+a8f4031382d3c1b94633164f3c98a3723ce0f1d9c1a78517c14d062f81a9dded  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/live-fault-hook.cpp
+9b1021c60604b1fffe97645654840a633c1d7587eadac008e97838e4640a63fd  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/run-live.sh
+13f539f2e0b6fbc713a7927b7e5f4ac9d5de46a3e813bd0719ee8b407546df66  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp
+93dbe3e2553390426406738f1ce14becb632b0cc31c4b5537e6ee04878551e89  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh
+ea945b488963655854d51ab094f564266d9150ad75fbe4fbef22f39e83650a0c  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/verify.sh

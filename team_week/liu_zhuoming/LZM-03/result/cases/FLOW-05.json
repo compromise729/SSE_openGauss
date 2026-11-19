@@ -1,0 +1,1 @@
+{"case":"FLOW-05","result":"PASS","status":"db_failed","classification":"mock_reinsert_failure_marker_retained","mock_sends":2,"mock_index_rows":0,"displays":0,"events":["preflight","begin_durable","mock_extract_index","counter_saved","mock_reinsert_failed"]}
