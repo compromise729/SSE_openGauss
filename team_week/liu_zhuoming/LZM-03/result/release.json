@@ -1,0 +1,14 @@
+{
+  "release_result": "PASS",
+  "module_cases": 18,
+  "real_request_cases": 15,
+  "module_evidence": "/var/tmp/state-crypto-test.EfWf2Wax",
+  "live_evidence": "/var/tmp/state-live-evidence.6dVdG2eV",
+  "isolated_run": "/var/tmp/fides-isolated.KvNT98Su",
+  "client_path": "gsql SendQuery -> execute_request -> actual Fides and isolated SQL",
+  "installed_programs_and_libraries_unchanged": true,
+  "original_state_unchanged": true,
+  "instance_stopped": true,
+  "fixed_baseline": "eae777379d0aa81f8d9467fce6a44298e595215a",
+  "source_changes": "working-tree request/state fixes; not yet committed"
+}

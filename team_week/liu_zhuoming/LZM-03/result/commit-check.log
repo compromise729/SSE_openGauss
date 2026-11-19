@@ -1,0 +1,25 @@
+LZM-03 output commit verification | 2026-11-19
+BRANCH=test/LZM-03-state-crypto
+COMMIT=0671a79d068b8c3535b7c511c4aeefe76710a032
+PARENT=eae777379d0aa81f8d9467fce6a44298e595215a
+PASS exactly 8 production source files and 10 tools committed
+PASS all committed file contents match current files and tested input fingerprints
+src/bin/psql/common.cpp
+src/bin/psql/startup.cpp
+src/common/interfaces/libpq/Client_Sophos.cpp
+src/common/interfaces/libpq/Makefile
+src/common/interfaces/libpq/row_request_v1.cpp
+src/common/interfaces/libpq/row_state_v1.cpp
+src/include/libpq/row_request_v1.h
+src/include/libpq/row_state_v1.h
+team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py
+team_week/liu_zhuoming/LZM-03/preflight/build-live.py
+team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp
+team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp
+team_week/liu_zhuoming/LZM-03/preflight/live-cases.py
+team_week/liu_zhuoming/LZM-03/preflight/live-fault-hook.cpp
+team_week/liu_zhuoming/LZM-03/preflight/run-live.sh
+team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp
+team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh
+team_week/liu_zhuoming/LZM-03/preflight/verify.sh
+Read local commit/tree/blob objects; no Git commands executed. Remote publication not queried.

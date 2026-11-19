@@ -1,0 +1,15 @@
+{
+  "task": "LMD-01",
+  "algorithm": "SHA-256",
+  "files": {
+    "李孟德-check.sql": "733df4be57fb3a31e2fabd225e87b25e878375af8ab20b92906b0e1df5aff143",
+    "db-interface.md": "bf58464bc6ef6b09892a050e31696cf5924f1ad3cde68da621b2fcd0cbf517ca",
+    "handoff.md": "4bf7f66bd1844e9a693e82182a0e550cab1bc081c413b47444cceff6248ed80b",
+    "LMD-01-storage.patch": "19236982db37dad7c376e9130b3a8355013c82b9ae4fa9a31cdf121eaf57f845",
+    "module-test.log": "a9d6c2f9975dccc3c4cce3a75dcb57f312560674ad410ea86bbd7afa27b213f4",
+    "results.json": "46ceed4032c581f69fdd483b43b5d8db36319961e61e49370c910c4bc3e1e2ad",
+    "run-module.sh": "2fb705f1f5304fa55f49dac280499e33166505bc3b922279a84aee8bede08f73",
+    "SSE_v1.sql": "0b28ec85b220a5c544695a8b52bf9db5fa64421f78f1e31c96eb33a9fb4ef140",
+    "storage-fixture.sql": "fed5bb3b87bf3ebda7be0e566d9cc337c823cf90a0025c43b51aeed14f373f30"
+  }
+}

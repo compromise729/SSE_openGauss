@@ -1,0 +1,61 @@
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+-- SHY-02 executable physical-shape fixture. LMD-01 implements production functions.
+CREATE SCHEMA shy02_contract;
+CREATE SCHEMA
+CREATE TABLE shy02_contract.demo_data (
+    rid text PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+    data_blob text NOT NULL CHECK (octet_length(data_blob) BETWEEN 88 AND 65624)
+);
+gsql:/mnt/c/Study/创新训练计划/team_week/leader/SHY-02/sql/physical_schema_draft.sql:6: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "demo_data_pkey" for table "demo_data"
+CREATE TABLE
+CREATE TABLE shy02_contract.demo_index (
+    ut text PRIMARY KEY,
+    locator_blob text NOT NULL CHECK (octet_length(locator_blob) = 96)
+);
+gsql:/mnt/c/Study/创新训练计划/team_week/leader/SHY-02/sql/physical_schema_draft.sql:10: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "demo_index_pkey" for table "demo_index"
+CREATE TABLE
+CREATE TABLE shy02_contract.catalog (
+    logical_schema text NOT NULL,
+    logical_table text NOT NULL,
+    protocol_version integer NOT NULL CHECK (protocol_version = 1),
+    PRIMARY KEY (logical_schema,logical_table)
+);
+gsql:/mnt/c/Study/创新训练计划/team_week/leader/SHY-02/sql/physical_schema_draft.sql:16: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "catalog_pkey" for table "catalog"
+CREATE TABLE
+INSERT INTO shy02_contract.demo_data VALUES (repeat('a',32),repeat('A',88));
+INSERT 0 1
+INSERT INTO shy02_contract.demo_index VALUES ('public_fixture_ut',repeat('B',96));
+INSERT 0 1
+SELECT 'SHAPE_OK', count(*) FROM shy02_contract.demo_data;
+ ?column? | count 
+----------+-------
+ SHAPE_OK |     1
+(1 row)
+
+SELECT 'LOCATOR_SIZE_OK',octet_length(locator_blob) FROM shy02_contract.demo_index;
+    ?column?     | octet_length 
+-----------------+--------------
+ LOCATOR_SIZE_OK |           96
+(1 row)
+
+DO $$ BEGIN
+  BEGIN
+    INSERT INTO shy02_contract.demo_data VALUES (repeat('a',32),repeat('A',88));
+    RAISE EXCEPTION 'DUPLICATE_RID_WAS_ACCEPTED';
+  EXCEPTION WHEN unique_violation THEN RAISE NOTICE 'DUPLICATE_RID_REJECTED'; END;
+  BEGIN
+    INSERT INTO shy02_contract.demo_index VALUES ('bad','short');
+    RAISE EXCEPTION 'SHORT_LOCATOR_WAS_ACCEPTED';
+  EXCEPTION WHEN check_violation THEN RAISE NOTICE 'SHORT_LOCATOR_REJECTED'; END;
+END $$;
+gsql:/mnt/c/Study/创新训练计划/team_week/leader/SHY-02/sql/physical_schema_draft.sql:30: NOTICE:  DUPLICATE_RID_REJECTED
+gsql:/mnt/c/Study/创新训练计划/team_week/leader/SHY-02/sql/physical_schema_draft.sql:30: NOTICE:  SHORT_LOCATOR_REJECTED
+ANONYMOUS BLOCK EXECUTE
+total time: 115  ms

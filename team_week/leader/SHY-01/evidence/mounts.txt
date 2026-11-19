@@ -1,0 +1,6 @@
+TARGET                   SOURCE                                           FSTYPE OPTIONS
+/opt/og/openGauss-server /dev/sdd[/opt/og/shy01-20261117.JNA4yJmS/source] ext4   rw,relatime,discard,errors=remount-ro,data=ordered
+TARGET                               SOURCE                                           FSTYPE OPTIONS
+/opt/og/openGauss-server/sse_storage /dev/sdd[/opt/og/shy01-20261117.JNA4yJmS/client] ext4   rw,relatime,discard,errors=remount-ro,data=ordered
+TARGET                                      SOURCE                                           FSTYPE OPTIONS
+/opt/og/openGauss-server/sse_server_storage /dev/sdd[/opt/og/shy01-20261117.JNA4yJmS/server] ext4   rw,relatime,discard,errors=remount-ro,data=ordered

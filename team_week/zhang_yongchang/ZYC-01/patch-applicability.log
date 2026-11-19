@@ -1,0 +1,16 @@
+=== ZYC-01 patch applicability verification ===
+date: 2026-11-18 14:28:43 +0800
+SHY-02 source_base: 25489f563f25b522d0cd37a6c85865039e3f340f
+SHY-02 release_commit: b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1
+baseline copies: team_prep/zhang_yongchang/evidence/raw/baseline-src/ (git HEAD verified 2026-11-15)
+
+=== normalized patch bodies byte-identical to team_prep originals ===
+common body identical: True
+fe-exec body identical: True
+
+=== dry-run against baseline source tree (patch -p1 --dry-run --binary) ===
+common.cpp is LF; fe-exec.cpp is CRLF (SHY-01 preserved CRLF context; --binary keeps it)
+checking file src/bin/psql/common.cpp
+common patch dry-run exit=0
+checking file src/common/interfaces/libpq/fe-exec.cpp
+fe-exec patch dry-run exit=0

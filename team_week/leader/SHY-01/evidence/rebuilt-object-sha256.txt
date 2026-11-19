@@ -1,0 +1,4 @@
+8018eabd9f3de6daf0fe5ba34253d76eec6f33cae51c4ab2af34eea8962ca1ba  src/bin/psql/common.o
+47a1f071ffa40e0ab8925dba38334e2be0a079d5951095ad85f3a077e1e3eb80  src/common/interfaces/libpq/fe-exec.o
+dd93d9fa17679384a4929453b7c5bf8507666184ef20757d7cd04f8d9de569f2  src/common/interfaces/libpq/sse_common.o
+f0e42c1ddc3783e2db9d3869711b21b009240114c10c0eaa2f6547b8514c5b26  src/gausskernel/process/tcop/postgres.o

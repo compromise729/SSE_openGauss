@@ -1,0 +1,14 @@
+{
+  "task": "SHY-02",
+  "contract_version": "1.0",
+  "source_base": "25489f563f25b522d0cd37a6c85865039e3f340f",
+  "release_commit": "b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1",
+  "release_repository": "/opt/og/shy02-release.K4AiadZr/source",
+  "branch": "team/shy02-contract-v1",
+  "publication": "merged to origin/main through PR #3",
+  "review": "awaiting four member acknowledgements",
+  "remote_branch": "main",
+  "remote_source_commit": "b7076b1d84f2f9d5d3c48063e5a984eb50c28ba9",
+  "remote_merge_commit": "7bace5b2182552f1e2fe5865ac66d58812435510",
+  "remote_pr": "https://github.com/compromise729/SSE_openGauss/pull/3"
+}

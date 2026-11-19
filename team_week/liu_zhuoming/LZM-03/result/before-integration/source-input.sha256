@@ -1,0 +1,7 @@
+64581856f054c1a0590221bdfebbec0d9e64640576992f066920cc20ec754170  /opt/og/openGauss-server/src/common/interfaces/libpq/row_state_v1.cpp
+1b082b69f6103c46a380a1ad6eb698fdfc1a15be768acbb26cef92659a190fe1  /opt/og/openGauss-server/team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371  /opt/og/openGauss-server/src/include/libpq/sse_v1_contract.hpp
+48edf771daaf9f7a33c743801909ab80734364b54581f0dc361200f51154140f  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py
+2aa4db42fb4713077478284fc4847d9eb41be1bf524ec9470c570c3b100d406b  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp
+13f539f2e0b6fbc713a7927b7e5f4ac9d5de46a3e813bd0719ee8b407546df66  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp
+ea945b488963655854d51ab094f564266d9150ad75fbe4fbef22f39e83650a0c  /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-03/preflight/verify.sh

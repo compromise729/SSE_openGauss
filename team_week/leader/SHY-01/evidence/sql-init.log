@@ -1,0 +1,81 @@
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+gsql:sse_sql/SSE_init.sql:1: NOTICE:  function sse_create_tables2(text,text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:49: NOTICE:  function fbdsse_create_tables2(text,text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:98: NOTICE:  function fides_insert(text[],text[],text[],text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:141: NOTICE:  function mitra_insert(text[],text[],text[],text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:161: NOTICE:  function fbdsse_insert(text[],text[],text[],text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:301: NOTICE:  function fides_re_insert(text[],text[],text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:325: NOTICE:  function mitra_re_insert(text[],text[],text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:345: NOTICE:  function fbdsse_select(text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:359: NOTICE:  function fides_join(text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:378: NOTICE:  function mitra_join(text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:407: NOTICE:  function mitra_reinsert(pg_catalog.varchar[],pg_catalog.varchar[],pg_catalog.varchar[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:431: NOTICE:  function closefb_create_tables2(text,text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:477: NOTICE:  function closefb_insert(text[],text[],text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:498: NOTICE:  function closefb_delete(text[],text[],text[],text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:525: NOTICE:  function closefb_select(text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:547: NOTICE:  function dual_create_tables2(text,text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:595: NOTICE:  function dual_insert(text[],text[],text[],text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:638: NOTICE:  function dual_delete(text[],text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:667: NOTICE:  function dual_select(text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:689: NOTICE:  function januspp_create_tables2(text,text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:763: NOTICE:  function januspp_insert(text[],text[],text[],text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:783: NOTICE:  function januspp_delete(text[],text[],text[],text[],text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:809: NOTICE:  function januspp_select(text[],text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+gsql:sse_sql/SSE_init.sql:830: NOTICE:  function orion_create_tables2(text,text,text,text) does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+total time: 106  ms

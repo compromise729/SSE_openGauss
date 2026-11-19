@@ -1,0 +1,11 @@
+Switched to a new branch 'team/shy02-contract-v1'
+[team/shy02-contract-v1 b6159cf] docs: freeze SHY-02 Fides row encryption contract v1
+ 7 files changed, 311 insertions(+)
+ create mode 100755 team_week/leader/SHY-02/checks/crypto_probe.cpp
+ create mode 100755 team_week/leader/SHY-02/checks/header_check.cpp
+ create mode 100755 team_week/leader/SHY-02/include/sse_v1_contract.hpp
+ create mode 100755 team_week/leader/SHY-02/sql/physical_schema_draft.sql
+ create mode 100755 team_week/leader/SHY-02/四人接续实现清单.md
+ create mode 100755 team_week/leader/SHY-02/接口与数据格式约定.md
+ create mode 100755 team_week/leader/SHY-02/验收样例与预期结果.md
+b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1

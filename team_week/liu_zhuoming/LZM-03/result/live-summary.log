@@ -1,0 +1,23 @@
+LIVE_EVIDENCE_DIR=/var/tmp/state-live-evidence.6dVdG2eV
+PASS installed programs/libraries unchanged
+PASS original client/server state bytes unchanged
+RUN_DIR=/var/tmp/fides-isolated.KvNT98Su
+RUN_DIR=/var/tmp/fides-isolated.KvNT98Su
+PASS LIVE-01-create
+PASS LIVE-02-insert
+PASS LIVE-03-search
+PASS LIVE-04-reopen-search
+PASS LIVE-05-unknown
+PASS LIVE-06-marker-insert
+PASS LIVE-07-marker-search
+PASS LIVE-08-broken-state
+PASS LIVE-09-missing-key
+PASS LIVE-10-missing-key
+PASS LIVE-11-missing-key
+PASS LIVE-12-empty-token
+PASS LIVE-13-empty-derivation
+PASS LIVE-14-quoted-keyword
+PASS LIVE-15-reinsert-failure
+LIVE_RESULT=PASS
+ISOLATED_SERVER_STOPPED
+LIVE_EXIT=0

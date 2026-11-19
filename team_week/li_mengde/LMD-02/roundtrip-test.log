@@ -1,0 +1,386 @@
+BASE=25489f563f25b522d0cd37a6c85865039e3f340f
+SERVER_COMMIT=f99e41872fc3f00f9199ed94b5828859e89ed27e
+LOCAL_TASK_BRANCH=test/LMD-02-roundtrip
+LOCAL_TASK_COMMIT=9fd14f8f4fa9b3a8209c63196bcf9b0c6f9dc5db
+83626a46fc4bb3697cdb05a91f3b6cce7d2dd0aa68fc879c794570f3b28acf31  /opt/og/lmd-week.yDi2bDj9/dest/bin/gaussdb
+0b28ec85b220a5c544695a8b52bf9db5fa64421f78f1e31c96eb33a9fb4ef140  sse_sql/SSE_v1.sql
+a2c08857709f0c30bb745bf138b9799b2125194e38189469aaa87c791faddd89  team_week/li_mengde/LMD-02/run-roundtrip.sh
+RUN_DIR=/var/tmp/fides-isolated.EtKlj9SJ
+PREFLIGHT_EXIT=3 RECORD=/var/tmp/fides-isolated.EtKlj9SJ/pre-init.bQRK094N.json
+{"counter": {"path": "/var/tmp/fides-isolated.EtKlj9SJ/client/fides_client.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "teamdemo20261012apple"}, "mapping": {"path": "/var/tmp/fides-isolated.EtKlj9SJ/client/sse_table.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "team_fides_demo"}, "recommendation": "\u72b6\u6001\u5f02\u5e38\uff0c\u5148\u5904\u7406\u6587\u4ef6\u95ee\u9898\uff1b\u5982\u9884\u671f\u4e3a\u9996\u6b21\u521d\u59cb\u5316\uff0c\u8bf7\u4eba\u5de5\u6838\u5bf9\u5b9e\u9a8c\u524d\u63d0\u3002"}
+RUN_DIR=/var/tmp/fides-isolated.EtKlj9SJ
+INSTANCE=/var/tmp/fides-isolated.EtKlj9SJ/db/instance
+SOCKET=/var/tmp/fides-isolated.EtKlj9SJ/socket
+PORT=55463
+CLIENT=/var/tmp/fides-isolated.EtKlj9SJ/client (mounted at /opt/og/openGauss-server/sse_storage)
+SERVER=/var/tmp/fides-isolated.EtKlj9SJ/server (mounted at /opt/og/openGauss-server/sse_server_storage)
+PID=411
+In this omm shell: isolated.sh gsql | preflight | stop; exit also stops the instance.
+built librow_aead_v1.so (g++ (GCC) 7.3.0)
+PASS load absent directory refuses
+PASS absent load clears output and creates nothing
+PASS generate keys explicitly
+PASS generated key lengths and distinct purposes
+PASS 0600 /row_aead_v1.key
+PASS 0600 /locator_aead_v1.key
+PASS 0600 /row_aead_v1.keyid
+PASS second initialization refuses
+PASS failure leaves no key output
+PASS load after initialization
+PASS second initialization never overwrites
+PASS generated keys usable
+PASS generated keys decrypt
+PASS generated key roundtrip bytes
+PASS fixture holds key directory lock
+PASS load during initialization refuses
+PASS release fixture lock
+PASS fixture remove locator key
+PASS existing state missing key
+PASS existing state cannot replace missing key
+PASS missing key never auto-created
+PASS reject key length 0
+PASS invalid key length clears output
+PASS reject key length 16
+PASS invalid key length clears output
+PASS reject key length 31
+PASS invalid key length clears output
+PASS reject key length 33
+PASS invalid key length clears output
+PASS short key ID refused
+PASS fixture unsafe file mode
+PASS unsafe file mode refused
+PASS fixture symlink
+PASS key symlink refused
+PASS CRYPTO-01 row 1 encode
+PASS CRYPTO-01 row 1 decode
+PASS CRYPTO-01 row 1 codec exact bytes=27
+PASS CRYPTO-01 row 1 different ciphertexts Base64=108
+PASS CRYPTO-01 row 1 decrypt first
+PASS CRYPTO-01 row 1 first exact
+PASS CRYPTO-01 row 1 decrypt second
+PASS CRYPTO-01 row 1 second exact
+PASS CRYPTO-01 row 2 encode
+PASS CRYPTO-01 row 2 decode
+PASS CRYPTO-01 row 2 codec exact bytes=29
+PASS CRYPTO-01 row 2 different ciphertexts Base64=112
+PASS CRYPTO-01 row 2 decrypt first
+PASS CRYPTO-01 row 2 first exact
+PASS CRYPTO-01 row 2 decrypt second
+PASS CRYPTO-01 row 2 second exact
+PASS CRYPTO-01 row 3 encode
+PASS CRYPTO-01 row 3 decode
+PASS CRYPTO-01 row 3 codec exact bytes=32
+PASS CRYPTO-01 row 3 different ciphertexts Base64=116
+PASS CRYPTO-01 row 3 decrypt first
+PASS CRYPTO-01 row 3 first exact
+PASS CRYPTO-01 row 3 decrypt second
+PASS CRYPTO-01 row 3 second exact
+PASS CRYPTO-02 all fields empty encode
+PASS CRYPTO-02 all fields empty decode
+PASS CRYPTO-02 all fields empty codec exact bytes=12
+PASS CRYPTO-02 all fields empty different ciphertexts Base64=88
+PASS CRYPTO-02 all fields empty decrypt first
+PASS CRYPTO-02 all fields empty first exact
+PASS CRYPTO-02 all fields empty decrypt second
+PASS CRYPTO-02 all fields empty second exact
+PASS CRYPTO-02 Chinese, spaces and trailing NULs encode
+PASS CRYPTO-02 Chinese, spaces and trailing NULs decode
+PASS CRYPTO-02 Chinese, spaces and trailing NULs codec exact bytes=31
+PASS CRYPTO-02 Chinese, spaces and trailing NULs different ciphertexts Base64=116
+PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt first
+PASS CRYPTO-02 Chinese, spaces and trailing NULs first exact
+PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt second
+PASS CRYPTO-02 Chinese, spaces and trailing NULs second exact
+PASS CRYPTO-02 payload 15 encode
+PASS CRYPTO-02 payload 15 decode
+PASS CRYPTO-02 payload 15 codec exact bytes=27
+PASS CRYPTO-02 payload 15 different ciphertexts Base64=108
+PASS CRYPTO-02 payload 15 decrypt first
+PASS CRYPTO-02 payload 15 first exact
+PASS CRYPTO-02 payload 15 decrypt second
+PASS CRYPTO-02 payload 15 second exact
+PASS CRYPTO-02 payload 16 encode
+PASS CRYPTO-02 payload 16 decode
+PASS CRYPTO-02 payload 16 codec exact bytes=28
+PASS CRYPTO-02 payload 16 different ciphertexts Base64=112
+PASS CRYPTO-02 payload 16 decrypt first
+PASS CRYPTO-02 payload 16 first exact
+PASS CRYPTO-02 payload 16 decrypt second
+PASS CRYPTO-02 payload 16 second exact
+PASS CRYPTO-02 payload 17 encode
+PASS CRYPTO-02 payload 17 decode
+PASS CRYPTO-02 payload 17 codec exact bytes=29
+PASS CRYPTO-02 payload 17 different ciphertexts Base64=112
+PASS CRYPTO-02 payload 17 decrypt first
+PASS CRYPTO-02 payload 17 first exact
+PASS CRYPTO-02 payload 17 decrypt second
+PASS CRYPTO-02 payload 17 second exact
+PASS CRYPTO-02 payload 63 encode
+PASS CRYPTO-02 payload 63 decode
+PASS CRYPTO-02 payload 63 codec exact bytes=75
+PASS CRYPTO-02 payload 63 different ciphertexts Base64=172
+PASS CRYPTO-02 payload 63 decrypt first
+PASS CRYPTO-02 payload 63 first exact
+PASS CRYPTO-02 payload 63 decrypt second
+PASS CRYPTO-02 payload 63 second exact
+PASS CRYPTO-02 payload 64 encode
+PASS CRYPTO-02 payload 64 decode
+PASS CRYPTO-02 payload 64 codec exact bytes=76
+PASS CRYPTO-02 payload 64 different ciphertexts Base64=176
+PASS CRYPTO-02 payload 64 decrypt first
+PASS CRYPTO-02 payload 64 first exact
+PASS CRYPTO-02 payload 64 decrypt second
+PASS CRYPTO-02 payload 64 second exact
+PASS CRYPTO-02 payload 65 encode
+PASS CRYPTO-02 payload 65 decode
+PASS CRYPTO-02 payload 65 codec exact bytes=77
+PASS CRYPTO-02 payload 65 different ciphertexts Base64=176
+PASS CRYPTO-02 payload 65 decrypt first
+PASS CRYPTO-02 payload 65 first exact
+PASS CRYPTO-02 payload 65 decrypt second
+PASS CRYPTO-02 payload 65 second exact
+PASS CRYPTO-02 all fields at limit encode
+PASS CRYPTO-02 all fields at limit decode
+PASS CRYPTO-02 all fields at limit codec exact bytes=33804
+PASS CRYPTO-02 all fields at limit different ciphertexts Base64=45144
+PASS CRYPTO-02 all fields at limit decrypt first
+PASS CRYPTO-02 all fields at limit first exact
+PASS CRYPTO-02 all fields at limit decrypt second
+PASS CRYPTO-02 all fields at limit second exact
+PASS payload over 16384
+PASS overlength payload clears ciphertext
+PASS keyword over 1024
+PASS trailing bytes in serialized row
+PASS bad codec does not emit partial fields
+PASS fresh rid
+PASS second fresh rid
+PASS rid is 16 random bytes as lowercase hex
+PASS CRYPTO-03 locator size, randomization and no plaintext rid|add
+PASS re-encrypted locator authenticates
+PASS locator exact rid and op=0
+PASS v1 same-scope valid locator substitution
+PASS v1 contract has no ut or expected rid in locator AAD
+PASS row cross-table
+PASS row cross-table no plaintext
+PASS locator cross-table
+PASS locator cross-table no locator
+PASS row cross-database
+PASS row cross-database no plaintext
+PASS locator cross-database
+PASS locator cross-database no locator
+PASS row cross-deployment
+PASS row cross-deployment no plaintext
+PASS locator cross-deployment
+PASS locator cross-deployment no locator
+PASS row cross-record
+PASS row cross-record no plaintext
+PASS row empty rid
+PASS row empty rid no plaintext
+PASS locator empty rid
+PASS locator error clears output
+PASS unsupported locator op
+PASS wrong locator purpose
+PASS wrong locator purpose no locator
+PASS wrong row purpose
+PASS wrong row purpose no plaintext
+PASS row version
+PASS row version no plaintext
+PASS locator version
+PASS locator version no locator
+PASS row purpose byte
+PASS row purpose byte no plaintext
+PASS row magic
+PASS row magic no plaintext
+PASS row length field
+PASS row length field no plaintext
+PASS locator length field
+PASS locator length field no locator
+PASS row key_id
+PASS row key_id no plaintext
+PASS locator key_id
+PASS locator key_id no locator
+PASS row truncated
+PASS row truncated no plaintext
+PASS locator truncated
+PASS locator truncated no locator
+PASS row Base64 whitespace
+PASS row Base64 whitespace no plaintext
+PASS locator invalid Base64 padding
+PASS locator invalid Base64 padding no locator
+PASS row tamper offset 32
+PASS row tamper offset 32 no plaintext
+PASS locator tamper offset 32
+PASS locator tamper offset 32 no locator
+PASS row tamper offset 56
+PASS row tamper offset 56 no plaintext
+PASS locator tamper offset 56
+PASS locator tamper offset 56 no locator
+PASS row tamper offset 88
+PASS row tamper offset 88 no plaintext
+PASS locator tamper offset 88
+PASS locator tamper offset 88 no locator
+PASS row missing key
+PASS row missing key no plaintext
+PASS locator missing key
+PASS locator missing key no locator
+PASS row wrong key same ID
+PASS row wrong key same ID no plaintext
+PASS locator wrong key same ID
+PASS locator wrong key same ID no locator
+PASS row key isolation
+PASS row key isolation no plaintext
+PASS locator key isolation
+PASS locator key isolation no locator
+PASS public vector file readable
+PASS known answer row
+PASS row exact plaintext
+PASS known answer row_repeat
+PASS row_repeat exact plaintext
+PASS known answer locator
+PASS locator exact public vector
+PASS valid tag then malformed row
+PASS valid tag then malformed row no plaintext
+PASS valid tag then invalid locator op
+PASS valid tag then invalid locator op no locator
+PASS all 5 public vectors verified
+PASS total=226
+PASS key-generation RNG failure
+PASS RNG failure leaves no key file or output
+PASS rid RNG failure
+PASS rid RNG failure clears output
+PASS row nonce RNG failure
+PASS row RNG failure clears output
+PASS locator nonce RNG failure
+PASS locator RNG failure clears output
+PASS total=8
+PASS standalone batch fixture: last tag damaged, exit=17 stdout_bytes=0 stderr=auth_failed
+In file included from /opt/og/openGauss-server/src/include/libpq/Client_Sophos.h:12:0,
+                 from ./team_week/li_mengde/LMD-02/fides-roundtrip-probe.cpp:10:
+/opt/og/openGauss-server/dest/include/../../sse/opensse-schemes/lib/include/sse/schemes/sophos/sophos_common.hpp:55:20: warning: 'bool sse::sophos::is_base64(unsigned char)' declared 'static' but never defined [-Wunused-function]
+ static inline bool is_base64(unsigned char c);
+                    ^~~~~~~~~
+Initializing crypto library
+cryptoInitWrapper ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+gsql:./team_week/li_mengde/LMD-02/../../../sse_sql/SSE_v1.sql:9: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "sse_v1_catalog_pkey" for table "sse_v1_catalog"
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+COMMIT
+total time: 72  ms
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_data_pkey" for table "week_demo_data"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_index_pkey" for table "week_demo_index"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+SNAPSHOT before_insert data=0:- index=0:-
+SNAPSHOT after_insert data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:30427bd7c195d205b2a6a92f096e3f37
+DATA rid=8aae1f7509c24ecc8ca009b07a841031 data_blob=U1NFMQEB/IkpMONA6zoSB7BZ68zgf1xT1T3QctbaJtCrnAAAABuhLlUmRFfbBH7M1QZboSCEqTSkC5d/2YICAbTNLm704vF8ScvNcB0SC7rO
+INDEX ut=pmNQAID7j4xDs63wIurpdA== locator_blob=U1NFMQEC/IkpMONA6zoSB7BZ68zgfzJ+mudJPnIig7b2nwAAABGv/M4+VXpBWVn7VvCLZs0YfsyuzuXjziOcrMykO+cDKBk=
+DATA rid=34ab8f6b9e3472ab98aa7c3090bcf4ab data_blob=U1NFMQEB/IkpMONA6zoSB7BZ68zgf6QYlJY+2RfhcWl84gAAAB2Xo0sofNz3di0sUfYSIbDQx9saF7fBiLpOosVC9wJ590A/jvSLapilKciz7l0=
+INDEX ut=a7A81qIk/sR0LdsaHDW1TQ== locator_blob=U1NFMQEC/IkpMONA6zoSB7BZ68zgfxna4AdY217gxJ9C/gAAABHBhJaSYXxAIJ6V45W5Ey0NUsrvCHMMjldekxSoso1+r68=
+DATA rid=e3163cf8a6675b1861f6df1fedfe3184 data_blob=U1NFMQEB/IkpMONA6zoSB7BZ68zgfybx/Gun/s5f58/EkgAAACC49NZjM9PDWjBhrEn5Ei+GcWS80tDzlmm2xxgmjsPvz30Okp/3BGLOVGiS1fvh0CY=
+INDEX ut=baSCswvtyMXmwRoukh0ZAQ== locator_blob=U1NFMQEC/IkpMONA6zoSB7BZ68zgfyS4TCRgASZ/gtJQ9AAAABEx3bpSWoBNbc7K+ZDuOh7kxnKNtmAzzJyySYqpxz+q5d0=
+PASS DB-03 stored row and locator bytes match YZH-01 output
+SNAPSHOT before_errors data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:30427bd7c195d205b2a6a92f096e3f37
+PASS middle duplicate rid SQLSTATE=23505
+SNAPSHOT after_duplicate_rid data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:30427bd7c195d205b2a6a92f096e3f37
+PASS index collision SQLSTATE=23505
+SNAPSHOT after_index_collision data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:30427bd7c195d205b2a6a92f096e3f37
+PASS missing row SQLSTATE=21000
+SNAPSHOT after_missing_row data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:30427bd7c195d205b2a6a92f096e3f37
+HIT round=1 ut=pmNQAID7j4xDs63wIurpdA== locator_blob_bytes=96 client_rid=8aae1f7509c24ecc8ca009b07a841031 client_operation=0
+HIT round=1 ut=a7A81qIk/sR0LdsaHDW1TQ== locator_blob_bytes=96 client_rid=34ab8f6b9e3472ab98aa7c3090bcf4ab client_operation=0
+FETCH round=1 rid=8aae1f7509c24ecc8ca009b07a841031 data_blob_bytes=108 client_row=[1,apple,red apple]
+FETCH round=1 rid=34ab8f6b9e3472ab98aa7c3090bcf4ab data_blob_bytes=112 client_row=[2,apple,green apple]
+PASS Fides round=1 hits=2 data and index rows=3
+HIT round=2 ut=gBIzkScjZVV+MNODVphCIA== locator_blob_bytes=96 client_rid=8aae1f7509c24ecc8ca009b07a841031 client_operation=0
+HIT round=2 ut=hsL/LODYcSgEVgVQXKeN4g== locator_blob_bytes=96 client_rid=34ab8f6b9e3472ab98aa7c3090bcf4ab client_operation=0
+FETCH round=2 rid=8aae1f7509c24ecc8ca009b07a841031 data_blob_bytes=108 client_row=[1,apple,red apple]
+FETCH round=2 rid=34ab8f6b9e3472ab98aa7c3090bcf4ab data_blob_bytes=112 client_row=[2,apple,green apple]
+PASS Fides round=2 hits=2 data and index rows=3
+HIT round=3 ut=baSCswvtyMXmwRoukh0ZAQ== locator_blob_bytes=96 client_rid=e3163cf8a6675b1861f6df1fedfe3184 client_operation=0
+FETCH round=3 rid=e3163cf8a6675b1861f6df1fedfe3184 data_blob_bytes=116 client_row=[3,banana,yellow banana]
+PASS Fides round=3 hits=1 data and index rows=3
+PASS malformed search SQLSTATE=22023
+PASS invalid search token padding SQLSTATE=22023
+SNAPSHOT after_reinsert data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:a720e9762175ec86bb6ab133333164c8
+PASS empty search, replay miss, and unchanged business rows after reinsert
+SNAPSHOT before_missing_hit_fixture data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:a720e9762175ec86bb6ab133333164c8
+SNAPSHOT after_missing_hit_injection data=2:f57f8a08505c1f8244ee46a3243cd58d index=2:07bd809251987d26b9e9f6c3fc3850f7
+PASS matched locator has no data row SQLSTATE=21000
+SNAPSHOT after_missing_hit_rollback data=3:610cdc26686dfa6a1adc1785a36a9ee5 index=3:a720e9762175ec86bb6ab133333164c8
+HIT round=4 ut=ICQ98autUFJLLGFi/kFpbA== locator_blob_bytes=96 client_rid=8aae1f7509c24ecc8ca009b07a841031 client_operation=0
+HIT round=4 ut=i9KnSJRtsRkzFc2lQxVAQg== locator_blob_bytes=96 client_rid=34ab8f6b9e3472ab98aa7c3090bcf4ab client_operation=0
+HIT round=4 ut=LZoiqop4Ee8c0Qlx224TTQ== locator_blob_bytes=96 client_rid=89fe48544a3933eb4dd6c848f7f9f823 client_operation=0
+FETCH round=4 rid=8aae1f7509c24ecc8ca009b07a841031 data_blob_bytes=108 client_row=[1,apple,red apple]
+FETCH round=4 rid=34ab8f6b9e3472ab98aa7c3090bcf4ab data_blob_bytes=112 client_row=[2,apple,green apple]
+FETCH round=4 rid=89fe48544a3933eb4dd6c848f7f9f823 data_blob_bytes=112 client_row=[编号 '四',apple,]
+PASS Fides round=4 hits=3 data and index rows=4
+PASS append after search, UTF-8, space, literal quote and empty payload round trip
+HIT round=5 ut=D2JMnTkylu0gNoUt4a+JDQ== locator_blob_bytes=96 client_rid=977861d4e9e122b1feffc225f24e8759 client_operation=0
+FETCH round=5 rid=977861d4e9e122b1feffc225f24e8759 data_blob_bytes=45144 client_field_bytes=16384,1024,16384
+PASS Fides round=5 hits=1 data and index rows=5
+PASS maximum YZH-01 field sizes round trip through libpq
+Initializing crypto library
+cryptoInitWrapper ok
+Dictionary loaded from file: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Dictionary size: 4
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+BEGIN
+ logical_schema | logical_table | protocol_version 
+----------------+---------------+------------------
+ public         | week_demo     |                1
+(1 row)
+
+               rid                | data_bytes |           data_digest            
+----------------------------------+------------+----------------------------------
+ 34ab8f6b9e3472ab98aa7c3090bcf4ab |        112 | 88cd5f0420f344f29f9ee82d28758f71
+ 89fe48544a3933eb4dd6c848f7f9f823 |        112 | cdc713bccc9a3d48925d30962cbec36f
+ 8aae1f7509c24ecc8ca009b07a841031 |        108 | 9876f908cc55cd23f076b057e9dfaac0
+ 977861d4e9e122b1feffc225f24e8759 |      45144 | 8bbcb3a086f67b91d9d42f2733b70327
+ e3163cf8a6675b1861f6df1fedfe3184 |        116 | bfde50ef173a6a59894da020aebcdc15
+(5 rows)
+
+            ut            | locator_bytes |          locator_digest          
+--------------------------+---------------+----------------------------------
+ 0BeKJrDg1tiMsjAU1JW6uQ== |            96 | 8fc70f6cba21186fbba8c63eba0b643b
+ B5QgmYKFxlzG6XihhNb/Aw== |            96 | e888baccda563b380e8268050c09d89d
+ EqahnofsDmTV/6wRu5aTbA== |            96 | cadd707cddd90cae82956209bd74cf1f
+ JMjKf4DNGu8HRlZA9qIr/Q== |            96 | 3673bed0effc1c8f7485bb12222c42b2
+ avsM5llze7fhEBg8dlfZ3A== |            96 | ed3ab097bb1afeace45070e77e94dab0
+(5 rows)
+
+               rid                | data_bytes |           data_digest            
+----------------------------------+------------+----------------------------------
+ 977861d4e9e122b1feffc225f24e8759 |      45144 | 8bbcb3a086f67b91d9d42f2733b70327
+(1 row)
+
+COMMIT
+total time: 34  ms
+ISOLATED_SERVER_STOPPED

@@ -1,0 +1,1 @@
+{"case":"FLOW-02","result":"PASS","status":"state_invalid","classification":"broken_state_failure","mock_sends":0,"mock_index_rows":2,"displays":0,"events":["preflight"]}

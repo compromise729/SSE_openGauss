@@ -1,0 +1,2 @@
+shy01_apple 6
+shy01_banana 2

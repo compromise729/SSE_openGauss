@@ -1,0 +1,14 @@
+EVIDENCE_DIR=/tmp/lzm02-catalog.Jgxeaer7
+RUN_DIR=/var/tmp/fides-isolated.qUUkjIlO
+RUN_DIR=/var/tmp/fides-isolated.qUUkjIlO
+PASS CATALOG-01: same-connection table and version verified with isolated SQL shape fixture
+{"status":"ok","counter":{"target":"apple","status":"found","count":2},"mapping":{"target":"week_demo","status":"found"}}
+{"status":"ok","counter":{"target":"unknown","status":"unregistered"},"mapping":{"target":"week_demo","status":"found"}}
+PASS CATALOG-02: CLI reports exit 0/1/2
+PASS CATALOG-05: CLI leaves all v1 state digests unchanged
+PASS CATALOG-06: CLI rejects mismatched server table version
+PASS CATALOG-07: missing rid or ut primary key is rejected
+PASS CATALOG-03: rebuilt gsql validates fixture before routing gate
+PASS CATALOG-04: rebuilt gsql refuses unfinished marker before any user SQL
+{"status":"incomplete_operation","reason":"operation.v1 exists; preserve the environment for diagnosis"}
+ISOLATED_SERVER_STOPPED

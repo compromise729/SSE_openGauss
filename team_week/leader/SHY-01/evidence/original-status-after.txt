@@ -1,0 +1,3 @@
+ M src/Makefile.global
+ M src/bin/gsqlerr/errmsg.log
+ M src/include/pg_config.h

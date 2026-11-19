@@ -1,0 +1,9 @@
+src/common/interfaces/libpq/sse_common.cpp: OK
+src/common/interfaces/libpq/fe-exec.cpp: OK
+src/bin/psql/common.cpp: OK
+src/bin/psql/startup.cpp: OK
+src/common/interfaces/libpq/Client_Sophos.cpp: OK
+src/common/interfaces/libpq/SSE_map.cpp: OK
+src/gausskernel/process/tcop/postgres.cpp: OK
+src/gausskernel/process/tcop/Server_Sophos.cpp: OK
+sse_sql/SSE_init.sql: OK

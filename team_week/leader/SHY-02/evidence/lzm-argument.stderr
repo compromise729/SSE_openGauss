@@ -1,0 +1,3 @@
+usage: check_fides_state.py [-h] --counter-file COUNTER_FILE --mapping-file
+                            MAPPING_FILE --table TABLE --keyword KEYWORD
+check_fides_state.py: error: the following arguments are required: --keyword

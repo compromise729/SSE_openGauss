@@ -1,0 +1,68 @@
+LZM-03 delivery check | 2026-11-19
+PASS fixed commit matches current local branch
+PASS input matches src/common/interfaces/libpq/row_state_v1.cpp
+PASS input matches src/common/interfaces/libpq/row_state_catalog.cpp
+PASS input matches src/include/libpq/row_state_v1.h
+PASS input matches src/include/libpq/sse_v1_contract.hpp
+PASS input matches src/bin/psql/common.cpp
+PASS input matches src/bin/psql/startup.cpp
+PASS input matches src/common/interfaces/libpq/fe-exec.cpp
+PASS input matches src/common/interfaces/libpq/Client_Sophos.cpp
+PASS input matches src/common/interfaces/libpq/sse_common.cpp
+PASS input matches team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+PASS input matches team_week/yan_zihan/YZH-01/include/row_aead_v1.h
+PASS input matches team_week/yan_zihan/YZH-01/include/sse_v1_contract.hpp
+PASS input matches team_week/liu_zhuoming/LZM-03/preflight/audit-call-order.py
+PASS input matches team_week/liu_zhuoming/LZM-03/preflight/fault-hook.cpp
+PASS input matches team_week/liu_zhuoming/LZM-03/preflight/state-crypto-cases.cpp
+PASS input matches team_week/liu_zhuoming/LZM-03/preflight/verify.sh
+PASS document README.md
+PASS link README.md -> handoff.md
+PASS link README.md -> env.md
+PASS link README.md -> call-order.md
+PASS link README.md -> fault-injection.md
+PASS link README.md -> preflight/
+PASS link README.md -> result/
+PASS link README.md -> result/call-order.json
+PASS document env.md
+PASS link env.md -> result/
+PASS link env.md -> call-order.md
+PASS link env.md -> fault-injection.md
+PASS document handoff.md
+PASS link handoff.md -> result/input.json
+PASS link handoff.md -> result/source-input.sha256
+PASS link handoff.md -> preflight/state-crypto-cases.cpp
+PASS link handoff.md -> preflight/fault-hook.cpp
+PASS link handoff.md -> preflight/audit-call-order.py
+PASS link handoff.md -> preflight/verify.sh
+PASS link handoff.md -> README.md
+PASS link handoff.md -> env.md
+PASS link handoff.md -> call-order.md
+PASS link handoff.md -> fault-injection.md
+PASS link handoff.md -> result/
+PASS link handoff.md -> env.md
+PASS link handoff.md -> result/verify.log
+PASS link handoff.md -> result/results.json
+PASS link handoff.md -> result/cases/
+PASS link handoff.md -> result/zyc-model.log
+PASS link handoff.md -> result/call-order.json
+PASS link handoff.md -> result/environment.log
+PASS document call-order.md
+PASS link call-order.md -> result/call-order.json
+PASS document fault-injection.md
+PASS link fault-injection.md -> env.md
+PASS link fault-injection.md -> call-order.md
+PASS bash syntax verify.sh
+PASS 4 delivery tools
+PASS 18 case files
+PASS 18 actual module cases PASS
+PASS client gaps not marked released
+PASS actual request call gaps retained
+PASS existing ZYC guards recorded
+PASS 16 ZYC rule models PASS
+PASS public delivery excludes key files and generated binaries
+PASS 171 installed library files unchanged during tests
+PASS installed libpq still unchanged
+RESULT: PASS (delivery integrity)
+RELEASE: NOT_RELEASED (actual client integration missing)
+No production source, installation, system configuration or Git changes performed.

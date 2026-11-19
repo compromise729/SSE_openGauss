@@ -1,0 +1,9 @@
+$ bash verify_legacy_short_key.sh <base repo>
+18b3add01e6408d19ff92108f435d423758a49c8
+PASS legacy baseline file_bytes=0 returned_bytes=16
+PASS legacy baseline file_bytes=15 returned_bytes=16
+PASS legacy baseline file_bytes=16 returned_bytes=16
+PASS legacy fixed file_bytes=0 returned_bytes=0
+PASS legacy fixed file_bytes=15 returned_bytes=0
+PASS legacy fixed file_bytes=16 returned_bytes=16
+PASS legacy fixed short key rejected by both AES helpers

@@ -1,0 +1,26 @@
+OFFLINE_EVIDENCE=/tmp/fides-preflight.nWOLkFsq
+/tmp/fides-preflight.nWOLkFsq/fixtures
+PASS T2-01: normal, exit=0
+PASS T2-02: empty, exit=1
+PASS T2-03: normal, exit=1
+PASS T2-04: normal, exit=1
+PASS T2-05: normal, exit=0
+PASS T2-06: non_numeric, exit=3
+PASS T2-07: truncated, exit=3
+PASS T2-08: missing_count, exit=3
+PASS T2-09: overflow, exit=3
+PASS T2-10: negative, exit=3
+PASS T2-11: bounds, exit=0
+PASS T2-12: bounds, exit=0
+PASS T2-13: missing_counter, exit=3
+PASS T2-14: missing_mapping, exit=3
+PASS T2-15: unreadable, exit=3
+PASS T2-16: bad_mapping, exit=3
+PASS T2-17: bad_scheme, exit=3
+PASS T2-18: duplicate_table, exit=0
+PASS T2-19: bad_encoding, exit=3
+PASS: 19 cases, 38 checker runs
+usage: check_fides_state.py [-h] --counter-file COUNTER_FILE --mapping-file
+                            MAPPING_FILE --table TABLE --keyword KEYWORD
+check_fides_state.py: error: the following arguments are required: --keyword
+PASS OFF-01: missing --keyword, exit=2; stdout empty; fixture tree unchanged

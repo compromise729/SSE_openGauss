@@ -1,0 +1,10 @@
+Initializing crypto library
+cryptoInitWrapper ok
+Sophos_key ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/fides_client.mat
+Sophos_client ok
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_filecnt.mat
+Error: Unable to open file for reading: /opt/og/openGauss-server/sse_storage/mitra_srccnt.mat
+Mitra_client ok
+FBdsse_client ok
+gsql (GaussDB Kernel V500R001C20 build ecfd9dfa) compiled at 2026-10-12 10:06:34 commit 0 last mr  debug

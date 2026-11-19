@@ -1,0 +1,17 @@
+$ bash build.sh
+built librow_aead_v1.so (g++ (GCC) 7.3.0)
+$ ldd build/librow_aead_v1.so
+/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/librow_aead_v1.so: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/librow_aead_v1.so)
+	linux-vdso.so.1 =>  (0x00007ffc149b9000)
+	libcrypto.so.10 => /lib64/libcrypto.so.10 (0x00007f2afc1df000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f2afbed7000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007f2afbbd5000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f2afb9bf000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007f2afb5f1000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x00007f2afb3ed000)
+	libz.so.1 => /lib64/libz.so.1 (0x00007f2afb1d7000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f2afc84b000)
+$ bash run.sh
+/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.20' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto)
+/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto)
+/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/librow_aead_v1.so)

@@ -1,0 +1,10 @@
+EVIDENCE_DIR=/tmp/lzm02-bridges.5Z7oVGj0
+PASS BRIDGE-01: existing mapping entry is guarded by create operation (append)
+PASS BRIDGE-02: existing counter entries reject unlocked writes and persist active counters
+PASS BRIDGE-01: existing mapping entry is guarded by create operation (whole-map)
+PASS BRIDGE-02: existing counter entries reject unlocked writes and persist active counters
+PASS BRIDGE-01: existing mapping entry is guarded by create operation (global-map)
+PASS BRIDGE-02: existing counter entries reject unlocked writes and persist active counters
+PASS BRIDGE-01: existing mapping entry is guarded by create operation (counter-failure)
+PASS BRIDGE-03: existing counter entry propagates unwritable directory error
+PASS BRIDGE-04: existing mapping entry propagates save failure and retains marker

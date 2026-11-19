@@ -1,0 +1,253 @@
+{
+  "module_result": "PASS",
+  "cases": [
+    {
+      "case": "FLOW-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "normal_empty_result",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight"
+      ]
+    },
+    {
+      "case": "FLOW-02",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "broken_state_failure",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight"
+      ]
+    },
+    {
+      "case": "FLOW-03",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "protocol_invalid",
+      "classification": "registered_empty_token_failure",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "token_protocol_invalid"
+      ]
+    },
+    {
+      "case": "FLOW-04",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "protocol_invalid",
+      "classification": "registered_empty_token_failure",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "token_protocol_invalid"
+      ]
+    },
+    {
+      "case": "FLOW-05",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "db_failed",
+      "classification": "mock_reinsert_failure_marker_retained",
+      "mock_sends": 2,
+      "mock_index_rows": 0,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "mock_extract_index",
+        "counter_saved",
+        "mock_reinsert_failed"
+      ]
+    },
+    {
+      "case": "HOOK-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "marker_failed_before_effects",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_failed"
+      ]
+    },
+    {
+      "case": "KEY-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "real_keys_state_crypto_compatible",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-02",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "repeat_and_process_reopen_unchanged",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-03",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-04",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-05",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-06",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-07",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "key_invalid",
+      "classification": "existing_encrypted_data_refused",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "KEY-08",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "partial_init_blocked",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": []
+    },
+    {
+      "case": "ORDER-01",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "marker_failed_before_effects",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_failed"
+      ]
+    },
+    {
+      "case": "ORDER-02",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "state_invalid",
+      "classification": "marker_failed_before_effects",
+      "mock_sends": 0,
+      "mock_index_rows": 2,
+      "displays": 0,
+      "events": [
+        "preflight",
+        "begin_failed"
+      ]
+    },
+    {
+      "case": "ORDER-03",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "ordered_fixture_success",
+      "mock_sends": 1,
+      "mock_index_rows": 2,
+      "displays": 1,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "counter_saved",
+        "mock_insert_success",
+        "real_decrypt_success",
+        "complete_durable",
+        "fixture_display_allowed"
+      ]
+    },
+    {
+      "case": "ORDER-04",
+      "exit_code": 0,
+      "result": "PASS",
+      "status": "ok",
+      "classification": "ordered_fixture_success",
+      "mock_sends": 2,
+      "mock_index_rows": 2,
+      "displays": 1,
+      "events": [
+        "preflight",
+        "begin_durable",
+        "mock_extract_index",
+        "counter_saved",
+        "mock_reinsert_success",
+        "real_decrypt_success",
+        "complete_durable",
+        "fixture_display_allowed"
+      ]
+    }
+  ],
+  "case_count": 18,
+  "call_order_exit": 3,
+  "release_result": "NOT_RELEASED",
+  "scope": "real state and crypto implementations; catalog and network effects are explicit fixtures",
+  "private_evidence_dir": "/var/tmp/state-crypto-test.02T0ctHr/private",
+  "full_business_chain": "not executed; see call-order.json"
+}

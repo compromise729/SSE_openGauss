@@ -1,0 +1,4 @@
+$ python SHY-02/verify_delivery.py
+PASS SHY-02: header, GCM library, physical SQL, state checker, envelope lengths and links
+SHY-02 SHA-256 manifest: 33 entries, 0 mismatches
+Delivered header SHA-256: 1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371

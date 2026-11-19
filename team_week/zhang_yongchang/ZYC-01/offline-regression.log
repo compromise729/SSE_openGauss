@@ -1,0 +1,21 @@
+test_internal_request_passes_through (test_zyc01_regression.CallSiteRoutingTests.test_internal_request_passes_through) ... ok
+test_new_cipher_table_simple_query_enters_guard (test_zyc01_regression.CallSiteRoutingTests.test_new_cipher_table_simple_query_enters_guard) ... ok
+test_old_sse_table_simple_query_enters_guard (test_zyc01_regression.CallSiteRoutingTests.test_old_sse_table_simple_query_enters_guard) ... ok
+test_physical_table_lookup_passes_through (test_zyc01_regression.CallSiteRoutingTests.test_physical_table_lookup_passes_through) ... ok
+test_plain_table_passes_through (test_zyc01_regression.CallSiteRoutingTests.test_plain_table_passes_through) ... ok
+test_broken_state_fails (test_zyc01_regression.EmptyTokenClassificationTests.test_broken_state_fails) ... ok
+test_healthy_unregistered_keyword_returns_empty_result (test_zyc01_regression.EmptyTokenClassificationTests.test_healthy_unregistered_keyword_returns_empty_result) ... ok
+test_registered_keyword_with_empty_token_fails (test_zyc01_regression.EmptyTokenClassificationTests.test_registered_keyword_with_empty_token_fails) ... ok
+test_and_inside_quote_is_literal (test_zyc01_regression.QuotedAndChineseSpaceTests.test_and_inside_quote_is_literal) ... ok
+test_banana_keyword (test_zyc01_regression.QuotedAndChineseSpaceTests.test_banana_keyword) ... ok
+test_chinese_and_space_keyword (test_zyc01_regression.QuotedAndChineseSpaceTests.test_chinese_and_space_keyword) ... ok
+test_or_inside_quote_is_literal (test_zyc01_regression.QuotedAndChineseSpaceTests.test_or_inside_quote_is_literal) ... ok
+test_fatal_status_stops_data_query (test_zyc01_regression.ReinsertGuardTests.test_fatal_status_stops_data_query) ... ok
+test_null_result_stops_data_query (test_zyc01_regression.ReinsertGuardTests.test_null_result_stops_data_query) ... ok
+test_success_continues_data_query (test_zyc01_regression.ReinsertGuardTests.test_success_continues_data_query) ... ok
+test_all_unsupported_forms_rejected (test_zyc01_regression.UnsupportedSyntaxTests.test_all_unsupported_forms_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.002s
+
+OK

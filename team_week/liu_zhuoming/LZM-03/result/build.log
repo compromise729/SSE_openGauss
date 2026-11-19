@@ -1,0 +1,10 @@
+PASS BUILD postgres.build.log
+PASS BUILD Server_Sophos.build.log
+PASS BUILD gaussdb.link.log
+PASS BUILD module.build.log
+PASS BUILD hook.build.log
+PASS BUILD initialize.build.log
+PASS BUILD startup.build.log
+PASS BUILD common.build.log
+PASS BUILD gsql.link.log
+LIVE_BUILD_DIR=/var/tmp/state-release-check.AjvXiziG/build

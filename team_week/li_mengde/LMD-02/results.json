@@ -1,0 +1,47 @@
+{
+  "task": "LMD-02",
+  "date": "2026-11-18",
+  "contract_version": "1.0",
+  "contract_release_record": "b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1",
+  "source_base": "25489f563f25b522d0cd37a6c85865039e3f340f",
+  "tested_server_commit": "f99e41872fc3f00f9199ed94b5828859e89ed27e",
+  "local_branch": "test/LMD-02-roundtrip",
+  "local_commit": "9fd14f8f4fa9b3a8209c63196bcf9b0c6f9dc5db",
+  "remote_pr_target": "integration/SHY-03",
+  "remote_delivery": "merged",
+  "official_test_commit": "8480117798db475fe5b03b3776406a604dcc6f24",
+  "remote_pr": "https://github.com/compromise729/SSE_openGauss/pull/7",
+  "remote_merge_commit": "8587978367201f69624e53d6e9b729c2eddb8e28",
+  "official_server_base": "5074c844a306d97002cc4a30ca80d5a929a6898d",
+  "integration_retest_commit": "c3fa234db4531e8de1aca2314e40a9ea0dec828e",
+  "team_acceptance": "module_review_passed",
+  "evidence_scope": "tested_server_commit, build_fingerprint and raw_log describe the original local run",
+  "module_test": "passed",
+  "completed_module_items": 5,
+  "module_checks": {
+    "rebuild_and_run_YZH01": "passed",
+    "real_envelope_storage": "passed",
+    "duplicate_rid_rollback": "passed",
+    "index_collision_rollback": "passed",
+    "missing_hit": "passed",
+    "repeat_search_and_reinsert": "passed",
+    "append_and_utf8_roundtrip": "passed",
+    "max_real_envelope": "passed"
+  },
+  "build_fingerprint": {
+    "gaussdb_sha256": "83626a46fc4bb3697cdb05a91f3b6cce7d2dd0aa68fc879c794570f3b28acf31",
+    "entry_script_sha256": "a2c08857709f0c30bb745bf138b9799b2125194e38189469aaa87c791faddd89",
+    "compiler": "GCC 7.3",
+    "environment": "WSL CentOS 7, LZM-01 isolated Unix socket",
+    "port": 55463
+  },
+  "patch": {
+    "file": "LMD-02-roundtrip.patch",
+    "sha256": "df0bcbabd68f60cfb2e99b5f9ee86b0ca897cee8a5faaef5cc0b5398dcb793ff"
+  },
+  "raw_log": {
+    "file": "roundtrip-test.log",
+    "sha256": "83f81ef2502d70f91a3185016f0fa6c4efb18840682193c1c4ab5bb5e0af9585"
+  },
+  "yzh01_package_release": "7b99d773e308ec3c06b71654e517f9abfa5e2ccd"
+}

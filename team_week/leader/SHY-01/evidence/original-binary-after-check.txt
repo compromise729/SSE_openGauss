@@ -1,0 +1,3 @@
+dest/bin/gsql: OK
+dest/bin/gaussdb: OK
+dest/lib/libpq_ce.so.5.5: OK

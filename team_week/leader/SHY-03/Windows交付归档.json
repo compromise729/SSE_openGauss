@@ -1,0 +1,74 @@
+{
+  "windows_text_files_imported": 304,
+  "member_directory": {
+    "windows": "yan zihan",
+    "git": "yan_zihan"
+  },
+  "windows_original": [
+    {
+      "windows_path": "leader/SHY-01/prepare.sh",
+      "git_path": "leader/SHY-01/windows-original/prepare.sh",
+      "sha256": "cf6b66a00b5e9e4a7dbdc3113e0f7cb033a533b9754329ccdfe003631b9c37ee"
+    },
+    {
+      "windows_path": "leader/SHY-02/verify.sh",
+      "git_path": "leader/SHY-02/windows-original/verify.sh",
+      "sha256": "aa44d94d95c90d7f4185584966a53684f126ef336d836e5de9eac471d213e350"
+    },
+    {
+      "windows_path": "li_mengde/LMD-01/SSE_v1.sql",
+      "git_path": "li_mengde/LMD-01/windows-original/SSE_v1.sql",
+      "sha256": "0b28ec85b220a5c544695a8b52bf9db5fa64421f78f1e31c96eb33a9fb4ef140"
+    },
+    {
+      "windows_path": "li_mengde/LMD-01/run-module.sh",
+      "git_path": "li_mengde/LMD-01/windows-original/run-module.sh",
+      "sha256": "2fb705f1f5304fa55f49dac280499e33166505bc3b922279a84aee8bede08f73"
+    },
+    {
+      "windows_path": "li_mengde/LMD-01/storage-fixture.sql",
+      "git_path": "li_mengde/LMD-01/windows-original/storage-fixture.sql",
+      "sha256": "fed5bb3b87bf3ebda7be0e566d9cc337c823cf90a0025c43b51aeed14f373f30"
+    },
+    {
+      "windows_path": "li_mengde/LMD-02/run-roundtrip.sh",
+      "git_path": "li_mengde/LMD-02/windows-original/run-roundtrip.sh",
+      "sha256": "a2c08857709f0c30bb745bf138b9799b2125194e38189469aaa87c791faddd89"
+    },
+    {
+      "windows_path": "liu_zhuoming/LZM-02/preflight/build-checker.sh",
+      "git_path": "liu_zhuoming/LZM-02/windows-original/preflight/build-checker.sh",
+      "sha256": "a83109696cc0d636105d7cca4a5d4921c1b4805986a95f3f2cf62d32daec1267"
+    },
+    {
+      "windows_path": "liu_zhuoming/LZM-02/preflight/verify-bridges.sh",
+      "git_path": "liu_zhuoming/LZM-02/windows-original/preflight/verify-bridges.sh",
+      "sha256": "e59c8fa371890239605f01c2fbbc7ce151d7137b10eb2b6473db29b9ead79062"
+    },
+    {
+      "windows_path": "liu_zhuoming/LZM-02/preflight/verify-catalog.sh",
+      "git_path": "liu_zhuoming/LZM-02/windows-original/preflight/verify-catalog.sh",
+      "sha256": "db0aecc7691fdbea14df225fd962c6733135801f82539252216668705a247a70"
+    },
+    {
+      "windows_path": "liu_zhuoming/LZM-02/preflight/verify-state.sh",
+      "git_path": "liu_zhuoming/LZM-02/windows-original/preflight/verify-state.sh",
+      "sha256": "c68911e44692922b8e5979a529fa51f7c48794e4ad106d0c6fadb9989bf84003"
+    },
+    {
+      "windows_path": "yan zihan/YZH-01/.gitignore",
+      "git_path": "yan_zihan/YZH-01/windows-original/.gitignore",
+      "sha256": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf"
+    },
+    {
+      "windows_path": "yan zihan/YZH-01/run.sh",
+      "git_path": "yan_zihan/YZH-01/windows-original/run.sh",
+      "sha256": "0fc75c5783d4d11e7eefdd4069fc563347680d578d9e42b45d215f6ea4e5447d"
+    }
+  ],
+  "local_build_artifacts": [
+    "yan zihan/YZH-01/build/librow_aead_v1.so",
+    "yan zihan/YZH-01/build/test_crypto",
+    "yan zihan/YZH-01/build/test_fail_random.so"
+  ]
+}

@@ -1,0 +1,2 @@
+EVIDENCE_DIR=/tmp/lzm02-prerequisites.nv7jqajb
+PASS CATALOG-08: missing gsql, missing libpq and nonexecutable gsql all fail before instance creation

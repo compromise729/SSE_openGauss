@@ -1,0 +1,14 @@
+EVIDENCE_DIR=/tmp/lzm02-state.BK7RGjG3
+PASS STATE-01: registered and healthy unknown keyword are distinct
+PASS STATE-02: truncated, missing, and unreadable state rejected without initialization
+PASS STATE-03: key mode, length, absence and key_id mismatch rejected
+PASS STATE-04: wrong instance, OID, version, physical shape and missing registration rejected
+PASS STATE-05: unwritable directory and marker write failure block before counters
+PASS STATE-06: second process refused; successful operation persists and releases lock
+PASS STATE-07: process exit releases lock but restart is blocked by marker
+PASS STATE-08: failed server create leaves marker and no local enrollment
+PASS STATE-09: map rename failure after server create leaves marker
+PASS STATE-10: fsync failure preserves original counters and marker
+PASS STATE-11: marker removal failure blocks completion (unlink)
+PASS STATE-11: marker removal failure blocks completion (clear-sync)
+PASS STATE-12: unsaved batched counter prevents completion

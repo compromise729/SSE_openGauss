@@ -1,0 +1,2155 @@
+From 7b99d773e308ec3c06b71654e517f9abfa5e2ccd Mon Sep 17 00:00:00 2001
+From: Codex <codex@localhost>
+Date: Wed, 18 Nov 2026 00:06:46 +0800
+Subject: [PATCH 1/2] Implement SHY-02 v1 client row and locator encryption
+
+---
+ team_week/yan_zihan/YZH-01/.gitignore              |   1 +
+ team_week/yan_zihan/YZH-01/build.sh                |  24 +
+ team_week/yan_zihan/YZH-01/include/row_aead_v1.h   |  12 +
+ .../yan_zihan/YZH-01/include/sse_v1_contract.hpp   |  49 ++
+ team_week/yan_zihan/YZH-01/legacy-short-key.patch  |  43 ++
+ team_week/yan_zihan/YZH-01/run.sh                  |  24 +
+ team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp     | 515 +++++++++++++++++++++
+ team_week/yan_zihan/YZH-01/tests/fail_random.cpp   |   5 +
+ .../yan_zihan/YZH-01/tests/legacy_short_key.cpp    |  26 ++
+ .../yan_zihan/YZH-01/tests/make_public_vectors.py  |  39 ++
+ .../yan_zihan/YZH-01/tests/public-vectors.tsv      |   6 +
+ team_week/yan_zihan/YZH-01/tests/test_crypto.cpp   | 451 ++++++++++++++++++
+ team_week/yan_zihan/YZH-01/verify_delivery.sh      |  14 +
+ .../yan_zihan/YZH-01/verify_legacy_short_key.sh    |  24 +
+ .../yan_zihan/YZH-01/verify_storage_fixture.sh     |  59 +++
+ 15 files changed, 1292 insertions(+)
+ create mode 100644 team_week/yan_zihan/YZH-01/.gitignore
+ create mode 100755 team_week/yan_zihan/YZH-01/build.sh
+ create mode 100644 team_week/yan_zihan/YZH-01/include/row_aead_v1.h
+ create mode 100644 team_week/yan_zihan/YZH-01/include/sse_v1_contract.hpp
+ create mode 100644 team_week/yan_zihan/YZH-01/legacy-short-key.patch
+ create mode 100755 team_week/yan_zihan/YZH-01/run.sh
+ create mode 100644 team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+ create mode 100644 team_week/yan_zihan/YZH-01/tests/fail_random.cpp
+ create mode 100644 team_week/yan_zihan/YZH-01/tests/legacy_short_key.cpp
+ create mode 100644 team_week/yan_zihan/YZH-01/tests/make_public_vectors.py
+ create mode 100644 team_week/yan_zihan/YZH-01/tests/public-vectors.tsv
+ create mode 100644 team_week/yan_zihan/YZH-01/tests/test_crypto.cpp
+ create mode 100755 team_week/yan_zihan/YZH-01/verify_delivery.sh
+ create mode 100755 team_week/yan_zihan/YZH-01/verify_legacy_short_key.sh
+ create mode 100755 team_week/yan_zihan/YZH-01/verify_storage_fixture.sh
+
+diff --git a/team_week/yan_zihan/YZH-01/.gitignore b/team_week/yan_zihan/YZH-01/.gitignore
+new file mode 100644
+index 0000000..84c048a
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/.gitignore
+@@ -0,0 +1 @@
++/build/
+diff --git a/team_week/yan_zihan/YZH-01/build.sh b/team_week/yan_zihan/YZH-01/build.sh
+new file mode 100755
+index 0000000..46398d9
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/build.sh
+@@ -0,0 +1,24 @@
++#!/usr/bin/env bash
++set -eo pipefail
++root=$(cd -- "$(dirname -- "$0")" && pwd)
++build=$(mkdir -p -- "$root/build" && cd -- "$root/build" && pwd)
++cxx=${CXX:-g++}
++read -r -a extra_cxxflags <<< "${CXXFLAGS:-}"
++read -r -a extra_ldflags <<< "${LDFLAGS:-}"
++crypto_cflags=()
++crypto_libs=(-lcrypto)
++if [[ -n "${OPENSSL_INCLUDE_DIR:-}" || -n "${OPENSSL_LIB_DIR:-}" ]]; then
++  : "${OPENSSL_INCLUDE_DIR:?set the matching OpenSSL include directory}"
++  : "${OPENSSL_LIB_DIR:?set the matching OpenSSL library directory}"
++  crypto_cflags=(-I"$OPENSSL_INCLUDE_DIR")
++  crypto_libs=(-L"$OPENSSL_LIB_DIR" -lcrypto)
++fi
++flags=(-std=c++11 -Wall -Wextra -Werror -O2 -g -I"$root/include")
++
++"$cxx" "${flags[@]}" "${extra_cxxflags[@]}" "${crypto_cflags[@]}" -fPIC -shared \
++  "$root/src/row_aead_v1.cpp" "${extra_ldflags[@]}" \
++  -Wl,-z,defs -Wl,-soname,librow_aead_v1.so "${crypto_libs[@]}" -o "$build/librow_aead_v1.so"
++"$cxx" "${flags[@]}" "${extra_cxxflags[@]}" "$root/tests/test_crypto.cpp" \
++  "${extra_ldflags[@]}" -Wl,-rpath,'$ORIGIN' -L"$build" -lrow_aead_v1 -o "$build/test_crypto"
++"$cxx" -Wall -Wextra -Werror -fPIC -shared "$root/tests/fail_random.cpp" -o "$build/test_fail_random.so"
++printf 'built librow_aead_v1.so (%s)\n' "$("$cxx" --version | sed -n '1p')"
+diff --git a/team_week/yan_zihan/YZH-01/include/row_aead_v1.h b/team_week/yan_zihan/YZH-01/include/row_aead_v1.h
+new file mode 100644
+index 0000000..007aca6
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/include/row_aead_v1.h
+@@ -0,0 +1,12 @@
++#ifndef ROW_AEAD_V1_H
++#define ROW_AEAD_V1_H
++
++#include "sse_v1_contract.hpp"
++
++namespace sse_v1 {
++constexpr std::size_t kRowBlobMin = 88;
++constexpr std::size_t kRowBlobMax = 65624;  // SHY-02 wire cap
++constexpr std::size_t kLocatorBlobSize = 96;
++} // namespace sse_v1
++
++#endif
+diff --git a/team_week/yan_zihan/YZH-01/include/sse_v1_contract.hpp b/team_week/yan_zihan/YZH-01/include/sse_v1_contract.hpp
+new file mode 100644
+index 0000000..3d1217d
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/include/sse_v1_contract.hpp
+@@ -0,0 +1,49 @@
++#ifndef SSE_V1_CONTRACT_HPP
++#define SSE_V1_CONTRACT_HPP
++#include <cstdint>
++#include <string>
++#include <vector>
++namespace sse_v1 {
++constexpr unsigned kProtocolVersion = 1;
++constexpr std::size_t kMaxFieldBytes = 16384;
++constexpr std::size_t kMaxKeywordBytes = 1024;
++constexpr std::size_t kMaxBatchRows = 100;
++constexpr std::size_t kMaxPlainRowBytes = 49164;
++enum class Code { ok, unsupported, invalid_input, state_invalid, unknown_keyword,
++    key_invalid, crypto_failed, auth_failed, protocol_invalid, db_failed,
++    incomplete_operation, busy, inconsistent_result };
++struct Status {
++    Code code;
++    std::string message;
++    bool ok() const { return code == Code::ok; }
++};
++struct Scope { std::string deployment_id, database_oid, schema, table; };
++struct Row { std::string ind, keyword, payload; };
++struct Locator { std::string rid; std::uint8_t operation; };
++struct KeySet { std::string key_id; std::vector<unsigned char> row_key, locator_key; };
++struct EncodedRow { std::string rid, data_blob; };
++struct IndexEntry { std::string ut, locator_blob; };
++struct SearchInput { std::string token, derivation_key; int add_count; };
++struct Preflight { Status status; bool keyword_registered; int counter; };
++struct Operation { std::string operation_id; };
++// YZH-01 owns definitions. All outputs are cleared on entry and on failure.
++Status initialize_keys(const std::string& directory, KeySet& output);
++Status load_keys(const std::string& directory, KeySet& output);
++Status new_rid(std::string& output);
++Status encode_row(const Row& row, std::vector<unsigned char>& output);
++Status decode_row(const std::vector<unsigned char>& bytes, Row& output);
++Status encrypt_row(const Scope&, const std::string& rid, const Row&, const KeySet&, std::string& blob);
++Status decrypt_row(const Scope&, const std::string& rid, const std::string& blob, const KeySet&, Row&);
++Status encrypt_locator(const Scope&, const Locator&, const KeySet&, std::string& blob);
++Status decrypt_locator(const Scope&, const std::string& blob, const KeySet&, Locator&);
++// LZM-02 owns definitions and holds a directory lock through completion or failure.
++Preflight preflight(const Scope&, const std::string& keyword);
++Status begin_operation(const Scope&, const std::string& kind, Operation&);
++Status complete_operation(const Operation&);
++// On failure caller stops. Marker survives, OS lock is released on client exit.
++Status register_table(const Scope&, unsigned version);
++Status load_table_version(const Scope&, unsigned& version);
++// ZYC-03 owns the v1 filter. Unique identity is complete rid, never ciphertext.
++Status filter_insert_only(const std::vector<Locator>&, std::vector<std::string>& rids);
++} // namespace sse_v1
++#endif
+diff --git a/team_week/yan_zihan/YZH-01/legacy-short-key.patch b/team_week/yan_zihan/YZH-01/legacy-short-key.patch
+new file mode 100644
+index 0000000..4dfbe3e
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/legacy-short-key.patch
+@@ -0,0 +1,43 @@
++diff --git a/src/common/interfaces/libpq/sse_common.cpp b/src/common/interfaces/libpq/sse_common.cpp
++index 18b3add..2e06684 100644
++--- a/src/common/interfaces/libpq/sse_common.cpp
+++++ b/src/common/interfaces/libpq/sse_common.cpp
++@@ -706,9 +706,13 @@ std::string generate_aes_key(const std::string& file_path) {
++     if (key_file) {
++         key.resize(16);  // 假设文件保存的是128位密钥
++         key_file.read(&key[0], 16);
+++        const std::streamsize bytes_read = key_file.gcount();
++         key_file.close();
++ 
++-        if (key.size() != 16) {
+++        // resize() only pre-allocates the container; it does not prove that
+++        // 16 bytes were actually read. A short or empty file must fail
+++        // explicitly instead of silently using zero-filled tail bytes as key.
+++        if (bytes_read != 16 || key.size() != 16) {
++             //std::cerr << "Invalid key size from file!" << std::endl;
++             return "";
++         }
++@@ -741,6 +745,11 @@ std::string generate_aes_key(const std::string& file_path) {
++ 
++ // AES加密函数
++ std::string aes_encrypt(const std::string& pt, const std::string& key) {
+++    // Reject an invalid key before any AES call. Empty return is the
+++    // documented failure signal for callers.
+++    if (key.size() != 16) {
+++        return "";
+++    }
++     // 生成一个随机的值v
++     unsigned char v[AES_BLOCK_SIZE];
++     if (!RAND_bytes(v, sizeof(v))) {
++@@ -781,6 +790,11 @@ std::string aes_encrypt(const std::string& pt, const std::string& key) {
++ 
++ // AES解密函数
++ std::string aes_decrypt(const std::string& ct, const std::string& key) {
+++    // Reject an invalid key before any AES call. Empty return is the
+++    // documented failure signal for callers.
+++    if (key.size() != 16) {
+++        return "";
+++    }
++     // 提取随机值v
++     size_t len = ct.size();
++     std::string random_value = ct.substr(len - AES_BLOCK_SIZE, AES_BLOCK_SIZE);
+diff --git a/team_week/yan_zihan/YZH-01/run.sh b/team_week/yan_zihan/YZH-01/run.sh
+new file mode 100755
+index 0000000..9dac263
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/run.sh
+@@ -0,0 +1,24 @@
++#!/usr/bin/env bash
++set -euo pipefail
++root=$(cd -- "$(dirname -- "$0")" && pwd)
++if [[ ! -x "$root/build/test_crypto" ]]; then
++  printf '%s\n' 'Run bash build.sh first.' >&2
++  exit 2
++fi
++scratch=$(mktemp -d /tmp/yzh01.XXXXXXXX)
++trap 'rm -rf -- "$scratch"' EXIT
++"$root/build/test_crypto" "$scratch" "$root/tests/public-vectors.tsv"
++cp "$root/build/test_fail_random.so" "$scratch/rng_fault.so"
++LD_PRELOAD="$scratch/rng_fault.so" \
++  "$root/build/test_crypto" "$scratch" "$root/tests/public-vectors.tsv" --rng-failure
++code=0
++"$root/build/test_crypto" "$scratch" "$root/tests/public-vectors.tsv" --last-row \
++  >"$scratch/batch.stdout" 2>"$scratch/batch.stderr" || code=$?
++if [[ "$code" != 17 || -s "$scratch/batch.stdout" ]] || \
++   ! grep -qx 'auth_failed' "$scratch/batch.stderr"; then
++  cat "$scratch/batch.stderr" >&2
++  printf 'FAIL standalone batch fixture: exit=%s stdout_bytes=%s\n' "$code" \
++    "$(wc -c <"$scratch/batch.stdout")" >&2
++  exit 1
++fi
++printf 'PASS standalone batch fixture: last tag damaged, exit=%s stdout_bytes=0 stderr=auth_failed\n' "$code"
+diff --git a/team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp b/team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+new file mode 100644
+index 0000000..34ecb98
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+@@ -0,0 +1,515 @@
++#include "row_aead_v1.h"
++
++#include <openssl/crypto.h>
++#include <openssl/evp.h>
++#include <openssl/rand.h>
++#include <array>
++#include <cerrno>
++#include <cstring>
++#include <dirent.h>
++#include <fcntl.h>
++#include <memory>
++#include <sys/file.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#include <utility>
++
++namespace sse_v1 {
++namespace {
++
++using Bytes = std::vector<unsigned char>;
++enum class Kind : unsigned char { row = 1, locator = 2 };
++constexpr std::size_t kKeyBytes = 32;
++constexpr std::size_t kIdBytes = 16;
++constexpr std::size_t kRidBytes = 16;
++constexpr std::size_t kNonceBytes = 12;
++constexpr std::size_t kTagBytes = 16;
++constexpr std::size_t kIdOffset = 6;
++constexpr std::size_t kNonceOffset = 22;
++constexpr std::size_t kSizeOffset = 34;
++constexpr std::size_t kHeader = 38;
++constexpr std::size_t kOverhead = kHeader + kTagBytes;
++constexpr std::size_t kLocatorPlain = 17;
++constexpr std::size_t kRowPlainMin = 12;
++constexpr char kRowKey[] = "row_aead_v1.key";
++constexpr char kLocatorKey[] = "locator_aead_v1.key";
++constexpr char kKeyId[] = "row_aead_v1.keyid";
++constexpr char kMagic[] = "SSE1";
++constexpr char kHex[] = "0123456789abcdef";
++
++using Cipher = std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)>;
++
++Status error(Code code, const char* message) { return {code, message}; }
++Status success() { return {Code::ok, {}}; }
++
++struct Sensitive {
++    Bytes bytes;
++    ~Sensitive()
++    {
++        if (!bytes.empty()) OPENSSL_cleanse(bytes.data(), bytes.size());
++    }
++};
++
++struct Fd {
++    explicit Fd(int value) : value(value) {}
++    ~Fd() { close_checked(); }
++    Fd(const Fd&) = delete;
++    Fd& operator=(const Fd&) = delete;
++    bool close_checked()
++    {
++        if (value < 0) return true;
++        const int fd = value;
++        value = -1;
++        return close(fd) == 0;
++    }
++    int value;
++};
++
++void clear_keys(KeySet& keys)
++{
++    if (!keys.row_key.empty()) OPENSSL_cleanse(keys.row_key.data(), keys.row_key.size());
++    if (!keys.locator_key.empty()) OPENSSL_cleanse(keys.locator_key.data(), keys.locator_key.size());
++    keys = {};
++}
++
++bool valid_keys(const KeySet& keys)
++{
++    return keys.key_id.size() == kIdBytes && keys.row_key.size() == kKeyBytes &&
++           keys.locator_key.size() == kKeyBytes &&
++           CRYPTO_memcmp(keys.row_key.data(), keys.locator_key.data(), kKeyBytes) != 0;
++}
++
++bool valid_directory(const std::string& path)
++{
++    // Refuse trailing slashes, which can bypass O_NOFOLLOW on the final component.
++    return !path.empty() && path.back() != '/' && path.find('\0') == std::string::npos;
++}
++
++bool private_owned(int fd, bool directory)
++{
++    struct stat info;
++    if (fstat(fd, &info) != 0 || info.st_uid != geteuid()) return false;
++    if (directory) return S_ISDIR(info.st_mode) && (info.st_mode & 07777) == 0700;
++    return S_ISREG(info.st_mode) && (info.st_mode & 07777) == 0600;
++}
++
++Status lock_directory(int fd, int type)
++{
++    if (flock(fd, type | LOCK_NB) == 0) return success();
++    if (errno == EWOULDBLOCK) return error(Code::busy, "key directory is locked");
++    return error(Code::state_invalid, "cannot lock key directory");
++}
++
++Status check_empty(int fd)
++{
++    const int copy = dup(fd);
++    if (copy < 0) return error(Code::state_invalid, "cannot enumerate key directory");
++    DIR* directory = fdopendir(copy);
++    if (!directory) {
++        close(copy);
++        return error(Code::state_invalid, "cannot enumerate key directory");
++    }
++    bool empty = true;
++    errno = 0;
++    while (auto* entry = readdir(directory)) {
++        if (std::strcmp(entry->d_name, ".") != 0 && std::strcmp(entry->d_name, "..") != 0) {
++            empty = false;
++            break;
++        }
++    }
++    const int read_error = errno;
++    if (closedir(directory) != 0 || read_error != 0) {
++        return error(Code::state_invalid, "cannot read key directory");
++    }
++    return empty ? success() : error(Code::state_invalid, "key initialization requires empty state");
++}
++
++bool create_file(int dir, const char* name, const unsigned char* data, std::size_t size)
++{
++    Fd file(openat(dir, name, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0600));
++    if (file.value < 0 || fchmod(file.value, 0600) != 0) return false;
++    std::size_t written = 0;
++    while (written < size) {
++        const auto n = write(file.value, data + written, size - written);
++        if (n < 0 && errno == EINTR) continue;
++        if (n <= 0) return false;
++        written += static_cast<std::size_t>(n);
++    }
++    const bool synced = fsync(file.value) == 0;
++    return file.close_checked() && synced;
++}
++
++bool read_file(int dir, const char* name, std::size_t size, Sensitive& data)
++{
++    Fd file(openat(dir, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC));
++    if (file.value < 0 || !private_owned(file.value, false)) return false;
++    data.bytes.resize(size + 1);
++    std::size_t bytes_read = 0;
++    while (bytes_read < data.bytes.size()) {
++        const auto n = read(file.value, data.bytes.data() + bytes_read, data.bytes.size() - bytes_read);
++        if (n < 0 && errno == EINTR) continue;
++        if (n < 0) return false;
++        if (n == 0) break;
++        bytes_read += static_cast<std::size_t>(n);
++    }
++    if (!file.close_checked() || bytes_read != size) return false;
++    data.bytes.resize(size);
++    return true;
++}
++
++void assign_keys(KeySet& keys, const Bytes& row, const Bytes& locator, const Bytes& id)
++{
++    keys = {std::string(id.begin(), id.end()), row, locator};
++}
++
++std::string hex(const unsigned char* data, std::size_t size)
++{
++    std::string out;
++    out.reserve(size * 2);
++    for (std::size_t i = 0; i < size; ++i) {
++        out.push_back(kHex[data[i] >> 4]);
++        out.push_back(kHex[data[i] & 15]);
++    }
++    return out;
++}
++
++bool decode_hex(const std::string& text, std::array<unsigned char, 16>& out)
++{
++    if (text.size() != 2 * out.size()) return false;
++    for (std::size_t i = 0; i < out.size(); ++i) {
++        const char* high = std::strchr(kHex, text[2 * i]);
++        const char* low = std::strchr(kHex, text[2 * i + 1]);
++        if (!high || !low || !*high || !*low) return false;
++        out[i] = static_cast<unsigned char>(((high - kHex) << 4) | (low - kHex));
++    }
++    return true;
++}
++
++bool valid_scope(const Scope& scope)
++{
++    std::array<unsigned char, 16> deployment;
++    if (!decode_hex(scope.deployment_id, deployment) || scope.schema != "public" ||
++        scope.table.empty() || scope.table.size() > 40 ||
++        scope.table[0] < 'a' || scope.table[0] > 'z' ||
++        scope.database_oid.empty() || scope.database_oid.size() > 10 ||
++        scope.database_oid[0] == '0') return false;
++    for (const char c : scope.table) {
++        if (!(c >= 'a' && c <= 'z') && !(c >= '0' && c <= '9') && c != '_') return false;
++    }
++    std::uint64_t oid = 0;
++    for (const char c : scope.database_oid) {
++        if (c < '0' || c > '9') return false;
++        oid = 10 * oid + (c - '0');
++    }
++    return oid <= UINT32_MAX;
++}
++
++void append_u32(Bytes& out, std::uint32_t n)
++{
++    for (int shift = 24; shift >= 0; shift -= 8) {
++        out.push_back(static_cast<unsigned char>(n >> shift));
++    }
++}
++
++std::uint32_t read_u32(const unsigned char* bytes)
++{
++    std::uint32_t n = 0;
++    for (int i = 0; i < 4; ++i) n = (n << 8) | bytes[i];
++    return n;
++}
++
++void append_field(Bytes& out, const std::string& field)
++{
++    append_u32(out, static_cast<std::uint32_t>(field.size()));
++    out.insert(out.end(), field.begin(), field.end());
++}
++
++Bytes make_aad(const Bytes& envelope, const Scope& scope,
++               const std::array<unsigned char, kRidBytes>* row_rid)
++{
++    Bytes aad(envelope.begin(), envelope.begin() + kHeader);
++    append_field(aad, scope.deployment_id);
++    append_field(aad, scope.database_oid);
++    append_field(aad, scope.schema);
++    append_field(aad, scope.table);
++    if (row_rid) aad.insert(aad.end(), row_rid->begin(), row_rid->end());
++    return aad;
++}
++
++bool encode_base64(const Bytes& bytes, std::string& out)
++{
++    const std::size_t size = 4 * ((bytes.size() + 2) / 3);
++    std::string encoded(size + 1, '\0'); // EVP also writes the terminator.
++    const int n = EVP_EncodeBlock(reinterpret_cast<unsigned char*>(&encoded[0]),
++                                  bytes.data(), static_cast<int>(bytes.size()));
++    if (n < 0 || static_cast<std::size_t>(n) != size) return false;
++    encoded.resize(size);
++    out.swap(encoded);
++    return true;
++}
++
++bool decode_base64(const std::string& input, Bytes& out)
++{
++    if (input.empty() || input.size() % 4 != 0) return false;
++    std::size_t pad = 0;
++    if (input.back() == '=') ++pad;
++    if (input[input.size() - 2] == '=') ++pad;
++    for (std::size_t i = 0; i < input.size() - pad; ++i) {
++        const unsigned char c = input[i];
++        if (!(c >= 'A' && c <= 'Z') && !(c >= 'a' && c <= 'z') &&
++            !(c >= '0' && c <= '9') && c != '+' && c != '/') return false;
++    }
++    out.resize(input.size() / 4 * 3);
++    const int n = EVP_DecodeBlock(out.data(), reinterpret_cast<const unsigned char*>(input.data()),
++                                  static_cast<int>(input.size()));
++    if (n < 0 || static_cast<std::size_t>(n) != out.size()) return false;
++    out.resize(out.size() - pad);
++    std::string canonical;
++    return encode_base64(out, canonical) && canonical == input;
++}
++
++const Bytes& secret(const KeySet& keys, Kind kind)
++{
++    return kind == Kind::row ? keys.row_key : keys.locator_key;
++}
++
++Status seal(const Scope& scope, const std::array<unsigned char, kRidBytes>* row_rid,
++            Kind kind, const Bytes& plain, const KeySet& keys, std::string& out)
++{
++    if (!valid_keys(keys)) return error(Code::key_invalid, "invalid encryption key set");
++    Bytes envelope;
++    envelope.reserve(kOverhead + plain.size());
++    envelope.insert(envelope.end(), kMagic, kMagic + 4);
++    envelope.push_back(kProtocolVersion);
++    envelope.push_back(static_cast<unsigned char>(kind));
++    envelope.insert(envelope.end(), keys.key_id.begin(), keys.key_id.end());
++    envelope.resize(kSizeOffset);
++    if (RAND_bytes(envelope.data() + kNonceOffset, kNonceBytes) != 1) {
++        return error(Code::crypto_failed, "nonce generation failed");
++    }
++    append_u32(envelope, static_cast<std::uint32_t>(plain.size()));
++    const Bytes aad = make_aad(envelope, scope, row_rid);
++    envelope.resize(kOverhead + plain.size());
++
++    Cipher ctx(EVP_CIPHER_CTX_new(), EVP_CIPHER_CTX_free);
++    int ignored = 0, written = 0, tail = 0;
++    auto* ciphertext = envelope.data() + kHeader;
++    auto* tag = ciphertext + plain.size();
++    if (!ctx || EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, nullptr, nullptr) != 1 ||
++        EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_SET_IVLEN, kNonceBytes, nullptr) != 1 ||
++        EVP_EncryptInit_ex(ctx.get(), nullptr, nullptr, secret(keys, kind).data(),
++                           envelope.data() + kNonceOffset) != 1 ||
++        EVP_EncryptUpdate(ctx.get(), nullptr, &ignored, aad.data(), aad.size()) != 1 ||
++        EVP_EncryptUpdate(ctx.get(), ciphertext, &written, plain.data(), plain.size()) != 1 ||
++        written != static_cast<int>(plain.size()) ||
++        EVP_EncryptFinal_ex(ctx.get(), tag, &tail) != 1 || tail != 0 ||
++        EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_GET_TAG, kTagBytes, tag) != 1 ||
++        !encode_base64(envelope, out)) return error(Code::crypto_failed, "AES-GCM encryption failed");
++    return success();
++}
++
++Status open_envelope(const Scope& scope, const std::array<unsigned char, kRidBytes>* row_rid,
++                     Kind kind, const std::string& blob, const KeySet& keys, Sensitive& clear)
++{
++    const bool row = kind == Kind::row;
++    if ((row && (blob.size() < kRowBlobMin || blob.size() > kRowBlobMax)) ||
++        (!row && blob.size() != kLocatorBlobSize)) {
++        return error(Code::protocol_invalid, "invalid encoded envelope length");
++    }
++    Bytes envelope;
++    if (!decode_base64(blob, envelope) || envelope.size() < kOverhead ||
++        std::memcmp(envelope.data(), kMagic, 4) != 0 || envelope[4] != kProtocolVersion ||
++        envelope[5] != static_cast<unsigned char>(kind)) {
++        return error(Code::protocol_invalid, "invalid envelope encoding, version or purpose");
++    }
++    const std::size_t length = read_u32(envelope.data() + kSizeOffset);
++    if (length != envelope.size() - kOverhead ||
++        (row && (length < kRowPlainMin || length > kMaxPlainRowBytes)) ||
++        (!row && length != kLocatorPlain)) return error(Code::protocol_invalid, "invalid ciphertext length");
++    if (!valid_keys(keys) ||
++        CRYPTO_memcmp(keys.key_id.data(), envelope.data() + kIdOffset, kIdBytes) != 0) {
++        return error(Code::key_invalid, "missing or mismatched encryption key");
++    }
++
++    const Bytes aad = make_aad(envelope, scope, row_rid);
++    Cipher ctx(EVP_CIPHER_CTX_new(), EVP_CIPHER_CTX_free);
++    clear.bytes.resize(length + EVP_MAX_BLOCK_LENGTH);
++    int ignored = 0, written = 0, tail = 0;
++    auto* ciphertext = envelope.data() + kHeader;
++    if (!ctx || EVP_DecryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, nullptr, nullptr) != 1 ||
++        EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_SET_IVLEN, kNonceBytes, nullptr) != 1 ||
++        EVP_DecryptInit_ex(ctx.get(), nullptr, nullptr, secret(keys, kind).data(),
++                           envelope.data() + kNonceOffset) != 1 ||
++        EVP_DecryptUpdate(ctx.get(), nullptr, &ignored, aad.data(), aad.size()) != 1 ||
++        EVP_DecryptUpdate(ctx.get(), clear.bytes.data(), &written, ciphertext, length) != 1 ||
++        written != static_cast<int>(length) ||
++        EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_SET_TAG, kTagBytes, ciphertext + length) != 1) {
++        return error(Code::crypto_failed, "AES-GCM decryption failed");
++    }
++    if (EVP_DecryptFinal_ex(ctx.get(), clear.bytes.data() + written, &tail) != 1) {
++        return error(Code::auth_failed, "AES-GCM tag verification failed");
++    }
++    if (tail != 0) return error(Code::crypto_failed, "unexpected AES-GCM output");
++    clear.bytes.resize(length);
++    return success();
++}
++
++} // namespace
++
++Status initialize_keys(const std::string& directory, KeySet& output)
++{
++    clear_keys(output);
++    if (!valid_directory(directory)) return error(Code::invalid_input, "invalid state directory path");
++    // State management explicitly creates this 0700 directory for a new environment.
++    Fd dir(open(directory.c_str(), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC));
++    if (dir.value < 0 || !private_owned(dir.value, true)) {
++        return error(Code::state_invalid, "initialization requires a private 0700 state directory");
++    }
++    const auto locked = lock_directory(dir.value, LOCK_EX);
++    if (!locked.ok()) return locked;
++    const auto empty = check_empty(dir.value);
++    if (!empty.ok()) return empty;
++    Sensitive row, locator, id;
++    row.bytes.resize(kKeyBytes);
++    locator.bytes.resize(kKeyBytes);
++    id.bytes.resize(kIdBytes);
++    if (RAND_bytes(row.bytes.data(), kKeyBytes) != 1 ||
++        RAND_bytes(locator.bytes.data(), kKeyBytes) != 1 ||
++        RAND_bytes(id.bytes.data(), kIdBytes) != 1 ||
++        CRYPTO_memcmp(row.bytes.data(), locator.bytes.data(), kKeyBytes) == 0) {
++        return error(Code::crypto_failed, "key generation failed");
++    }
++    // Write the key ID last. An interrupted partial set is rejected by load_keys
++    // and blocks future initialization; preserve the files for diagnosis.
++    if (!create_file(dir.value, kRowKey, row.bytes.data(), kKeyBytes) ||
++        !create_file(dir.value, kLocatorKey, locator.bytes.data(), kKeyBytes) ||
++        !create_file(dir.value, kKeyId, id.bytes.data(), kIdBytes) ||
++        fsync(dir.value) != 0 || !dir.close_checked()) {
++        return error(Code::state_invalid, "key set creation incomplete");
++    }
++    assign_keys(output, row.bytes, locator.bytes, id.bytes);
++    return success();
++}
++
++Status load_keys(const std::string& directory, KeySet& output)
++{
++    clear_keys(output);
++    if (!valid_directory(directory)) return error(Code::invalid_input, "invalid state directory path");
++    Fd dir(open(directory.c_str(), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC));
++    if (dir.value < 0 || !private_owned(dir.value, true)) {
++        return error(Code::key_invalid, "missing or unsafe key directory");
++    }
++    const auto locked = lock_directory(dir.value, LOCK_SH);
++    if (!locked.ok()) return locked;
++    Sensitive row, locator, id;
++    if (!read_file(dir.value, kKeyId, kIdBytes, id) ||
++        !read_file(dir.value, kRowKey, kKeyBytes, row) ||
++        !read_file(dir.value, kLocatorKey, kKeyBytes, locator) ||
++        CRYPTO_memcmp(row.bytes.data(), locator.bytes.data(), kKeyBytes) == 0 ||
++        !dir.close_checked()) return error(Code::key_invalid, "missing, malformed or unsafe key file");
++    assign_keys(output, row.bytes, locator.bytes, id.bytes);
++    return success();
++}
++
++Status new_rid(std::string& output)
++{
++    output.clear();
++    std::array<unsigned char, kRidBytes> random;
++    if (RAND_bytes(random.data(), random.size()) != 1) {
++        return error(Code::crypto_failed, "rid generation failed");
++    }
++    output = hex(random.data(), random.size());
++    return success();
++}
++
++Status encode_row(const Row& row, Bytes& output)
++{
++    output.clear();
++    if (row.ind.size() > kMaxFieldBytes || row.keyword.size() > kMaxKeywordBytes ||
++        row.payload.size() > kMaxFieldBytes) {
++        return error(Code::invalid_input, "row field exceeds byte limit");
++    }
++    output.reserve(kRowPlainMin + row.ind.size() + row.keyword.size() + row.payload.size());
++    append_field(output, row.ind);
++    append_field(output, row.keyword);
++    append_field(output, row.payload);
++    return success();
++}
++
++Status decode_row(const Bytes& bytes, Row& output)
++{
++    output = {};
++    if (bytes.size() < kRowPlainMin || bytes.size() > kMaxPlainRowBytes) {
++        return error(Code::protocol_invalid, "invalid encoded row length");
++    }
++    const std::size_t limits[] = {kMaxFieldBytes, kMaxKeywordBytes, kMaxFieldBytes};
++    std::size_t offsets[3], lengths[3], offset = 0;
++    for (std::size_t i = 0; i < 3; ++i) {
++        if (bytes.size() - offset < 4) return error(Code::protocol_invalid, "truncated field length");
++        lengths[i] = read_u32(bytes.data() + offset);
++        offset += 4;
++        if (lengths[i] > limits[i] || lengths[i] > bytes.size() - offset) {
++            return error(Code::protocol_invalid, "invalid encoded field length");
++        }
++        offsets[i] = offset;
++        offset += lengths[i];
++    }
++    if (offset != bytes.size()) return error(Code::protocol_invalid, "trailing bytes in row");
++    const auto* text = reinterpret_cast<const char*>(bytes.data());
++    output = {std::string(text + offsets[0], lengths[0]), std::string(text + offsets[1], lengths[1]),
++              std::string(text + offsets[2], lengths[2])};
++    return success();
++}
++
++Status encrypt_row(const Scope& scope, const std::string& rid, const Row& row,
++                   const KeySet& keys, std::string& blob)
++{
++    blob.clear();
++    std::array<unsigned char, kRidBytes> raw;
++    if (!valid_scope(scope) || !decode_hex(rid, raw)) return error(Code::invalid_input, "invalid scope or rid");
++    Sensitive clear;
++    const auto status = encode_row(row, clear.bytes);
++    if (!status.ok()) return status;
++    return seal(scope, &raw, Kind::row, clear.bytes, keys, blob);
++}
++
++Status decrypt_row(const Scope& scope, const std::string& rid, const std::string& blob,
++                   const KeySet& keys, Row& output)
++{
++    output = {};
++    std::array<unsigned char, kRidBytes> raw;
++    if (!valid_scope(scope) || !decode_hex(rid, raw)) return error(Code::invalid_input, "invalid scope or rid");
++    Sensitive clear;
++    const auto status = open_envelope(scope, &raw, Kind::row, blob, keys, clear);
++    if (!status.ok()) return status;
++    return decode_row(clear.bytes, output);
++}
++
++Status encrypt_locator(const Scope& scope, const Locator& locator, const KeySet& keys,
++                       std::string& blob)
++{
++    blob.clear();
++    std::array<unsigned char, kRidBytes> raw;
++    if (!valid_scope(scope) || !decode_hex(locator.rid, raw) || locator.operation != 0) {
++        return error(Code::invalid_input, "invalid scope, rid or locator operation");
++    }
++    Sensitive clear;
++    clear.bytes.assign(raw.begin(), raw.end());
++    clear.bytes.push_back(locator.operation);
++    return seal(scope, nullptr, Kind::locator, clear.bytes, keys, blob);
++}
++
++Status decrypt_locator(const Scope& scope, const std::string& blob, const KeySet& keys,
++                       Locator& output)
++{
++    output = {};
++    if (!valid_scope(scope)) return error(Code::invalid_input, "invalid scope");
++    Sensitive clear;
++    const auto status = open_envelope(scope, nullptr, Kind::locator, blob, keys, clear);
++    if (!status.ok()) return status;
++    if (clear.bytes[kRidBytes] != 0) return error(Code::protocol_invalid, "unsupported locator operation");
++    output = {hex(clear.bytes.data(), kRidBytes), 0};
++    return success();
++}
++
++} // namespace sse_v1
+diff --git a/team_week/yan_zihan/YZH-01/tests/fail_random.cpp b/team_week/yan_zihan/YZH-01/tests/fail_random.cpp
+new file mode 100644
+index 0000000..6b319d4
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/tests/fail_random.cpp
+@@ -0,0 +1,5 @@
++// Used only via LD_PRELOAD in the failure test, never by the library build.
++extern "C" int RAND_bytes(unsigned char*, int)
++{
++    return 0;
++}
+diff --git a/team_week/yan_zihan/YZH-01/tests/legacy_short_key.cpp b/team_week/yan_zihan/YZH-01/tests/legacy_short_key.cpp
+new file mode 100644
+index 0000000..ee9471a
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/tests/legacy_short_key.cpp
+@@ -0,0 +1,26 @@
++#include "libpq/sse_common.h"
++
++#include <iostream>
++
++int main(int argc, char** argv)
++{
++    if (argc != 3) return 2;
++    const std::string dir = argv[1];
++    const bool fixed = std::string(argv[2]) == "fixed";
++    const std::string key(16, 'k');
++    for (const auto n : {0, 15, 16}) {
++        const std::string path = dir + "/key" + std::to_string(n);
++        std::ofstream file(path, std::ios::binary);
++        file.write(key.data(), n);
++        file.close();
++        if (!file) return 2;
++        const auto loaded = generate_aes_key(path);
++        const auto expected = fixed && n < 16 ? 0U : 16U;
++        if (loaded.size() != expected || (n == 16 && loaded != key)) return 1;
++        std::cout << "PASS legacy " << argv[2] << " file_bytes=" << n << " returned_bytes=" << loaded.size() << '\n';
++    }
++    if (fixed && (!aes_encrypt("test", key.substr(1)).empty() ||
++                  !aes_decrypt("test", key.substr(1)).empty())) return 1;
++    if (fixed) std::cout << "PASS legacy fixed short key rejected by both AES helpers\n";
++    return 0;
++}
+diff --git a/team_week/yan_zihan/YZH-01/tests/make_public_vectors.py b/team_week/yan_zihan/YZH-01/tests/make_public_vectors.py
+new file mode 100644
+index 0000000..f7b6a97
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/tests/make_public_vectors.py
+@@ -0,0 +1,39 @@
++"""Regenerate public v1 vectors with Python cryptography, separate from the C++ API."""
++import base64
++import pathlib
++import struct
++
++from cryptography.hazmat.primitives.ciphers.aead import AESGCM
++
++SCOPE = (b"00112233445566778899aabbccddeeff", b"16384", b"public", b"week_demo")
++RID = bytes.fromhex("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
++KEY_ID = bytes(range(16))
++KEYS = {1: bytes(range(32)), 2: bytes(range(32, 64))}
++
++
++def fields(*items):
++    return b"".join(struct.pack(">I", len(item)) + item for item in items)
++
++
++def main():
++    row = fields(b"17", "苹果".encode("utf-8"), b"two words\x00\x00")
++    vectors = [
++        ("row", 1, row),
++        ("row_repeat", 1, row),
++        ("locator", 2, RID + b"\x00"),
++        ("row_bad_length", 1, struct.pack(">III", 0xffffffff, 0, 0)),
++        ("locator_bad_op", 2, RID + b"\x01"),
++    ]
++    lines = ["name\taad_hex\tplaintext_hex\tblob_base64"]
++    for i, (name, kind, plain) in enumerate(vectors):
++        nonce = bytes(range(i * 12, (i + 1) * 12))
++        header = b"SSE1" + bytes((1, kind)) + KEY_ID + nonce + struct.pack(">I", len(plain))
++        aad = header + fields(*SCOPE) + (RID if kind == 1 else b"")
++        blob = header + AESGCM(KEYS[kind]).encrypt(nonce, plain, aad)
++        lines.append("\t".join((name, aad.hex(), plain.hex(), base64.b64encode(blob).decode("ascii"))))
++    pathlib.Path(__file__).with_name("public-vectors.tsv").write_bytes(
++        ("\n".join(lines) + "\n").encode("ascii"))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/team_week/yan_zihan/YZH-01/tests/public-vectors.tsv b/team_week/yan_zihan/YZH-01/tests/public-vectors.tsv
+new file mode 100644
+index 0000000..75147ab
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/tests/public-vectors.tsv
+@@ -0,0 +1,6 @@
++name	aad_hex	plaintext_hex	blob_base64
++row	535345310101000102030405060708090a0b0c0d0e0f000102030405060708090a0b0000001f000000203030313132323333343435353636373738383939616162626363646465656666000000053136333834000000067075626c6963000000097765656b5f64656d6faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	00000002313700000006e88bb9e69e9c0000000b74776f20776f7264730000	U1NFMQEBAAECAwQFBgcICQoLDA0ODwABAgMEBQYHCAkKCwAAAB9HAtYZ9NLCG41HfwAID+bxg9aHP4QMMFxPCJfhbmkAfzeBTfQhACBF9RGh849Uzw==
++row_repeat	535345310101000102030405060708090a0b0c0d0e0f0c0d0e0f10111213141516170000001f000000203030313132323333343435353636373738383939616162626363646465656666000000053136333834000000067075626c6963000000097765656b5f64656d6faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	00000002313700000006e88bb9e69e9c0000000b74776f20776f7264730000	U1NFMQEBAAECAwQFBgcICQoLDA0ODwwNDg8QERITFBUWFwAAAB+Y/mnaTkH8UzcsoF4obbh7VQPt5YIKVIrszYiEl6DAEhhePNdcN/TfXGVAWkzG7Q==
++locator	535345310102000102030405060708090a0b0c0d0e0f18191a1b1c1d1e1f2021222300000011000000203030313132323333343435353636373738383939616162626363646465656666000000053136333834000000067075626c6963000000097765656b5f64656d6f	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa00	U1NFMQECAAECAwQFBgcICQoLDA0ODxgZGhscHR4fICEiIwAAABHVw/Ez4e12EB9c1vPqvA9sEHWpegmt6c5LmYvmFvZBM3w=
++row_bad_length	535345310101000102030405060708090a0b0c0d0e0f2425262728292a2b2c2d2e2f0000000c000000203030313132323333343435353636373738383939616162626363646465656666000000053136333834000000067075626c6963000000097765656b5f64656d6faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	ffffffff0000000000000000	U1NFMQEBAAECAwQFBgcICQoLDA0ODyQlJicoKSorLC0uLwAAAAwMcFwhI05dKTnnZRXNodNwdlLtCACc1TwCGqaG
++locator_bad_op	535345310102000102030405060708090a0b0c0d0e0f303132333435363738393a3b00000011000000203030313132323333343435353636373738383939616162626363646465656666000000053136333834000000067075626c6963000000097765656b5f64656d6f	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01	U1NFMQECAAECAwQFBgcICQoLDA0ODzAxMjM0NTY3ODk6OwAAABHwsdrRump7jMQDyPddd7O3Cmrxw79LwjivfeLIrO4+HkQ=
+diff --git a/team_week/yan_zihan/YZH-01/tests/test_crypto.cpp b/team_week/yan_zihan/YZH-01/tests/test_crypto.cpp
+new file mode 100644
+index 0000000..ec246a0
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/tests/test_crypto.cpp
+@@ -0,0 +1,451 @@
++#include "row_aead_v1.h"
++
++#include <cstdlib>
++#include <fstream>
++#include <iostream>
++#include <sstream>
++#include <stdexcept>
++#include <sys/file.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <unistd.h>
++
++using namespace sse_v1;
++
++namespace {
++
++const Scope scope{"00112233445566778899aabbccddeeff", "16384", "public", "week_demo"};
++const std::string rid_a(32, 'a'), rid_b(32, 'b'), rid_c(32, 'c');
++const Row demo{"17", u8"苹果", std::string("two words\0\0", 11)};
++const Row basics[] = {{"1", "apple", "red apple"}, {"2", "apple", "green apple"}, {"3", "banana", "yellow banana"}};
++const std::string rids[] = {rid_a, rid_b, rid_c};
++const std::string row_file = "/row_aead_v1.key";
++const std::string locator_file = "/locator_aead_v1.key";
++const std::string id_file = "/row_aead_v1.keyid";
++unsigned checks = 0;
++
++void check(bool condition, const std::string& label)
++{
++    if (!condition) throw std::runtime_error(label);
++    ++checks;
++    std::cout << "PASS " << label << '\n';
++}
++
++void expect(Status actual, Code expected, const std::string& label)
++{
++    if (actual.code != expected) {
++        throw std::runtime_error(label + ": code " + std::to_string(static_cast<int>(actual.code)) +
++                                 ", expected " + std::to_string(static_cast<int>(expected)) +
++                                 " (" + actual.message + ")");
++    }
++    check(true, label);
++}
++
++bool equal(const Row& a, const Row& b)
++{
++    return a.ind == b.ind && a.keyword == b.keyword && a.payload == b.payload;
++}
++
++bool empty(const KeySet& keys)
++{
++    return keys.key_id.empty() && keys.row_key.empty() && keys.locator_key.empty();
++}
++
++void make_directory(const std::string& path)
++{
++    if (mkdir(path.c_str(), 0700) != 0) throw std::runtime_error("mkdir fixture failed");
++}
++
++void put(const std::string& path, const std::string& bytes)
++{
++    std::ofstream out(path, std::ios::binary | std::ios::trunc);
++    out.write(bytes.data(), bytes.size());
++    out.close();
++    if (!out || chmod(path.c_str(), 0600) != 0) throw std::runtime_error("write fixture failed");
++}
++
++std::string sequence(unsigned start, unsigned size)
++{
++    std::string bytes;
++    for (unsigned i = 0; i < size; ++i) bytes.push_back(static_cast<char>(start + i));
++    return bytes;
++}
++
++KeySet public_keys(const std::string& dir)
++{
++    make_directory(dir);
++    put(dir + row_file, sequence(0, 32));
++    put(dir + locator_file, sequence(32, 32));
++    put(dir + id_file, sequence(0, 16));
++    KeySet keys;
++    auto result = load_keys(dir, keys);
++    if (!result.ok()) throw std::runtime_error(result.message);
++    return keys;
++}
++
++void key_cases(const std::string& folder, const KeySet& fixture)
++{
++    const auto fresh = folder + "/fresh";
++    KeySet keys = fixture;
++    expect(load_keys(fresh, keys), Code::key_invalid, "load absent directory refuses");
++    check(empty(keys) && access(fresh.c_str(), F_OK) != 0, "absent load clears output and creates nothing");
++    make_directory(fresh);
++    expect(initialize_keys(fresh, keys), Code::ok, "generate keys explicitly");
++    const KeySet generated = keys;
++    check(keys.key_id.size() == 16 && keys.row_key.size() == 32 && keys.locator_key.size() == 32 &&
++          keys.row_key != keys.locator_key, "generated key lengths and distinct purposes");
++    for (const auto& file : {row_file, locator_file, id_file}) {
++        struct stat info;
++        check(stat((fresh + file).c_str(), &info) == 0 && (info.st_mode & 0777) == 0600, "0600 " + file);
++    }
++    expect(initialize_keys(fresh, keys), Code::state_invalid, "second initialization refuses");
++    check(empty(keys), "failure leaves no key output");
++    expect(load_keys(fresh, keys), Code::ok, "load after initialization");
++    check(keys.key_id == generated.key_id && keys.row_key == generated.row_key &&
++          keys.locator_key == generated.locator_key, "second initialization never overwrites");
++    std::string blob;
++    expect(encrypt_row(scope, rid_a, demo, keys, blob), Code::ok, "generated keys usable");
++    Row out;
++    expect(decrypt_row(scope, rid_a, blob, keys, out), Code::ok, "generated keys decrypt");
++    check(equal(out, demo), "generated key roundtrip bytes");
++
++    const int lock = open(fresh.c_str(), O_RDONLY | O_DIRECTORY);
++    check(lock >= 0 && flock(lock, LOCK_EX | LOCK_NB) == 0, "fixture holds key directory lock");
++    expect(load_keys(fresh, keys), Code::busy, "load during initialization refuses");
++    check(close(lock) == 0, "release fixture lock");
++
++    check(unlink((fresh + locator_file).c_str()) == 0, "fixture remove locator key");
++    expect(load_keys(fresh, keys), Code::key_invalid, "existing state missing key");
++    expect(initialize_keys(fresh, keys), Code::state_invalid, "existing state cannot replace missing key");
++    check(empty(keys) && access((fresh + locator_file).c_str(), F_OK) != 0, "missing key never auto-created");
++
++    for (const unsigned n : {0, 16, 31, 33}) {
++        put(fresh + locator_file, sequence(32, n));
++        expect(load_keys(fresh, keys), Code::key_invalid, "reject key length " + std::to_string(n));
++        check(empty(keys), "invalid key length clears output");
++    }
++    put(fresh + locator_file, sequence(32, 32));
++    put(fresh + id_file, sequence(0, 15));
++    expect(load_keys(fresh, keys), Code::key_invalid, "short key ID refused");
++    put(fresh + id_file, sequence(0, 16));
++    check(chmod((fresh + locator_file).c_str(), 0644) == 0, "fixture unsafe file mode");
++    expect(load_keys(fresh, keys), Code::key_invalid, "unsafe file mode refused");
++    check(unlink((fresh + locator_file).c_str()) == 0 &&
++          symlink((fresh + row_file).c_str(), (fresh + locator_file).c_str()) == 0, "fixture symlink");
++    expect(load_keys(fresh, keys), Code::key_invalid, "key symlink refused");
++}
++
++std::string seal_row(const Row& row, const std::string& rid, const KeySet& keys)
++{
++    std::string blob;
++    const auto status = encrypt_row(scope, rid, row, keys, blob);
++    if (!status.ok()) throw std::runtime_error(status.message);
++    return blob;
++}
++
++std::string seal_locator(const std::string& rid, const KeySet& keys)
++{
++    std::string blob;
++    const auto status = encrypt_locator(scope, {rid, 0}, keys, blob);
++    if (!status.ok()) throw std::runtime_error(status.message);
++    return blob;
++}
++
++void row_test(const Row& row, const std::string& rid, const KeySet& keys, const std::string& label)
++{
++    std::vector<unsigned char> bytes;
++    expect(encode_row(row, bytes), Code::ok, label + " encode");
++    Row decoded;
++    expect(decode_row(bytes, decoded), Code::ok, label + " decode");
++    const std::size_t length = 12 + row.ind.size() + row.keyword.size() + row.payload.size();
++    check(equal(decoded, row) && bytes.size() == length, label + " codec exact bytes=" + std::to_string(length));
++    const auto first = seal_row(row, rid, keys);
++    const auto second = seal_row(row, rid, keys);
++    check(first != second && first.substr(32, 12) != second.substr(32, 12) &&
++          first.size() == 4 * ((length + 54 + 2) / 3) && second.size() == first.size(),
++          label + " different ciphertexts Base64=" + std::to_string(first.size()));
++    expect(decrypt_row(scope, rid, first, keys, decoded), Code::ok, label + " decrypt first");
++    check(equal(decoded, row), label + " first exact");
++    expect(decrypt_row(scope, rid, second, keys, decoded), Code::ok, label + " decrypt second");
++    check(equal(decoded, row), label + " second exact");
++}
++
++void rows(const KeySet& keys)
++{
++    for (int i = 0; i < 3; ++i) row_test(basics[i], rids[i], keys, "CRYPTO-01 row " + std::to_string(i + 1));
++    row_test({}, rid_a, keys, "CRYPTO-02 all fields empty");
++    row_test(demo, rid_a, keys, "CRYPTO-02 Chinese, spaces and trailing NULs");
++    for (const unsigned n : {15, 16, 17, 63, 64, 65}) {
++        row_test({"", "", std::string(n, '\0')}, rid_a, keys, "CRYPTO-02 payload " + std::to_string(n));
++    }
++    row_test({std::string(16384, 'i'), std::string(1024, 'k'), std::string(16384, 'p')},
++             rid_a, keys, "CRYPTO-02 all fields at limit");
++    std::string blob = "old value";
++    expect(encrypt_row(scope, rid_a, {"", "", std::string(16385, 'x')}, keys, blob),
++           Code::invalid_input, "payload over 16384");
++    check(blob.empty(), "overlength payload clears ciphertext");
++    expect(encrypt_row(scope, rid_a, {"", std::string(1025, 'x'), ""}, keys, blob),
++           Code::invalid_input, "keyword over 1024");
++    std::vector<unsigned char> malformed(13, 0);
++    Row out = demo;
++    expect(decode_row(malformed, out), Code::protocol_invalid, "trailing bytes in serialized row");
++    check(equal(out, {}), "bad codec does not emit partial fields");
++}
++
++char flip_b64(char c) { return c == 'A' ? 'B' : 'A'; }
++
++std::string flip(const std::string& input, std::size_t at)
++{
++    auto out = input;
++    out.at(at) = flip_b64(out.at(at));
++    return out;
++}
++
++void reject_row(const Scope& context, const std::string& rid, const std::string& blob,
++                const KeySet& keys, Code expected, const std::string& label)
++{
++    Row out = demo;
++    expect(decrypt_row(context, rid, blob, keys, out), expected, label);
++    check(equal(out, {}), label + " no plaintext");
++}
++
++void reject_locator(const Scope& context, const std::string& blob, const KeySet& keys,
++                    Code expected, const std::string& label)
++{
++    Locator out{rid_a, 1};
++    expect(decrypt_locator(context, blob, keys, out), expected, label);
++    check(out.rid.empty() && out.operation == 0, label + " no locator");
++}
++
++void attacks(const KeySet& keys)
++{
++    std::string rid, second_rid;
++    expect(new_rid(rid), Code::ok, "fresh rid");
++    expect(new_rid(second_rid), Code::ok, "second fresh rid");
++    check(rid.size() == 32 && rid != second_rid &&
++          rid.find_first_not_of("0123456789abcdef") == std::string::npos, "rid is 16 random bytes as lowercase hex");
++    const auto row = seal_row(demo, rid_a, keys);
++    const auto loc = seal_locator(rid_a, keys);
++    const auto repeat = seal_locator(rid_a, keys);
++    check(loc.size() == 96 && loc != repeat && loc.find(rid_a + "|add") == std::string::npos,
++          "CRYPTO-03 locator size, randomization and no plaintext rid|add");
++    Locator recovered;
++    expect(decrypt_locator(scope, repeat, keys, recovered), Code::ok, "re-encrypted locator authenticates");
++    check(recovered.rid == rid_a && recovered.operation == 0, "locator exact rid and op=0");
++    const auto another = seal_locator(rid_b, keys);
++    expect(decrypt_locator(scope, another, keys, recovered), Code::ok, "v1 same-scope valid locator substitution");
++    check(recovered.rid == rid_b, "v1 contract has no ut or expected rid in locator AAD");
++
++    Scope other = scope;
++    other.table = "another";
++    reject_row(other, rid_a, row, keys, Code::auth_failed, "row cross-table");
++    reject_locator(other, loc, keys, Code::auth_failed, "locator cross-table");
++    other = scope;
++    other.database_oid = "16385";
++    reject_row(other, rid_a, row, keys, Code::auth_failed, "row cross-database");
++    reject_locator(other, loc, keys, Code::auth_failed, "locator cross-database");
++    other = scope;
++    other.deployment_id[0] = '1';
++    reject_row(other, rid_a, row, keys, Code::auth_failed, "row cross-deployment");
++    reject_locator(other, loc, keys, Code::auth_failed, "locator cross-deployment");
++    reject_row(scope, rid_b, row, keys, Code::auth_failed, "row cross-record");
++    reject_row(scope, "", row, keys, Code::invalid_input, "row empty rid");
++    std::string blob = "seed";
++    expect(encrypt_locator(scope, {"", 0}, keys, blob), Code::invalid_input, "locator empty rid");
++    check(blob.empty(), "locator error clears output");
++    expect(encrypt_locator(scope, {rid_a, 1}, keys, blob), Code::invalid_input, "unsupported locator op");
++    reject_locator(scope, row, keys, Code::protocol_invalid, "wrong locator purpose");
++    reject_row(scope, rid_a, loc, keys, Code::protocol_invalid, "wrong row purpose");
++    reject_row(scope, rid_a, flip(row, 6), keys, Code::protocol_invalid, "row version");
++    reject_locator(scope, flip(loc, 6), keys, Code::protocol_invalid, "locator version");
++    reject_row(scope, rid_a, flip(row, 7), keys, Code::protocol_invalid, "row purpose byte");
++    reject_row(scope, rid_a, flip(row, 0), keys, Code::protocol_invalid, "row magic");
++    reject_row(scope, rid_a, flip(row, 47), keys, Code::protocol_invalid, "row length field");
++    reject_locator(scope, flip(loc, 47), keys, Code::protocol_invalid, "locator length field");
++    reject_row(scope, rid_a, flip(row, 8), keys, Code::key_invalid, "row key_id");
++    reject_locator(scope, flip(loc, 8), keys, Code::key_invalid, "locator key_id");
++    reject_row(scope, rid_a, row.substr(0, row.size() - 4), keys, Code::protocol_invalid, "row truncated");
++    reject_locator(scope, loc.substr(0, loc.size() - 4), keys, Code::protocol_invalid, "locator truncated");
++    reject_row(scope, rid_a, row + "\n", keys, Code::protocol_invalid, "row Base64 whitespace");
++    reject_locator(scope, loc.substr(0, 95) + "A", keys, Code::protocol_invalid, "locator invalid Base64 padding");
++    for (const unsigned offset : {32, 56, 88}) {
++        reject_row(scope, rid_a, flip(row, offset), keys, Code::auth_failed, "row tamper offset " + std::to_string(offset));
++        reject_locator(scope, flip(loc, offset), keys, Code::auth_failed, "locator tamper offset " + std::to_string(offset));
++    }
++    reject_row(scope, rid_a, row, {}, Code::key_invalid, "row missing key");
++    reject_locator(scope, loc, {}, Code::key_invalid, "locator missing key");
++    auto wrong = keys;
++    wrong.row_key[0] ^= 1;
++    wrong.locator_key[0] ^= 1;
++    reject_row(scope, rid_a, row, wrong, Code::auth_failed, "row wrong key same ID");
++    reject_locator(scope, loc, wrong, Code::auth_failed, "locator wrong key same ID");
++    wrong = keys;
++    std::swap(wrong.row_key, wrong.locator_key);
++    reject_row(scope, rid_a, row, wrong, Code::auth_failed, "row key isolation");
++    reject_locator(scope, loc, wrong, Code::auth_failed, "locator key isolation");
++}
++
++void vectors(const std::string& path, const KeySet& keys)
++{
++    std::ifstream in(path);
++    std::string first, second, line, name, aad, plain, blob;
++    check(static_cast<bool>(std::getline(in, line)), "public vector file readable");
++    int read = 0;
++    while (std::getline(in, line)) {
++        std::istringstream parts(line);
++        if (!(parts >> name >> aad >> plain >> blob)) throw std::runtime_error("bad public vector");
++        ++read;
++        if (name == "row" || name == "row_repeat") {
++            Row out;
++            expect(decrypt_row(scope, rid_a, blob, keys, out), Code::ok, "known answer " + name);
++            check(equal(out, demo), name + " exact plaintext");
++            (name == "row" ? first : second) = blob;
++        } else if (name == "locator") {
++            Locator out;
++            expect(decrypt_locator(scope, blob, keys, out), Code::ok, "known answer locator");
++            check(out.rid == rid_a && out.operation == 0, "locator exact public vector");
++        } else if (name == "row_bad_length") {
++            reject_row(scope, rid_a, blob, keys, Code::protocol_invalid, "valid tag then malformed row");
++        } else if (name == "locator_bad_op") {
++            reject_locator(scope, blob, keys, Code::protocol_invalid, "valid tag then invalid locator op");
++        } else {
++            throw std::runtime_error("unrecognized public vector");
++        }
++    }
++    check(read == 5 && !first.empty() && !second.empty() && first != second, "all 5 public vectors verified");
++}
++
++void rng_case(const std::string& dir, const KeySet& keys)
++{
++    const auto fresh = dir + "/rng";
++    make_directory(fresh);
++    KeySet fresh_keys = keys;
++    expect(initialize_keys(fresh, fresh_keys), Code::crypto_failed, "key-generation RNG failure");
++    check(empty(fresh_keys) && access((fresh + row_file).c_str(), F_OK) != 0,
++          "RNG failure leaves no key file or output");
++    std::string blob = "seed";
++    expect(new_rid(blob), Code::crypto_failed, "rid RNG failure");
++    check(blob.empty(), "rid RNG failure clears output");
++    expect(encrypt_row(scope, rid_a, demo, keys, blob), Code::crypto_failed, "row nonce RNG failure");
++    check(blob.empty(), "row RNG failure clears output");
++    expect(encrypt_locator(scope, {rid_a, 0}, keys, blob), Code::crypto_failed, "locator nonce RNG failure");
++    check(blob.empty(), "locator RNG failure clears output");
++}
++
++int damaged_last_row(const KeySet& keys)
++{
++    std::vector<Row> staged;
++    for (unsigned i = 0; i < 3; ++i) {
++        auto blob = seal_row(basics[i], rids[i], keys);
++        if (i == 2) blob = flip(blob, blob.size() - 6);
++        Row row;
++        const auto status = decrypt_row(scope, rids[i], blob, keys, row);
++        if (status.code == Code::auth_failed && i == 2 && equal(row, {})) {
++            std::cerr << "auth_failed\n";
++            return 17;
++        }
++        if (!status.ok()) return 2;
++        staged.push_back(row);
++    }
++    for (const auto& row : staged) std::cout << row.ind << '\n';
++    return 0;
++}
++
++Scope sql_scope()
++{
++    const char* oid = std::getenv("YZH_FIXTURE_DB_OID");
++    if (!oid || !*oid) throw std::runtime_error("missing fixture database OID");
++    Scope context = scope;
++    context.database_oid = oid;
++    return context;
++}
++
++void write_sql_fixture(const std::string& path, const KeySet& keys)
++{
++    const auto context = sql_scope();
++    std::ofstream expected(path);
++    std::cout << "CREATE TABLE public.week_demo_data (rid text PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),"
++                 " data_blob text NOT NULL CHECK (octet_length(data_blob) BETWEEN 88 AND 65624));\n"
++                 "CREATE TABLE public.week_demo_index (ut text PRIMARY KEY,"
++                 " locator_blob text NOT NULL CHECK (octet_length(locator_blob) = 96));\n";
++    for (unsigned i = 0; i < 3; ++i) {
++        std::string blob;
++        if (!encrypt_row(context, rids[i], basics[i], keys, blob).ok()) throw std::runtime_error("fixture encode row");
++        std::cout << "INSERT INTO public.week_demo_data VALUES ('" << rids[i] << "','" << blob << "');\n";
++        expected << "YZH:d\t" << rids[i] << '\t' << blob << '\n';
++    }
++    for (unsigned i = 0; i < 3; ++i) {
++        std::string blob;
++        if (!encrypt_locator(context, {rids[i], 0}, keys, blob).ok()) throw std::runtime_error("fixture encode locator");
++        std::cout << "INSERT INTO public.week_demo_index VALUES ('fixture" << i << "','" << blob << "');\n";
++        if (i == 0) {
++            const auto first = blob;
++            if (!encrypt_locator(context, {rids[i], 0}, keys, blob).ok() || blob == first) {
++                throw std::runtime_error("fixture reseal locator");
++            }
++            std::cout << "DELETE FROM public.week_demo_index WHERE ut='fixture0';\n"
++                         "INSERT INTO public.week_demo_index VALUES ('fixture0_new','" << blob << "');\n";
++        }
++        expected << "YZH:l\tfixture" << i << (i == 0 ? "_new" : "") << '\t' << blob << '\n';
++    }
++    expected.close();
++    if (!expected) throw std::runtime_error("cannot write expected ciphertext file");
++    std::cout << "SELECT 'YZH:d',rid,data_blob FROM public.week_demo_data ORDER BY rid;\n"
++                 "SELECT 'YZH:l',ut,locator_blob FROM public.week_demo_index ORDER BY ut;\n";
++}
++
++void read_sql_fixture(const std::string& path, const KeySet& keys)
++{
++    const auto context = sql_scope();
++    std::ifstream from_db(path);
++    std::string kind, id, blob;
++    for (unsigned i = 0; i < 3; ++i) {
++        Row row;
++        check(static_cast<bool>(from_db >> kind >> id >> blob) && kind == "YZH:d" && id == rids[i],
++              "database read row " + std::to_string(i + 1));
++        expect(decrypt_row(context, id, blob, keys, row), Code::ok, "database row authentication");
++        check(equal(row, basics[i]), "database row recovers full original bytes");
++    }
++    for (unsigned i = 0; i < 3; ++i) {
++        Locator locator;
++        check(static_cast<bool>(from_db >> kind >> id >> blob) && kind == "YZH:l" &&
++              id == "fixture" + std::to_string(i) + (i == 0 ? "_new" : "") && blob.size() == 96,
++              "database read locator " + std::to_string(i + 1));
++        expect(decrypt_locator(context, blob, keys, locator), Code::ok, "database locator authentication");
++        check(locator.rid == rids[i] && locator.operation == 0, "database locator recovers rid and op");
++    }
++    check(!(from_db >> kind), "database returned only the six expected ciphertexts");
++}
++
++} // namespace
++
++int main(int argc, char** argv)
++{
++    if (argc < 3 || argc > 4) return 2;
++    try {
++        const std::string mode = argc == 4 ? argv[3] : "";
++        const std::string dir = argv[1];
++        const auto keys = public_keys(dir + (mode.empty() ? "/public" : "/public" + mode));
++        if (mode == "--sql-write") {
++            write_sql_fixture(argv[2], keys);
++            return 0;
++        }
++        if (mode == "--sql-read") {
++            read_sql_fixture(argv[2], keys);
++            return 0;
++        }
++        if (mode == "--last-row") return damaged_last_row(keys);
++        if (mode == "--rng-failure") rng_case(dir, keys);
++        else if (mode.empty()) {
++            key_cases(dir, keys);
++            rows(keys);
++            attacks(keys);
++            vectors(argv[2], keys);
++        } else return 2;
++        std::cout << "PASS total=" << checks << '\n';
++        return 0;
++    } catch (const std::exception& error) {
++        std::cerr << "FAIL " << error.what() << '\n';
++        return 1;
++    }
++}
+diff --git a/team_week/yan_zihan/YZH-01/verify_delivery.sh b/team_week/yan_zihan/YZH-01/verify_delivery.sh
+new file mode 100755
+index 0000000..a04a99b
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/verify_delivery.sh
+@@ -0,0 +1,14 @@
++#!/usr/bin/env bash
++set -euo pipefail
++root=$(cd -- "$(dirname -- "$0")" && pwd)
++mkdir -p -- "$root/results"
++{
++  printf '$ bash build.sh\n'
++  bash "$root/build.sh"
++  printf '$ ldd build/librow_aead_v1.so\n'
++  runtime=$(ldd "$root/build/librow_aead_v1.so")
++  printf '%s\n' "$runtime"
++  if [[ "$runtime" == *'not found'* ]]; then exit 1; fi
++  printf '$ bash run.sh\n'
++  bash "$root/run.sh"
++} 2>&1 | tee "$root/results/module.log"
+diff --git a/team_week/yan_zihan/YZH-01/verify_legacy_short_key.sh b/team_week/yan_zihan/YZH-01/verify_legacy_short_key.sh
+new file mode 100755
+index 0000000..4fd5cb3
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/verify_legacy_short_key.sh
+@@ -0,0 +1,24 @@
++#!/usr/bin/env bash
++set -euo pipefail
++here=$(cd -- "$(dirname -- "$0")" && pwd)
++repo=$(cd -- "$1" && pwd)
++base=25489f563f25b522d0cd37a6c85865039e3f340f
++source_file=src/common/interfaces/libpq/sse_common.cpp
++cxx=${CXX:-g++}
++tmp=$(mktemp -d)
++trap 'rm -rf -- "$tmp"' EXIT
++(
++  cd "$repo"
++  git rev-parse "$base:$source_file"
++  git archive "$base" "$source_file" src/include/libpq/sse_common.h src/include/libpq/SSE_map.h | tar -x -C "$tmp"
++)
++cp "$tmp/$source_file" "$tmp/original.cpp"
++(cd "$tmp" && git apply --check "$here/legacy-short-key.patch" && git apply "$here/legacy-short-key.patch")
++for variant in baseline fixed; do
++  src="$tmp/original.cpp"
++  if [[ "$variant" == fixed ]]; then src="$tmp/$source_file"; fi
++  "$cxx" -std=c++11 -O0 -ffunction-sections -fdata-sections -I"$tmp/src/include" \
++    "$here/tests/legacy_short_key.cpp" "$src" -Wl,--gc-sections -static-libstdc++ \
++    -static-libgcc -lcrypto -o "$tmp/check"
++  "$tmp/check" "$tmp" "$variant"
++done
+diff --git a/team_week/yan_zihan/YZH-01/verify_storage_fixture.sh b/team_week/yan_zihan/YZH-01/verify_storage_fixture.sh
+new file mode 100755
+index 0000000..70019a6
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/verify_storage_fixture.sh
+@@ -0,0 +1,59 @@
++#!/usr/bin/env bash
++# Test ciphertext storage against a fresh openGauss instance using public fixtures.
++set -euo pipefail
++here=$(cd -- "$(dirname -- "$0")" && pwd)
++: "${GAUSSHOME:?set GAUSSHOME to the installed openGauss prefix}"
++: "${SSE_LEGACY_ROOT:?set SSE_LEGACY_ROOT to the fixed state root of the old binary}"
++db_user=${YZH_FIXTURE_DB_USER:-omm}
++[[ "$db_user" =~ ^[a-z_][a-z0-9_]*$ ]]
++if [[ "${1:-}" != inside ]]; then
++  [[ "$(id -u)" == 0 ]]
++  export YZH_PARENT_MNT=$(readlink /proc/self/ns/mnt)
++  exec unshare -m --propagation private bash "$0" inside
++fi
++[[ "$(readlink /proc/self/ns/mnt)" != "${YZH_PARENT_MNT:?run without arguments}" ]]
++export LD_LIBRARY_PATH="$GAUSSHOME/lib:${LD_LIBRARY_PATH:-}"
++export PATH="$GAUSSHOME/bin:$PATH"
++scratch=$(mktemp -d /tmp/yzh01-db.XXXXXXXX)
++port=55452
++as_db() { runuser -u "$db_user" -- "$@"; }
++finish() {
++  if [[ -f "$scratch/db/postmaster.pid" ]]; then
++    as_db gs_ctl stop -D "$scratch/db" -m fast >"$scratch/stop.log" 2>&1 || true
++  fi
++  if [[ -f "$scratch/db/postmaster.pid" ]]; then
++    printf 'Database stop failed. Fixture preserved at %s\n' "$scratch" >&2
++    return 1
++  fi
++  rm -rf -- "$scratch"
++}
++trap finish EXIT
++chmod 0755 "$scratch"
++install -d -m 0700 -o "$db_user" "$scratch/client" "$scratch/server" "$scratch/socket" "$scratch/db"
++mount --bind "$scratch/client" "$SSE_LEGACY_ROOT/sse_storage"
++mount --bind "$scratch/server" "$SSE_LEGACY_ROOT/sse_server_storage"
++as_db gs_initdb -D "$scratch/db" --nodename=yzh_fixture --no-locale -E UTF8 \
++  --auth-local=trust --auth-host=reject >"$scratch/init.log" 2>&1 || { cat "$scratch/init.log"; exit 1; }
++as_db gs_ctl start -D "$scratch/db" -Z single_node -l "$scratch/db/server.log" \
++  -o "-p $port -c listen_addresses= -k $scratch/socket" >"$scratch/start.log" 2>&1 ||
++  { cat "$scratch/start.log"; tail -35 "$scratch/db/server.log"; exit 1; }
++gq() {
++  as_db gsql -X -h "$scratch/socket" -p "$port" -d postgres -v ON_ERROR_STOP=1 -qAt -F $'\t' "$@"
++}
++# New blank local cluster requires a login password even with Unix socket auth.
++password=$(openssl rand -hex 14)
++printf "ALTER ROLE %s PASSWORD 'Aa1!%s';\n" "$db_user" "$password" | gq >/dev/null
++unset password
++YZH_FIXTURE_DB_OID=$(gq -c 'SELECT oid::text FROM pg_database WHERE datname=current_database()' | grep -E '^[0-9]+$')
++export YZH_FIXTURE_DB_OID
++"$here/build/test_crypto" "$scratch" "$scratch/expected.tsv" --sql-write >"$scratch/fixture.sql"
++if grep -Eq "red apple|green apple|yellow banana|rid\\|add" "$scratch/fixture.sql"; then
++  printf 'FAIL fixture SQL contained plaintext\n' >&2
++  exit 1
++fi
++gq <"$scratch/fixture.sql" | grep -E '^YZH:[dl]' >"$scratch/readback.tsv"
++cmp "$scratch/expected.tsv" "$scratch/readback.tsv"
++printf 'PASS SQL write/read stored exactly three row blobs and three locator blobs (one resealed)\n'
++"$here/build/test_crypto" "$scratch" "$scratch/readback.tsv" --sql-read
++as_db gs_ctl stop -D "$scratch/db" -m fast >"$scratch/stop.log" 2>&1
++printf 'PASS isolated openGauss fixture stopped\n'
+-- 
+1.8.3.1
+
+
+From 335b78a1b43b3cbd847cd7aef76f753256755a11 Mon Sep 17 00:00:00 2001
+From: Codex <codex@localhost>
+Date: Wed, 18 Nov 2026 00:11:11 +0800
+Subject: [PATCH 2/2] Record YZH-01 verification and integration handoff
+
+---
+ team_week/yan_zihan/YZH-01/crypto-report.md        |  58 +++++
+ team_week/yan_zihan/YZH-01/handoff.md              |  44 ++++
+ .../yan_zihan/YZH-01/results/legacy-short-key.log  |   9 +
+ team_week/yan_zihan/YZH-01/results/module.log      | 250 +++++++++++++++++++++
+ .../yan_zihan/YZH-01/results/shy-02-check.log      |   4 +
+ .../yan_zihan/YZH-01/results/storage-fixture.log   |  24 ++
+ .../yan_zihan/YZH-01/results/system-openssl.log    | 250 +++++++++++++++++++++
+ .../YZH-01/results/system-runtime-mismatch.log     |  17 ++
+ 8 files changed, 656 insertions(+)
+ create mode 100644 team_week/yan_zihan/YZH-01/crypto-report.md
+ create mode 100644 team_week/yan_zihan/YZH-01/handoff.md
+ create mode 100644 team_week/yan_zihan/YZH-01/results/legacy-short-key.log
+ create mode 100644 team_week/yan_zihan/YZH-01/results/module.log
+ create mode 100644 team_week/yan_zihan/YZH-01/results/shy-02-check.log
+ create mode 100644 team_week/yan_zihan/YZH-01/results/storage-fixture.log
+ create mode 100644 team_week/yan_zihan/YZH-01/results/system-openssl.log
+ create mode 100644 team_week/yan_zihan/YZH-01/results/system-runtime-mismatch.log
+
+diff --git a/team_week/yan_zihan/YZH-01/crypto-report.md b/team_week/yan_zihan/YZH-01/crypto-report.md
+new file mode 100644
+index 0000000..33c25eb
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/crypto-report.md
+@@ -0,0 +1,58 @@
++# YZH-01 业务行与位置认证加密
++
++## 输入与交付
++
++接收 SHY-02 v1.0，发布标识为 b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1，源码基准为 25489f563f25b522d0cd37a6c85865039e3f340f。SHY-02 文件包的 33 项 SHA-256 全部匹配，见 [前置复验日志](results/shy-02-check.log)。原样附入的 sse_v1_contract.hpp 的 SHA-256 为 1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371。模块提交号及获取方法见 [交接记录](handoff.md)。
++
++模块的入口为 include/row_aead_v1.h。src/row_aead_v1.cpp 实现 SHY-02 分配给 YZH-01 的九个函数。build.sh 生成可链接的 build/librow_aead_v1.so，验收程序直接调用这个动态库。使用 OpenSSL 的 EVP AES-256-GCM 和 RAND_bytes，检查随机源、每步 EVP 调用和实际输出长度。解密的中间缓冲区先保留在模块内部，只有认证通过后才解析业务行或位置。所有入口将输出清空，只有成功才返回结果。合法空业务字段和失败通过 Status 区分。参考 [OpenSSL EVP](https://docs.openssl.org/1.0.2/man3/EVP_EncryptInit/) 和 [RAND_bytes](https://docs.openssl.org/1.0.2/man3/RAND_bytes/)。
++
++## 数据与长度
++
++- 业务行依次编码 ind、keyword、payload，每项是 4 字节大端长度和原始字节。UTF-8 文本按字节保留中文、空格和空串。序列化层也保存 NUL，SQL 文本的 NUL、CR、LF 拒绝由客户端入口完成。
++- rid 是独立的 16 字节随机记录标识，在线路上用 32 位小写十六进制表示。位置明文固定为 16 字节 rid 加 1 字节操作值，v1 只接受 0。空业务字段合法，空 rid 非法。
++- 封装为标准带填充 Base64。二进制按顺序为 SSE1（4）、版本（1）、用途（1）、key_id（16）、nonce（12）、大端密文长度（4）、密文和标签（16），括号内单位为字节。解密检查严格 Base64、长度、版本、用途及 key_id。密文长度和原始明文长度相同。
++- AAD 是整个 38 字节头，加长度前缀编码的 deployment_id、database_oid、schema、table。业务行还追加已知 rid 的原始 16 字节。位置按 v1 使用 Scope；rid 与 op 一起加密和认证。
++
++| 数据 | 明文长度 | 二进制封装 | Base64 |
++|---|---:|---:|---:|
++| 三字段均为空 | 12 | 66 | 88 |
++| 三字段达到允许上限（16384 + 1024 + 16384） | 33804 | 33858 | 45144 |
++| SHY-02 结构上限（按三个 16384 字段计算） | 49164 | 49218 | 65624 |
++| 位置 | 17 | 71 | 96 |
++
++二进制长度为明文长度加 54，Base64 长度为 4 × ⌈二进制长度 / 3⌉。结构上限用于封装预检和物理表约束。实际行必须同时遵守 1024 字节的关键词上限，因而可生成的最大业务封装为 45144 字符。解码还会拒绝声明长度超限、截断或尾随字节的行。
++
++## 密钥与状态
++
++客户端以独立的 32 字节 Krow、32 字节 Kloc 和 16 字节 key_id 保存到 row_aead_v1.key、locator_aead_v1.key、row_aead_v1.keyid。仅在上游明确判断全新环境后，先建立归当前用户所有的空 0700 目录，再调用 initialize_keys。调用方应在其他状态文件写入前完成此步骤。三个文件独占创建，权限 0600，key_id 最后写入，写入和目录同步均检查。中途出错时保留现场，缺项或非空状态继续阻断。目录锁避免同时初始化和读取半套密钥。
++
++load_keys 只读。已有状态缺任一文件、短钥、过长文件、权限或属主不符合要求、符号链接和两用途钥相同，均返回 key_invalid。封装 key_id 不匹配也返回 key_invalid。同 key_id 的错钥以及修改 nonce、密文或标签返回 auth_failed。随机源失败返回 crypto_failed。原有 join_col 辅助路径和 CBC 格式不参与新协议。
++
++## 实测记录
++
++主环境是 WSL CentOS 7、GCC 7.3.0、C++11、旧 libstdc++ ABI、项目 dest/lib 中的 libcrypto.so.1.1。以上构建和三组测试均从模块提交导出的干净副本复跑，路径包含空格。测试使用公开夹具和临时目录，没有使用现存业务密钥。
++
++| 用例 | 命令及输入 | 预期和实测 | 原始日志 |
++|---|---|---|---|
++| CRYPTO-01 | bash verify_delivery.sh。SHY-02 三条公开样例，每行加密两次 | 三行逐字段、逐字节等长恢复。两次 nonce 和密文各自不同 | [module.log](results/module.log) |
++| CRYPTO-02 | 同入口。中文、空格、空字段、尾零、15/16/17 与 63/64/65 字节、字段最大和超长 | 精确往返。空行 88 字符，最大合法行 45144 字符。越界清空输出并拒绝 | [module.log](results/module.log) |
++| CRYPTO-03 | 同入口。位置 op=0、重新加密、错 Scope/rid/key_id/密钥、非法版本和用途、修改 nonce/密文/标签、截断、非法 Base64，以及有合法标签但内容违法的公开向量 | 合法位置恢复；错误返回且没有行或位置输出。有合法标签的非法操作值或行长度返回 protocol_invalid | [module.log](results/module.log) |
++| KEY | 同入口。缺钥、空钥、16/31/33 字节钥、短 key_id、权限、链接、互斥及二次初始化 | 缺钥与短钥拒绝，不补钥，原钥保留。只在显式初始化时创建 | [module.log](results/module.log) |
++| RNG | 同入口。仅测试用 LD_PRELOAD 将 RAND_bytes 返回值置为失败 | 行、位置、rid 和钥生成均返回 crypto_failed。没有输出和新钥文件 | [module.log](results/module.log) |
++| 批结果夹具 | 同入口。第三行标签损坏，独立驱动先暂存前两行 | 驱动 stderr 为 auth_failed，退出 17，stdout 为 0 字节 | [module.log](results/module.log) |
++| openGauss 存取夹具 | bash verify_storage_fixture.sh。独立实例、SHY-02 三条公开行、六个实际封装、一次位置重新加密并替换 | 真实 gsql 收到的列值为 rid/ut 和密文。读回三个业务封装和三个位置封装，密文字节与提交前相等。客户端认证恢复业务行、rid、op。实例正常停止 | [storage-fixture.log](results/storage-fixture.log) |
++| 旧短钥 | bash verify_legacy_short_key.sh <含 25489f5 的 Git 仓库>。读取旧路径的 0、15、16 字节样本 | 在隔离源码副本中，旧基准把前两例当作 16 字节，旧补丁拒绝前两例并保留 16 字节正常行为。新模块另测 32 字节文件 | [legacy-short-key.log](results/legacy-short-key.log) |
++
++旧补丁源自本机 team_prep 的 short_key_check.patch。其原文件、a3567e4 与 SHY-02 基准 25489f5 的 sse_common.cpp blob 均为 18b3add01e6408d19ff92108f435d423758a49c8。legacy-short-key.patch 是按仓库相对路径整理的回归输入，未应用到本交付的生产源码。
++
++另用系统 libcrypto.so.10 复验了独立模块。未配置运行库时，加载器报告系统 libstdc++ 缺少 GLIBCXX_3.4.20/21，测试进程尚未启动。补上本机匹配的 GCC 7.3 运行库路径后，同一组测试通过。证据见 [加载失败日志](results/system-runtime-mismatch.log) 与 [复跑日志](results/system-openssl.log)。
++
++公开向量在 [public-vectors.tsv](tests/public-vectors.tsv)。其中两条行向量使用相同的完整明文和不同的固定测试 nonce；另有一条位置向量和两条合法认证、非法内容的负例。生成脚本使用 Python cryptography；生产模块只用 RAND_bytes，未提供固定 nonce 入口。
++
++## 现有契约的边界及待集成验证
++
++业务行绑定 rid，跨记录替换实测返回 auth_failed。位置载荷绑定 Scope，跨部署、数据库或表替换实测被拒绝。**同一 Scope 中，把一条合法完整 locator_blob 换到另一个 ut 下，v1 密码接口仍能认证。** 公开测试换入另一条有效位置并恢复了另一 rid，表明位置 AAD 没有绑定 ut 或外部预期 rid。检查返回的 ut 是本次请求成员，无法独立证明对应 locator_blob 原来存在哪个 ut 下。若集成验收必须拒绝这类替换，需要由组长发布包含可信预期定位标识的契约版本，涉及 YZH、ZYC 与 LMD。
++
++真实 Fides 的 INSERT、索引搜索、客户端重插、按 rid 回查，以及最后一行损坏时 gsql 的 ON_ERROR_STOP 行为，需在 SHY-03、LMD 与 ZYC 接入后复验。openGauss 存取夹具用了真实数据库和 SQL 物理形状，ut 为公开占位，调用链尚未接入 Fides。夹具通过 Unix socket 使用隔离实例，未启用 TCP。旧原生列加密路径的组合 DDL 和篡改退出码问题仍在。
++
++Scope 认证不能代替 SSE 计数命名空间隔离，现阶段仍限隔离环境和单客户端。密钥轮换、备份恢复、丢钥恢复、旧数据迁移、多关键词、范围查询、服务端密文 JOIN、TCP/TLS、整链性能和形式化安全证明均未交付。
+diff --git a/team_week/yan_zihan/YZH-01/handoff.md b/team_week/yan_zihan/YZH-01/handoff.md
+new file mode 100644
+index 0000000..e9c942a
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/handoff.md
+@@ -0,0 +1,44 @@
++# YZH-01 交接记录
++
++前置 SHY-02 已接收，契约版本 v1.0。发布标识 b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1 来自交付包的发布版本.json 与 evidence/release-commit.txt，其本地 Git 对象未随包提供。本次以已校验的 SHY-02 文件包和源码基准 25489f563f25b522d0cd37a6c85865039e3f340f 实作。
++
++模块提交为 7b99d773e308ec3c06b71654e517f9abfa5e2ccd，隔离仓库为 /opt/og/yzh01-release.WUApfiBz/source，分支 codex/yzh-01-crypto。原机器上已有 Git 作者为占位符，因此隔离仓库提交使用本地 Codex 作者。综合交付补丁 YZH-01.patch 可在包含 25489f5 的独立分支上，用 git am --3way 应用。交付文件校验值见 manifest-sha256.json。
++
++## 文件与接入
++
++- include/sse_v1_contract.hpp 原样保留 SHY-02 接口，include/row_aead_v1.h 是调用入口。src/row_aead_v1.cpp 实作封装、行编解码、rid、密钥与加解密。
++- build.sh 构建，run.sh 运行，verify_delivery.sh 记录编译、动态库和测试结果。tests 中的密钥均为公开合成夹具，运行时存放于新临时目录。完整预期、实测和原始日志见 [crypto-report.md](crypto-report.md)。
++- verify_storage_fixture.sh 把正式模块生成的公开夹具密文送入独立 openGauss 实例，验证数据库存取、模拟位置替换及客户端回读认证。
++- legacy-short-key.patch 仅供旧辅助函数回归，验证入口为 verify_legacy_short_key.sh。现有 sse_common.cpp、libpq/gsql 全局构建规则、SQL 和客户端调用方由各负责人维护。
++
++## 复现编译与运行
++
++在 Linux/WSL 从交付目录运行。系统提供匹配的 OpenSSL 开发包和运行库时可直接用 bash verify_delivery.sh。使用 SHY-02 的 GCC 7.3 与项目 OpenSSL 时，先按自己的安装位置设置下列变量。本机实际配置如下。
++
++~~~bash
++export CXX=/opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/bin/g++
++export CXXFLAGS=-D_GLIBCXX_USE_CXX11_ABI=0
++export OPENSSL_INCLUDE_DIR=/opt/og/binarylibs/dependency/centos7.6_x86_64/openssl/comm/include
++export OPENSSL_LIB_DIR=/opt/og/SSE_openGauss/dest/lib
++export LD_LIBRARY_PATH="$OPENSSL_LIB_DIR:/opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/lib64"
++bash verify_delivery.sh
++bash verify_legacy_short_key.sh /opt/og/yzh01-release.WUApfiBz/source
++~~~
++
++调用方用与库相同的编译器 ABI，并使用对应 OpenSSL 头文件和运行库。若出现 libcrypto 未找到或 GLIBCXX 符号错误，先检查 ldd 和动态库搜索路径。库文件 build/librow_aead_v1.so 由脚本生成，与测试程序同目录，源码提交不携带各机器的编译产物。
++
++存取夹具需要已安装的 openGauss、可创建 mount namespace 的 Linux root，以及专用的 SQL 运行用户（默认 omm）。脚本在私有挂载命名空间中绑定临时 SSE 状态目录，只通过新建的 Unix socket 连接临时实例。按本机安装设置以下路径后在交付目录运行。
++
++~~~bash
++export GAUSSHOME=/opt/og/SSE_openGauss/dest
++export SSE_LEGACY_ROOT=/opt/og/openGauss-server
++export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/og/SSE_openGauss/sse/opensse-schemes/third_party/crypto/build/src:/opt/og/SSE_openGauss/sse/Mitra/third_party/crypto/library/lib:/opt/og/fides_relic/lib:/opt/og/mitra_relic/lib"
++bash verify_storage_fixture.sh
++~~~
++
++## 接手
++
++- **李孟德** 用实产 Base64 验证 SQL 存取、数组处理与重插；行长度 88～45144，协议结构上限为 65624，位置严格 96 字符。
++- **刘卓明** 在显式创建空 0700 状态目录后、写其他状态文件前初始化钥。已有或未知状态使用 load_keys，缺钥即终止。将目录范围和表 Scope 与实际连接匹配。
++- **张永昌** 写入前先通过 new_rid、encrypt_row 和 encrypt_locator，认证失败立即停止。回查业务行时以预期 rid 解密，全部成功后才能统一展示。用新版真实 gsql 复验篡改最后一行与批处理非零退出。
++- **组长** 在 SHY-03 纳入统一构建。请登记 v1 位置载荷无法验证同一表内的合法位置互换。解决它需要契约加入可信 ut 或其他预期绑定，不能用本模块的跨表测试替代验收。
+diff --git a/team_week/yan_zihan/YZH-01/results/legacy-short-key.log b/team_week/yan_zihan/YZH-01/results/legacy-short-key.log
+new file mode 100644
+index 0000000..f15a880
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/results/legacy-short-key.log
+@@ -0,0 +1,9 @@
++$ bash verify_legacy_short_key.sh <base repo>
++18b3add01e6408d19ff92108f435d423758a49c8
++PASS legacy baseline file_bytes=0 returned_bytes=16
++PASS legacy baseline file_bytes=15 returned_bytes=16
++PASS legacy baseline file_bytes=16 returned_bytes=16
++PASS legacy fixed file_bytes=0 returned_bytes=0
++PASS legacy fixed file_bytes=15 returned_bytes=0
++PASS legacy fixed file_bytes=16 returned_bytes=16
++PASS legacy fixed short key rejected by both AES helpers
+diff --git a/team_week/yan_zihan/YZH-01/results/module.log b/team_week/yan_zihan/YZH-01/results/module.log
+new file mode 100644
+index 0000000..71edadc
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/results/module.log
+@@ -0,0 +1,250 @@
++$ bash build.sh
++built librow_aead_v1.so (g++ (GCC) 7.3.0)
++$ ldd build/librow_aead_v1.so
++	linux-vdso.so.1 =>  (0x00007ffeb1fe4000)
++	libcrypto.so.1.1 => /opt/og/SSE_openGauss/dest/lib/libcrypto.so.1.1 (0x00007f4465f4c000)
++	libstdc++.so.6 => /opt/og/SSE_openGauss/dest/lib/libstdc++.so.6 (0x00007f4465bc9000)
++	libm.so.6 => /lib64/libm.so.6 (0x00007f44658c7000)
++	libgcc_s.so.1 => /opt/og/SSE_openGauss/dest/lib/libgcc_s.so.1 (0x00007f44656af000)
++	libc.so.6 => /lib64/libc.so.6 (0x00007f44652e1000)
++	libdl.so.2 => /lib64/libdl.so.2 (0x00007f44650dd000)
++	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f4464ec1000)
++	/lib64/ld-linux-x86-64.so.2 (0x00007f4466615000)
++$ bash run.sh
++PASS load absent directory refuses
++PASS absent load clears output and creates nothing
++PASS generate keys explicitly
++PASS generated key lengths and distinct purposes
++PASS 0600 /row_aead_v1.key
++PASS 0600 /locator_aead_v1.key
++PASS 0600 /row_aead_v1.keyid
++PASS second initialization refuses
++PASS failure leaves no key output
++PASS load after initialization
++PASS second initialization never overwrites
++PASS generated keys usable
++PASS generated keys decrypt
++PASS generated key roundtrip bytes
++PASS fixture holds key directory lock
++PASS load during initialization refuses
++PASS release fixture lock
++PASS fixture remove locator key
++PASS existing state missing key
++PASS existing state cannot replace missing key
++PASS missing key never auto-created
++PASS reject key length 0
++PASS invalid key length clears output
++PASS reject key length 16
++PASS invalid key length clears output
++PASS reject key length 31
++PASS invalid key length clears output
++PASS reject key length 33
++PASS invalid key length clears output
++PASS short key ID refused
++PASS fixture unsafe file mode
++PASS unsafe file mode refused
++PASS fixture symlink
++PASS key symlink refused
++PASS CRYPTO-01 row 1 encode
++PASS CRYPTO-01 row 1 decode
++PASS CRYPTO-01 row 1 codec exact bytes=27
++PASS CRYPTO-01 row 1 different ciphertexts Base64=108
++PASS CRYPTO-01 row 1 decrypt first
++PASS CRYPTO-01 row 1 first exact
++PASS CRYPTO-01 row 1 decrypt second
++PASS CRYPTO-01 row 1 second exact
++PASS CRYPTO-01 row 2 encode
++PASS CRYPTO-01 row 2 decode
++PASS CRYPTO-01 row 2 codec exact bytes=29
++PASS CRYPTO-01 row 2 different ciphertexts Base64=112
++PASS CRYPTO-01 row 2 decrypt first
++PASS CRYPTO-01 row 2 first exact
++PASS CRYPTO-01 row 2 decrypt second
++PASS CRYPTO-01 row 2 second exact
++PASS CRYPTO-01 row 3 encode
++PASS CRYPTO-01 row 3 decode
++PASS CRYPTO-01 row 3 codec exact bytes=32
++PASS CRYPTO-01 row 3 different ciphertexts Base64=116
++PASS CRYPTO-01 row 3 decrypt first
++PASS CRYPTO-01 row 3 first exact
++PASS CRYPTO-01 row 3 decrypt second
++PASS CRYPTO-01 row 3 second exact
++PASS CRYPTO-02 all fields empty encode
++PASS CRYPTO-02 all fields empty decode
++PASS CRYPTO-02 all fields empty codec exact bytes=12
++PASS CRYPTO-02 all fields empty different ciphertexts Base64=88
++PASS CRYPTO-02 all fields empty decrypt first
++PASS CRYPTO-02 all fields empty first exact
++PASS CRYPTO-02 all fields empty decrypt second
++PASS CRYPTO-02 all fields empty second exact
++PASS CRYPTO-02 Chinese, spaces and trailing NULs encode
++PASS CRYPTO-02 Chinese, spaces and trailing NULs decode
++PASS CRYPTO-02 Chinese, spaces and trailing NULs codec exact bytes=31
++PASS CRYPTO-02 Chinese, spaces and trailing NULs different ciphertexts Base64=116
++PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt first
++PASS CRYPTO-02 Chinese, spaces and trailing NULs first exact
++PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt second
++PASS CRYPTO-02 Chinese, spaces and trailing NULs second exact
++PASS CRYPTO-02 payload 15 encode
++PASS CRYPTO-02 payload 15 decode
++PASS CRYPTO-02 payload 15 codec exact bytes=27
++PASS CRYPTO-02 payload 15 different ciphertexts Base64=108
++PASS CRYPTO-02 payload 15 decrypt first
++PASS CRYPTO-02 payload 15 first exact
++PASS CRYPTO-02 payload 15 decrypt second
++PASS CRYPTO-02 payload 15 second exact
++PASS CRYPTO-02 payload 16 encode
++PASS CRYPTO-02 payload 16 decode
++PASS CRYPTO-02 payload 16 codec exact bytes=28
++PASS CRYPTO-02 payload 16 different ciphertexts Base64=112
++PASS CRYPTO-02 payload 16 decrypt first
++PASS CRYPTO-02 payload 16 first exact
++PASS CRYPTO-02 payload 16 decrypt second
++PASS CRYPTO-02 payload 16 second exact
++PASS CRYPTO-02 payload 17 encode
++PASS CRYPTO-02 payload 17 decode
++PASS CRYPTO-02 payload 17 codec exact bytes=29
++PASS CRYPTO-02 payload 17 different ciphertexts Base64=112
++PASS CRYPTO-02 payload 17 decrypt first
++PASS CRYPTO-02 payload 17 first exact
++PASS CRYPTO-02 payload 17 decrypt second
++PASS CRYPTO-02 payload 17 second exact
++PASS CRYPTO-02 payload 63 encode
++PASS CRYPTO-02 payload 63 decode
++PASS CRYPTO-02 payload 63 codec exact bytes=75
++PASS CRYPTO-02 payload 63 different ciphertexts Base64=172
++PASS CRYPTO-02 payload 63 decrypt first
++PASS CRYPTO-02 payload 63 first exact
++PASS CRYPTO-02 payload 63 decrypt second
++PASS CRYPTO-02 payload 63 second exact
++PASS CRYPTO-02 payload 64 encode
++PASS CRYPTO-02 payload 64 decode
++PASS CRYPTO-02 payload 64 codec exact bytes=76
++PASS CRYPTO-02 payload 64 different ciphertexts Base64=176
++PASS CRYPTO-02 payload 64 decrypt first
++PASS CRYPTO-02 payload 64 first exact
++PASS CRYPTO-02 payload 64 decrypt second
++PASS CRYPTO-02 payload 64 second exact
++PASS CRYPTO-02 payload 65 encode
++PASS CRYPTO-02 payload 65 decode
++PASS CRYPTO-02 payload 65 codec exact bytes=77
++PASS CRYPTO-02 payload 65 different ciphertexts Base64=176
++PASS CRYPTO-02 payload 65 decrypt first
++PASS CRYPTO-02 payload 65 first exact
++PASS CRYPTO-02 payload 65 decrypt second
++PASS CRYPTO-02 payload 65 second exact
++PASS CRYPTO-02 all fields at limit encode
++PASS CRYPTO-02 all fields at limit decode
++PASS CRYPTO-02 all fields at limit codec exact bytes=33804
++PASS CRYPTO-02 all fields at limit different ciphertexts Base64=45144
++PASS CRYPTO-02 all fields at limit decrypt first
++PASS CRYPTO-02 all fields at limit first exact
++PASS CRYPTO-02 all fields at limit decrypt second
++PASS CRYPTO-02 all fields at limit second exact
++PASS payload over 16384
++PASS overlength payload clears ciphertext
++PASS keyword over 1024
++PASS trailing bytes in serialized row
++PASS bad codec does not emit partial fields
++PASS fresh rid
++PASS second fresh rid
++PASS rid is 16 random bytes as lowercase hex
++PASS CRYPTO-03 locator size, randomization and no plaintext rid|add
++PASS re-encrypted locator authenticates
++PASS locator exact rid and op=0
++PASS v1 same-scope valid locator substitution
++PASS v1 contract has no ut or expected rid in locator AAD
++PASS row cross-table
++PASS row cross-table no plaintext
++PASS locator cross-table
++PASS locator cross-table no locator
++PASS row cross-database
++PASS row cross-database no plaintext
++PASS locator cross-database
++PASS locator cross-database no locator
++PASS row cross-deployment
++PASS row cross-deployment no plaintext
++PASS locator cross-deployment
++PASS locator cross-deployment no locator
++PASS row cross-record
++PASS row cross-record no plaintext
++PASS row empty rid
++PASS row empty rid no plaintext
++PASS locator empty rid
++PASS locator error clears output
++PASS unsupported locator op
++PASS wrong locator purpose
++PASS wrong locator purpose no locator
++PASS wrong row purpose
++PASS wrong row purpose no plaintext
++PASS row version
++PASS row version no plaintext
++PASS locator version
++PASS locator version no locator
++PASS row purpose byte
++PASS row purpose byte no plaintext
++PASS row magic
++PASS row magic no plaintext
++PASS row length field
++PASS row length field no plaintext
++PASS locator length field
++PASS locator length field no locator
++PASS row key_id
++PASS row key_id no plaintext
++PASS locator key_id
++PASS locator key_id no locator
++PASS row truncated
++PASS row truncated no plaintext
++PASS locator truncated
++PASS locator truncated no locator
++PASS row Base64 whitespace
++PASS row Base64 whitespace no plaintext
++PASS locator invalid Base64 padding
++PASS locator invalid Base64 padding no locator
++PASS row tamper offset 32
++PASS row tamper offset 32 no plaintext
++PASS locator tamper offset 32
++PASS locator tamper offset 32 no locator
++PASS row tamper offset 56
++PASS row tamper offset 56 no plaintext
++PASS locator tamper offset 56
++PASS locator tamper offset 56 no locator
++PASS row tamper offset 88
++PASS row tamper offset 88 no plaintext
++PASS locator tamper offset 88
++PASS locator tamper offset 88 no locator
++PASS row missing key
++PASS row missing key no plaintext
++PASS locator missing key
++PASS locator missing key no locator
++PASS row wrong key same ID
++PASS row wrong key same ID no plaintext
++PASS locator wrong key same ID
++PASS locator wrong key same ID no locator
++PASS row key isolation
++PASS row key isolation no plaintext
++PASS locator key isolation
++PASS locator key isolation no locator
++PASS public vector file readable
++PASS known answer row
++PASS row exact plaintext
++PASS known answer row_repeat
++PASS row_repeat exact plaintext
++PASS known answer locator
++PASS locator exact public vector
++PASS valid tag then malformed row
++PASS valid tag then malformed row no plaintext
++PASS valid tag then invalid locator op
++PASS valid tag then invalid locator op no locator
++PASS all 5 public vectors verified
++PASS total=226
++PASS key-generation RNG failure
++PASS RNG failure leaves no key file or output
++PASS rid RNG failure
++PASS rid RNG failure clears output
++PASS row nonce RNG failure
++PASS row RNG failure clears output
++PASS locator nonce RNG failure
++PASS locator RNG failure clears output
++PASS total=8
++PASS standalone batch fixture: last tag damaged, exit=17 stdout_bytes=0 stderr=auth_failed
+diff --git a/team_week/yan_zihan/YZH-01/results/shy-02-check.log b/team_week/yan_zihan/YZH-01/results/shy-02-check.log
+new file mode 100644
+index 0000000..2a95d63
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/results/shy-02-check.log
+@@ -0,0 +1,4 @@
++$ python SHY-02/verify_delivery.py
++PASS SHY-02: header, GCM library, physical SQL, state checker, envelope lengths and links
++SHY-02 SHA-256 manifest: 33 entries, 0 mismatches
++Delivered header SHA-256: 1d40431b825d6b79706efd38220b6fd1809157eecb4c80e1b884191ad4d73371
+diff --git a/team_week/yan_zihan/YZH-01/results/storage-fixture.log b/team_week/yan_zihan/YZH-01/results/storage-fixture.log
+new file mode 100644
+index 0000000..e557635
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/results/storage-fixture.log
+@@ -0,0 +1,24 @@
++$ bash verify_storage_fixture.sh
++NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_data_pkey" for table "week_demo_data"
++NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_index_pkey" for table "week_demo_index"
++PASS SQL write/read stored exactly three row blobs and three locator blobs (one resealed)
++PASS database read row 1
++PASS database row authentication
++PASS database row recovers full original bytes
++PASS database read row 2
++PASS database row authentication
++PASS database row recovers full original bytes
++PASS database read row 3
++PASS database row authentication
++PASS database row recovers full original bytes
++PASS database read locator 1
++PASS database locator authentication
++PASS database locator recovers rid and op
++PASS database read locator 2
++PASS database locator authentication
++PASS database locator recovers rid and op
++PASS database read locator 3
++PASS database locator authentication
++PASS database locator recovers rid and op
++PASS database returned only the six expected ciphertexts
++PASS isolated openGauss fixture stopped
+diff --git a/team_week/yan_zihan/YZH-01/results/system-openssl.log b/team_week/yan_zihan/YZH-01/results/system-openssl.log
+new file mode 100644
+index 0000000..b36151a
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/results/system-openssl.log
+@@ -0,0 +1,250 @@
++$ bash build.sh
++built librow_aead_v1.so (g++ (GCC) 7.3.0)
++$ ldd build/librow_aead_v1.so
++	linux-vdso.so.1 =>  (0x00007fffbdd8b000)
++	libcrypto.so.10 => /lib64/libcrypto.so.10 (0x00007fca92a87000)
++	libstdc++.so.6 => /opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/lib64/libstdc++.so.6 (0x00007fca92704000)
++	libm.so.6 => /lib64/libm.so.6 (0x00007fca92402000)
++	libgcc_s.so.1 => /opt/og/binarylibs/buildtools/centos7.6_x86_64/gcc7.3/gcc/lib64/libgcc_s.so.1 (0x00007fca921ea000)
++	libc.so.6 => /lib64/libc.so.6 (0x00007fca91e1c000)
++	libdl.so.2 => /lib64/libdl.so.2 (0x00007fca91c18000)
++	libz.so.1 => /lib64/libz.so.1 (0x00007fca91a02000)
++	/lib64/ld-linux-x86-64.so.2 (0x00007fca930f3000)
++$ bash run.sh
++PASS load absent directory refuses
++PASS absent load clears output and creates nothing
++PASS generate keys explicitly
++PASS generated key lengths and distinct purposes
++PASS 0600 /row_aead_v1.key
++PASS 0600 /locator_aead_v1.key
++PASS 0600 /row_aead_v1.keyid
++PASS second initialization refuses
++PASS failure leaves no key output
++PASS load after initialization
++PASS second initialization never overwrites
++PASS generated keys usable
++PASS generated keys decrypt
++PASS generated key roundtrip bytes
++PASS fixture holds key directory lock
++PASS load during initialization refuses
++PASS release fixture lock
++PASS fixture remove locator key
++PASS existing state missing key
++PASS existing state cannot replace missing key
++PASS missing key never auto-created
++PASS reject key length 0
++PASS invalid key length clears output
++PASS reject key length 16
++PASS invalid key length clears output
++PASS reject key length 31
++PASS invalid key length clears output
++PASS reject key length 33
++PASS invalid key length clears output
++PASS short key ID refused
++PASS fixture unsafe file mode
++PASS unsafe file mode refused
++PASS fixture symlink
++PASS key symlink refused
++PASS CRYPTO-01 row 1 encode
++PASS CRYPTO-01 row 1 decode
++PASS CRYPTO-01 row 1 codec exact bytes=27
++PASS CRYPTO-01 row 1 different ciphertexts Base64=108
++PASS CRYPTO-01 row 1 decrypt first
++PASS CRYPTO-01 row 1 first exact
++PASS CRYPTO-01 row 1 decrypt second
++PASS CRYPTO-01 row 1 second exact
++PASS CRYPTO-01 row 2 encode
++PASS CRYPTO-01 row 2 decode
++PASS CRYPTO-01 row 2 codec exact bytes=29
++PASS CRYPTO-01 row 2 different ciphertexts Base64=112
++PASS CRYPTO-01 row 2 decrypt first
++PASS CRYPTO-01 row 2 first exact
++PASS CRYPTO-01 row 2 decrypt second
++PASS CRYPTO-01 row 2 second exact
++PASS CRYPTO-01 row 3 encode
++PASS CRYPTO-01 row 3 decode
++PASS CRYPTO-01 row 3 codec exact bytes=32
++PASS CRYPTO-01 row 3 different ciphertexts Base64=116
++PASS CRYPTO-01 row 3 decrypt first
++PASS CRYPTO-01 row 3 first exact
++PASS CRYPTO-01 row 3 decrypt second
++PASS CRYPTO-01 row 3 second exact
++PASS CRYPTO-02 all fields empty encode
++PASS CRYPTO-02 all fields empty decode
++PASS CRYPTO-02 all fields empty codec exact bytes=12
++PASS CRYPTO-02 all fields empty different ciphertexts Base64=88
++PASS CRYPTO-02 all fields empty decrypt first
++PASS CRYPTO-02 all fields empty first exact
++PASS CRYPTO-02 all fields empty decrypt second
++PASS CRYPTO-02 all fields empty second exact
++PASS CRYPTO-02 Chinese, spaces and trailing NULs encode
++PASS CRYPTO-02 Chinese, spaces and trailing NULs decode
++PASS CRYPTO-02 Chinese, spaces and trailing NULs codec exact bytes=31
++PASS CRYPTO-02 Chinese, spaces and trailing NULs different ciphertexts Base64=116
++PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt first
++PASS CRYPTO-02 Chinese, spaces and trailing NULs first exact
++PASS CRYPTO-02 Chinese, spaces and trailing NULs decrypt second
++PASS CRYPTO-02 Chinese, spaces and trailing NULs second exact
++PASS CRYPTO-02 payload 15 encode
++PASS CRYPTO-02 payload 15 decode
++PASS CRYPTO-02 payload 15 codec exact bytes=27
++PASS CRYPTO-02 payload 15 different ciphertexts Base64=108
++PASS CRYPTO-02 payload 15 decrypt first
++PASS CRYPTO-02 payload 15 first exact
++PASS CRYPTO-02 payload 15 decrypt second
++PASS CRYPTO-02 payload 15 second exact
++PASS CRYPTO-02 payload 16 encode
++PASS CRYPTO-02 payload 16 decode
++PASS CRYPTO-02 payload 16 codec exact bytes=28
++PASS CRYPTO-02 payload 16 different ciphertexts Base64=112
++PASS CRYPTO-02 payload 16 decrypt first
++PASS CRYPTO-02 payload 16 first exact
++PASS CRYPTO-02 payload 16 decrypt second
++PASS CRYPTO-02 payload 16 second exact
++PASS CRYPTO-02 payload 17 encode
++PASS CRYPTO-02 payload 17 decode
++PASS CRYPTO-02 payload 17 codec exact bytes=29
++PASS CRYPTO-02 payload 17 different ciphertexts Base64=112
++PASS CRYPTO-02 payload 17 decrypt first
++PASS CRYPTO-02 payload 17 first exact
++PASS CRYPTO-02 payload 17 decrypt second
++PASS CRYPTO-02 payload 17 second exact
++PASS CRYPTO-02 payload 63 encode
++PASS CRYPTO-02 payload 63 decode
++PASS CRYPTO-02 payload 63 codec exact bytes=75
++PASS CRYPTO-02 payload 63 different ciphertexts Base64=172
++PASS CRYPTO-02 payload 63 decrypt first
++PASS CRYPTO-02 payload 63 first exact
++PASS CRYPTO-02 payload 63 decrypt second
++PASS CRYPTO-02 payload 63 second exact
++PASS CRYPTO-02 payload 64 encode
++PASS CRYPTO-02 payload 64 decode
++PASS CRYPTO-02 payload 64 codec exact bytes=76
++PASS CRYPTO-02 payload 64 different ciphertexts Base64=176
++PASS CRYPTO-02 payload 64 decrypt first
++PASS CRYPTO-02 payload 64 first exact
++PASS CRYPTO-02 payload 64 decrypt second
++PASS CRYPTO-02 payload 64 second exact
++PASS CRYPTO-02 payload 65 encode
++PASS CRYPTO-02 payload 65 decode
++PASS CRYPTO-02 payload 65 codec exact bytes=77
++PASS CRYPTO-02 payload 65 different ciphertexts Base64=176
++PASS CRYPTO-02 payload 65 decrypt first
++PASS CRYPTO-02 payload 65 first exact
++PASS CRYPTO-02 payload 65 decrypt second
++PASS CRYPTO-02 payload 65 second exact
++PASS CRYPTO-02 all fields at limit encode
++PASS CRYPTO-02 all fields at limit decode
++PASS CRYPTO-02 all fields at limit codec exact bytes=33804
++PASS CRYPTO-02 all fields at limit different ciphertexts Base64=45144
++PASS CRYPTO-02 all fields at limit decrypt first
++PASS CRYPTO-02 all fields at limit first exact
++PASS CRYPTO-02 all fields at limit decrypt second
++PASS CRYPTO-02 all fields at limit second exact
++PASS payload over 16384
++PASS overlength payload clears ciphertext
++PASS keyword over 1024
++PASS trailing bytes in serialized row
++PASS bad codec does not emit partial fields
++PASS fresh rid
++PASS second fresh rid
++PASS rid is 16 random bytes as lowercase hex
++PASS CRYPTO-03 locator size, randomization and no plaintext rid|add
++PASS re-encrypted locator authenticates
++PASS locator exact rid and op=0
++PASS v1 same-scope valid locator substitution
++PASS v1 contract has no ut or expected rid in locator AAD
++PASS row cross-table
++PASS row cross-table no plaintext
++PASS locator cross-table
++PASS locator cross-table no locator
++PASS row cross-database
++PASS row cross-database no plaintext
++PASS locator cross-database
++PASS locator cross-database no locator
++PASS row cross-deployment
++PASS row cross-deployment no plaintext
++PASS locator cross-deployment
++PASS locator cross-deployment no locator
++PASS row cross-record
++PASS row cross-record no plaintext
++PASS row empty rid
++PASS row empty rid no plaintext
++PASS locator empty rid
++PASS locator error clears output
++PASS unsupported locator op
++PASS wrong locator purpose
++PASS wrong locator purpose no locator
++PASS wrong row purpose
++PASS wrong row purpose no plaintext
++PASS row version
++PASS row version no plaintext
++PASS locator version
++PASS locator version no locator
++PASS row purpose byte
++PASS row purpose byte no plaintext
++PASS row magic
++PASS row magic no plaintext
++PASS row length field
++PASS row length field no plaintext
++PASS locator length field
++PASS locator length field no locator
++PASS row key_id
++PASS row key_id no plaintext
++PASS locator key_id
++PASS locator key_id no locator
++PASS row truncated
++PASS row truncated no plaintext
++PASS locator truncated
++PASS locator truncated no locator
++PASS row Base64 whitespace
++PASS row Base64 whitespace no plaintext
++PASS locator invalid Base64 padding
++PASS locator invalid Base64 padding no locator
++PASS row tamper offset 32
++PASS row tamper offset 32 no plaintext
++PASS locator tamper offset 32
++PASS locator tamper offset 32 no locator
++PASS row tamper offset 56
++PASS row tamper offset 56 no plaintext
++PASS locator tamper offset 56
++PASS locator tamper offset 56 no locator
++PASS row tamper offset 88
++PASS row tamper offset 88 no plaintext
++PASS locator tamper offset 88
++PASS locator tamper offset 88 no locator
++PASS row missing key
++PASS row missing key no plaintext
++PASS locator missing key
++PASS locator missing key no locator
++PASS row wrong key same ID
++PASS row wrong key same ID no plaintext
++PASS locator wrong key same ID
++PASS locator wrong key same ID no locator
++PASS row key isolation
++PASS row key isolation no plaintext
++PASS locator key isolation
++PASS locator key isolation no locator
++PASS public vector file readable
++PASS known answer row
++PASS row exact plaintext
++PASS known answer row_repeat
++PASS row_repeat exact plaintext
++PASS known answer locator
++PASS locator exact public vector
++PASS valid tag then malformed row
++PASS valid tag then malformed row no plaintext
++PASS valid tag then invalid locator op
++PASS valid tag then invalid locator op no locator
++PASS all 5 public vectors verified
++PASS total=226
++PASS key-generation RNG failure
++PASS RNG failure leaves no key file or output
++PASS rid RNG failure
++PASS rid RNG failure clears output
++PASS row nonce RNG failure
++PASS row RNG failure clears output
++PASS locator nonce RNG failure
++PASS locator RNG failure clears output
++PASS total=8
++PASS standalone batch fixture: last tag damaged, exit=17 stdout_bytes=0 stderr=auth_failed
+diff --git a/team_week/yan_zihan/YZH-01/results/system-runtime-mismatch.log b/team_week/yan_zihan/YZH-01/results/system-runtime-mismatch.log
+new file mode 100644
+index 0000000..635f400
+--- /dev/null
++++ b/team_week/yan_zihan/YZH-01/results/system-runtime-mismatch.log
+@@ -0,0 +1,17 @@
++$ bash build.sh
++built librow_aead_v1.so (g++ (GCC) 7.3.0)
++$ ldd build/librow_aead_v1.so
++/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/librow_aead_v1.so: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/librow_aead_v1.so)
++	linux-vdso.so.1 =>  (0x00007ffc149b9000)
++	libcrypto.so.10 => /lib64/libcrypto.so.10 (0x00007f2afc1df000)
++	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f2afbed7000)
++	libm.so.6 => /lib64/libm.so.6 (0x00007f2afbbd5000)
++	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f2afb9bf000)
++	libc.so.6 => /lib64/libc.so.6 (0x00007f2afb5f1000)
++	libdl.so.2 => /lib64/libdl.so.2 (0x00007f2afb3ed000)
++	libz.so.1 => /lib64/libz.so.1 (0x00007f2afb1d7000)
++	/lib64/ld-linux-x86-64.so.2 (0x00007f2afc84b000)
++$ bash run.sh
++/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.20' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto)
++/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto)
++/tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/test_crypto: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /tmp/yzh01-system.6oHKggiR/team_week/yan_zihan/YZH-01/build/librow_aead_v1.so)
+-- 
+1.8.3.1
+

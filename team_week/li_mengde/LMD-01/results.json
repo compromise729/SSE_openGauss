@@ -1,0 +1,42 @@
+{
+  "task": "LMD-01",
+  "date": "2026-11-18",
+  "contract_version": "1.0",
+  "contract_release_record": "b6159cf8d0dd6d3d8befa8fd84816d289a7b88d1",
+  "source_base": "25489f563f25b522d0cd37a6c85865039e3f340f",
+  "tested_server_commit": "f99e41872fc3f00f9199ed94b5828859e89ed27e",
+  "local_branch": "feature/LMD-01-storage",
+  "local_commit": "1294a76f37237196b1b208b9187bd7239365ef48",
+  "remote_pr_target": "integration/SHY-03",
+  "remote_delivery": "merged",
+  "official_test_commit": "52aa69d36ca6884572e9b9c07c104ad898429e1f",
+  "remote_pr": "https://github.com/compromise729/SSE_openGauss/pull/6",
+  "remote_merge_commit": "5074c844a306d97002cc4a30ca80d5a929a6898d",
+  "team_acceptance": "module_review_passed",
+  "evidence_scope": "tested_server_commit, build_fingerprint and raw_log describe the original local run",
+  "module_test": "passed",
+  "completed_module_items": 7,
+  "module_checks": {
+    "create_catalog_and_reject_legacy": "passed",
+    "atomic_write_and_rollback": "passed",
+    "synthetic_envelope_limits": "passed",
+    "read_only_audit": "passed",
+    "audit_failure_and_skip_exit_nonzero": "passed",
+    "create_failure_rolls_back_db_and_preserves_fixture_maps": "passed"
+  },
+  "build_fingerprint": {
+    "gaussdb_sha256": "83626a46fc4bb3697cdb05a91f3b6cce7d2dd0aa68fc879c794570f3b28acf31",
+    "entry_script_sha256": "2fb705f1f5304fa55f49dac280499e33166505bc3b922279a84aee8bede08f73",
+    "compiler": "GCC 7.3",
+    "environment": "WSL CentOS 7, LZM-01 isolated Unix socket",
+    "port": 55462
+  },
+  "patch": {
+    "file": "LMD-01-storage.patch",
+    "sha256": "19236982db37dad7c376e9130b3a8355013c82b9ae4fa9a31cdf121eaf57f845"
+  },
+  "raw_log": {
+    "file": "module-test.log",
+    "sha256": "a9d6c2f9975dccc3c4cce3a75dcb57f312560674ad410ea86bbd7afa27b213f4"
+  }
+}

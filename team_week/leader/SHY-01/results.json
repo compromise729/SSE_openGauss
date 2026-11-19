@@ -1,0 +1,19 @@
+{
+  "source_commit": "25489f563f25b522d0cd37a6c85865039e3f340f",
+  "build": "PASS",
+  "install": "PASS",
+  "apple": "PASS",
+  "banana": "PASS",
+  "repeat": "PASS",
+  "reconnect": "PASS",
+  "unknown": "PASS",
+  "patch_dry_run": "PASS",
+  "original_environment_unchanged": "PASS",
+  "limitations": [
+    "incremental rebuild from retained configured artifacts",
+    "business rows remain plaintext",
+    "index location readable",
+    "member patches only dry-run, awaiting owner integration",
+    "Mitra missing counter-file warnings during unrelated startup"
+  ]
+}

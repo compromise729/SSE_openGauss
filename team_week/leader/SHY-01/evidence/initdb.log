@@ -1,0 +1,72 @@
+The files belonging to this database system will be owned by user "omm".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+creating directory /opt/og/shy01-20261117.JNA4yJmS/db ... ok
+creating subdirectories ... ok
+selecting default max_connections ... 100
+selecting default shared_buffers ... 32MB
+creating configuration files ... ok
+creating template1 database in /opt/og/shy01-20261117.JNA4yJmS/db/base/1 ... The core dump path is an invalid directory
+2026-11-17 09:21:21.812 [unknown] [unknown] localhost 124699311849344 0  [BACKEND] WARNING:  macAddr is 60/3079711694, sysidentifier is 3979152/2882446423, randomNum is 3432752215
+ok
+initializing pg_authid ... The core dump path is an invalid directory
+ok
+setting password ... The core dump path is an invalid directory
+ok
+initializing dependencies ... The core dump path is an invalid directory
+ok
+loading PL/pgSQL server-side language ... The core dump path is an invalid directory
+ok
+creating system views ... The core dump path is an invalid directory
+ok
+creating performance views ... The core dump path is an invalid directory
+ok
+loading system objects' descriptions ... The core dump path is an invalid directory
+ok
+creating collations ... The core dump path is an invalid directory
+ok
+creating conversions ... The core dump path is an invalid directory
+ok
+creating dictionaries ... The core dump path is an invalid directory
+ok
+setting privileges on built-in objects ... The core dump path is an invalid directory
+ok
+initialize global configure for bucketmap length ... The core dump path is an invalid directory
+ok
+creating information schema ... The core dump path is an invalid directory
+The core dump path is an invalid directory
+ok
+loading foreign-data wrapper for distfs access ... The core dump path is an invalid directory
+ok
+loading foreign-data wrapper for hdfs access ... The core dump path is an invalid directory
+ok
+loading foreign-data wrapper for log access ... The core dump path is an invalid directory
+ok
+loading hstore extension ... The core dump path is an invalid directory
+ok
+loading security plugin ... The core dump path is an invalid directory
+ok
+update system tables ... The core dump path is an invalid directory
+ok
+vacuuming database template1 ... The core dump path is an invalid directory
+ok
+copying template1 to template0 ... The core dump path is an invalid directory
+ok
+copying template1 to postgres ... The core dump path is an invalid directory
+ok
+freezing database template0 ... The core dump path is an invalid directory
+ok
+freezing database template1 ... The core dump path is an invalid directory
+ok
+freezing database postgres ... The core dump path is an invalid directory
+ok
+
+Success. You can now start the database server of single node using:
+
+    dest/bin/gaussdb -D /opt/og/shy01-20261117.JNA4yJmS/db --single_node
+or
+    dest/bin/gs_ctl start -D /opt/og/shy01-20261117.JNA4yJmS/db -Z single_node -l logfile
+
