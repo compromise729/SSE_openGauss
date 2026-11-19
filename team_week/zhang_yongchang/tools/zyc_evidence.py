@@ -11,7 +11,7 @@ baseline = json.loads((out/'baseline-release.json').read_text(encoding='utf-8'))
 results = json.loads((out/'requests/results.json').read_text(encoding='utf-8'))
 phases = json.loads((out/'requests/phases.json').read_text(encoding='utf-8'))
 assert baseline['release_result'] == 'PASS' and baseline['module_cases'] == 18 and baseline['real_request_cases'] == 18
-assert len(results['cases']) == 12 and all(c['result'] == 'PASS' for c in results['cases'])
+assert len(results['cases']) == 13 and all(c['result'] == 'PASS' for c in results['cases'])
 assert len(phases) >= 8
 assert baseline['instance_stopped'] and not (Path(baseline['isolated_run'])/'db/instance/postmaster.pid').exists()
 assert 'ISOLATED_SERVER_STOPPED' in (out/'zyc-live.log').read_text(encoding='utf-8')
@@ -29,7 +29,7 @@ dirty = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-fi
     'src/bin/psql/common.cpp', 'src/common/interfaces/libpq', 'sse_sql/SSE_v1.sql',
     'team_week/zhang_yongchang/tools'], cwd=str(repo)).decode()
 summary = {'result': 'PASS', 'tested_head': head, 'modified_tracked_inputs': bool(dirty),
-           'module_cases': 18, 'baseline_live_cases': 18, 'zyc_cases': 12, 'entry_regressions': 2,
+           'module_cases': 18, 'baseline_live_cases': 18, 'zyc_cases': 13, 'entry_regressions': 3,
            'successful_search_traces': len(phases), 'instances_stopped': True,
            'public_synthetic_fixtures_only': True, 'derivation_key_values': 'redacted', 'input_sha256': hashes}
 (out/'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
