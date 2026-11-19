@@ -1,66 +1,61 @@
-#!/bin/bash
-# Runs INSIDE the isolated omm session (via isolated.sh init)
-B=/home/yonghu/shy03_build
-LOG=$ISOLATED_RUN_DIR/evidence/zyc-live-evidence.log
-: > "$LOG"
-log(){ echo "$@" | tee -a "$LOG"; }
-log "=== ZYC-02/03 live verify $(date) ==="
-log "user=$(id -un) RUN_DIR=$ISOLATED_RUN_DIR PORT=$ISOLATED_PORT"
-
-# 1. Fides base keys + v1 SQL functions
-isolated.sh gsql -c "fides_setup;" >>"$LOG" 2>&1 && log "STEP1 fides_setup OK" || log "STEP1 fides_setup FAIL"
-chmod 600 "$ISOLATED_RUN_DIR/client/"*.key 2>/dev/null
-isolated.sh gsql -f "$OPENGAUSS_PROJECT_ROOT/sse_sql/SSE_v1.sql" >>"$LOG" 2>&1 && log "STEP2 SSE_v1.sql OK" || log "STEP2 SSE_v1.sql FAIL"
-
-# 2. Init v1 state (AEAD keys)
-conn="host=$ISOLATED_RUN_DIR/socket port=$ISOLATED_PORT dbname=postgres user=omm"
-state="$ISOLATED_RUN_DIR/evidence/v1-state"
-"$B/dest/bin/initialize-live" "$conn" "$state" >>"$LOG" 2>&1 && log "STEP3 initialize-live OK state=$state" || log "STEP3 initialize-live FAIL"
-
-# 3. v1 helper: native gsql + SSE_V1_STATE_DIR
-vsql(){
-  SSE_V1_STATE_DIR="$state" "$B/dest/bin/gsql" -X -h "$ISOLATED_RUN_DIR/socket" -p "$ISOLATED_PORT" \
-    -d postgres -U omm -v ON_ERROR_STOP=1 "$@"
-}
-log "--- STEP4 CREATE ---"
-vsql -c "CREATE TABLE week_demo (ind text, keyword text SSE='FIDES', payload text) WITH (sse_storage='ROW_AEAD_V1');" >>"$LOG" 2>&1; log "CREATE rc=$?"
-log "--- STEP5 INSERT 3 rows ---"
-vsql -c "INSERT INTO week_demo VALUES ('1','apple','red apple'),('2','apple','green apple'),('3','banana','yellow banana');" >>"$LOG" 2>&1; log "INSERT rc=$?"
-log "--- STEP6 physical tables (should be ciphertext only) ---"
-isolated.sh gsql -c "SELECT rid,data_blob FROM public.week_demo_data;" >>"$LOG" 2>&1
-isolated.sh gsql -c "SELECT ut,locator_blob FROM public.week_demo_index;" >>"$LOG" 2>&1
-log "--- STEP7 SELECT apple ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='apple';" >>"$LOG" 2>&1; log "SELECT apple rc=$?"
-log "--- STEP8 SELECT banana ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='banana';" >>"$LOG" 2>&1; log "SELECT banana rc=$?"
-log "--- STEP9 SELECT unknown ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='zyc_unknown_20261119';" >>"$LOG" 2>&1; log "SELECT unknown rc=$?"
-log "--- STEP10 repeat SELECT apple (dedup check) ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='apple';" >>"$LOG" 2>&1; log "SELECT apple repeat rc=$?"
-
-log "=== ROUND2 (same session) ==="
-log "--- A. apple still intact (resume) ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='apple';" >>"$LOG" 2>&1; log "apple rc=$?"
-
-log "--- B. Chinese + space keyword INSERT ---"
-vsql -c "INSERT INTO week_demo VALUES ('4','中文 苹果 space','red 苹果'),('5','中文 苹果 space','green 苹果');" >>"$LOG" 2>&1; log "insert-cn rc=$?"
-log "--- C. Chinese + space SELECT ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='中文 苹果 space';" >>"$LOG" 2>&1; log "select-cn rc=$?"
-
-log "--- D. SQL quote escape ('it''s OR not') ---"
-vsql -c "INSERT INTO week_demo VALUES ('6','it''s OR not','o''brien apple');" >>"$LOG" 2>&1; log "insert-esc rc=$?"
-vsql -c "SELECT * FROM week_demo WHERE keyword='it''s OR not';" >>"$LOG" 2>&1; log "select-esc rc=$?"
-
-log "--- E. unsupported syntax: AND compound (should REJECT) ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='apple' AND payload='red apple';" >>"$LOG" 2>&1; log "select-AND rc=$? (expect NONZERO)"
-log "--- F. unsupported: column projection (should REJECT) ---"
-vsql -c "SELECT ind FROM week_demo WHERE keyword='apple';" >>"$LOG" 2>&1; log "select-proj rc=$? (expect NONZERO)"
-log "--- G. unknown keyword zero rows ---"
-vsql -c "SELECT * FROM week_demo WHERE keyword='not_registered_zyc';" >>"$LOG" 2>&1; log "select-unknown rc=$?"
-
-log "--- H. physical tables still ciphertext only (no plaintext) ---"
-isolated.sh gsql -c "SELECT rid,data_blob FROM public.week_demo_data;" >>"$LOG" 2>&1
-isolated.sh gsql -At -c "SELECT string_agg(data_blob,'|') FROM public.week_demo_data;" 2>/dev/null | grep -qiE "apple|banana|red|green|yellow|中文|苹果" && log "PLAINTEXT LEAK FOUND IN DATA" || log "NO_PLAINTEXT_IN_DATA_OK"
-isolated.sh gsql -At -c "SELECT string_agg(locator_blob,'|') FROM public.week_demo_index;" 2>/dev/null | grep -qiE "apple|banana|red|green|yellow|中文|苹果|[0-9a-f]{32}" && log "PLAINTEXT/RAW-RID LEAK IN INDEX" || log "NO_PLAINTEXT_IN_INDEX_OK"
-
-log "=== END $(date) ==="
+#!/usr/bin/env bash
+# Outer Linux root entry. Only public synthetic-fixture evidence is exported.
+set -Eeuo pipefail
+umask 077
+here=$(cd -- "$(dirname -- "$0")" && pwd -P)
+repo=${OPENGAUSS_PROJECT_ROOT:-$here/../../..}
+out=
+port=55443
+fail() { printf 'ZYC_RESULT=FAIL %s\n' "$*" >&2; exit 1; }
+while (( $# )); do
+  case $1 in
+    --project-root) (( $# >= 2 )) || fail 'missing project root'; repo=$2; shift 2 ;;
+    --evidence-dir) (( $# >= 2 )) || fail 'missing evidence directory'; out=$2; shift 2 ;;
+    --port) (( $# >= 2 )) || fail 'missing port'; port=$2; shift 2 ;;
+    --help) echo 'Usage (outer root): bash zyc_live_verify_all.sh [--project-root PATH] [--evidence-dir NEW_DIR] [--port PORT]'; exit 0 ;;
+    *) fail "unknown argument: $1" ;;
+  esac
+done
+[[ $EUID == 0 && -z ${ISOLATED_RUN_DIR:-} ]] || fail 'run once from the outer Linux root terminal'
+[[ $port =~ ^[0-9]+$ && ${#port} -le 5 ]] || fail 'invalid port'
+(( 10#$port >= 1024 && 10#$port <= 65535 )) || fail 'invalid port'
+repo=$(cd -- "$repo" && pwd -P) || fail 'project root does not exist'
+here="$repo/team_week/zhang_yongchang/tools"
+for f in dest/bin/gsql dest/bin/gaussdb dest/lib/libpq_ce.so.5.5 \
+  sse_sql/SSE_v1.sql team_week/liu_zhuoming/LZM-03/preflight/initialize-live.cpp \
+  team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh \
+  team_week/liu_zhuoming/LZM-01/isolated.sh \
+  team_week/zhang_yongchang/tools/zyc_session.sh; do
+  [[ -f $repo/$f ]] || fail "missing required build/tool: $repo/$f"
+done
+if ! command -v python3 >/dev/null; then
+  [[ -r /opt/rh/rh-python36/enable ]] || fail 'Python >=3.6 required'
+  set +u; source /opt/rh/rh-python36/enable; set -u
+fi
+python3 -c 'import sys; assert sys.version_info >= (3,6)'
+export PYTHONIOENCODING=utf-8
+if [[ -z ${CXX:-} ]]; then
+  CXX=$(runuser -u omm -- bash -ec 'source /home/omm/.sse_opengauss_env; command -v "${CXX:-g++}"')
+fi
+export CXX
+export LD_LIBRARY_PATH="$(dirname -- "$("$CXX" -print-file-name=libstdc++.so)")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+if [[ -z $out ]]; then out=$(mktemp -d /var/tmp/zyc-acceptance.XXXXXXXX)
+else mkdir -m 0700 -- "$out" || fail 'evidence directory must be new'; fi
+out=$(cd -- "$out" && pwd -P)
+printf 'ZYC_EVIDENCE_DIR=%s\n' "$out"
+trap 'rc=$?; printf "ZYC_RESULT=FAIL exit=%s evidence=%s\n" "$rc" "$out" >&2; exit "$rc"' ERR
+export OPENGAUSS_PROJECT_ROOT="$repo"
+python3 "$here/test_zyc_delivery.py" > "$out/entry-regressions.log" 2>&1
+bash "$repo/team_week/liu_zhuoming/LZM-03/preflight/verify-all.sh" > "$out/baseline.log" 2>&1
+baseline=$(sed -n 's/^RELEASE_EVIDENCE_DIR=//p' "$out/baseline.log")
+[[ -n $baseline && -f $baseline/release.json ]]
+cp "$baseline/release.json" "$out/baseline-release.json"
+bash "$repo/team_week/liu_zhuoming/LZM-01/isolated.sh" init --port "$port" \
+  < "$here/zyc_session.sh" > "$out/zyc-live.log" 2>&1
+live=$(sed -n 's/^RUN_DIR=//p' "$out/zyc-live.log" | head -n1)
+[[ -n $live && ! -e $live/db/instance/postmaster.pid ]]
+mkdir "$out/requests"
+cp "$live/evidence/live/"* "$out/requests/"
+python3 "$here/zyc_evidence.py" "$repo" "$out"
+grep -E '^(PASS ZYC|ADDITIONAL_RESULT=|ISOLATED_SERVER_STOPPED)' "$out/zyc-live.log"
+printf 'ZYC_RESULT=PASS MODULE_CASES=18 BASELINE_LIVE_CASES=18 ZYC_CASES=12\n'
