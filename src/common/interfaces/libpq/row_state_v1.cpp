@@ -59,6 +59,7 @@ struct Active {
     Counters counters;
     bool saved = false;
     bool failed = false;
+    bool advanced = false;
 };
 std::mutex state_mutex;
 CatalogReader catalog_reader;
@@ -312,6 +313,24 @@ std::string mapping(const std::string& table)
     return table + " ind|undefined keyword|fides payload|undefined\n";
 }
 
+Status read_registration(int dir, std::string& data, std::string& table)
+{
+    table.clear();
+    const Status status = read_file(dir, kTables, data);
+    if (!status.ok()) return status;
+    const size_t header = std::strlen(kTableHeader);
+    if (data.compare(0, header, kTableHeader) != 0)
+        return state_error("invalid row_aead_tables.v1 header");
+    if (data.size() == header) return good();
+    const size_t start = data.find("\tpublic\t", header);
+    if (start == std::string::npos) return state_error("invalid row_aead_tables.v1 entry");
+    const size_t end = data.find('\t', start + 8);
+    if (end == std::string::npos) return state_error("invalid row_aead_tables.v1 entry");
+    table = data.substr(start + 8, end - start - 8);
+    if (!identifier(table)) return state_error("invalid row_aead_tables.v1 table name");
+    return good();
+}
+
 Status load_local(int dir, Snapshot& out)
 {
     Status s = no_marker(dir);
@@ -337,18 +356,10 @@ Status load_local(int dir, Snapshot& out)
     out.instance_identity = metadata.substr(split + 1, identity_end - split - 1);
     if (metadata.substr(identity_end + 1) != key_id + "\n") return key_error("key_id does not match environment.v1");
 
-    s = read_file(dir, kTables, data);
+    s = read_registration(dir, data, out.table);
     if (!s.ok()) return s;
-    const size_t header = std::strlen(kTableHeader);
-    if (data.compare(0, header, kTableHeader) != 0) return state_error("invalid row_aead_tables.v1 header");
-    if (data.size() != header) {
-        const size_t start = data.find("\tpublic\t", header);
-        const size_t end = start == std::string::npos ? start : data.find('\t', start + 8);
-        if (end == std::string::npos) return state_error("invalid row_aead_tables.v1 entry");
-        out.table = data.substr(start + 8, end - start - 8);
-        if (!identifier(out.table) || data != kTableHeader + registration(out, out.table))
-            return state_error("table version or scope in row_aead_tables.v1 is invalid");
-    }
+    if (!out.table.empty() && data != kTableHeader + registration(out, out.table))
+        return state_error("table version or scope in row_aead_tables.v1 is invalid");
     s = read_file(dir, kMapping, data);
     if (!s.ok()) return s;
     if (data != (out.table.empty() ? "" : mapping(out.table)))
@@ -455,6 +466,24 @@ void release_operation()
     active.counters.clear();
     active.saved = false;
     active.failed = false;
+    active.advanced = false;
+}
+
+Status clear_marker()
+{
+    std::string stored;
+    Status s = read_file(active.directory.fd, kMarker, stored);
+    if (!s.ok() || stored != active.marker) return operation_failure(state_error("operation marker changed or is missing"));
+    if (unlinkat(active.directory.fd, kMarker, 0) != 0)
+        return operation_failure(io_error("unlink", kMarker));
+    if (!sync_fd(active.directory.fd)) {
+        s = io_error("fsync directory after clearing", kMarker);
+        const Status restore = durable_write(active.directory.fd, kMarker, active.marker, true);
+        if (!restore.ok()) s.message += "; marker restoration is uncertain: " + restore.message;
+        return operation_failure(s);
+    }
+    release_operation();
+    return good();
 }
 } // namespace
 
@@ -534,6 +563,15 @@ Status validate_startup()
     return s.ok() ? load_checked(dir.fd, state, nullptr) : s;
 }
 
+Status registered_table(std::string& table)
+{
+    std::lock_guard<std::mutex> guard(state_mutex);
+    Fd dir;
+    std::string registration_data;
+    const Status status = open_directory(directory_path(), dir);
+    return status.ok() ? read_registration(dir.fd, registration_data, table) : status;
+}
+
 Status local_scope(const std::string& table, Scope& scope, bool& table_registered)
 {
     std::lock_guard<std::mutex> guard(state_mutex);
@@ -578,6 +616,12 @@ Status load_table_version(const Scope& scope, unsigned& version)
 
 Status begin_operation(const Scope& scope, const std::string& kind, Operation& operation)
 {
+    return begin_checked_operation(scope, kind, operation, CounterCheck());
+}
+
+Status begin_checked_operation(const Scope& scope, const std::string& kind, Operation& operation,
+                               const CounterCheck& check)
+{
     std::lock_guard<std::mutex> guard(state_mutex);
     operation.operation_id.clear();
     if (kind != "create" && kind != "insert" && kind != "search")
@@ -589,6 +633,7 @@ Status begin_operation(const Scope& scope, const std::string& kind, Operation& o
     if (s.ok()) s = lock_directory(dir.fd, lock);
     if (s.ok()) s = load_local(dir.fd, state);
     if (s.ok()) s = check_scope(state, scope);
+    if (s.ok() && check) s = check(state.counters);
     if (!s.ok()) return s;
     if (kind == "create") {
         if (!state.table.empty()) return {Code::db_failed, "table already registered"};
@@ -679,6 +724,7 @@ Status increment_counter(const std::string& keyword, int& counter, bool persist)
         const int previous = found == active.counters.end() ? 0 : found->second;
         if (previous == INT_MAX) return operation_failure(state_error("counter overflow"));
         active.counters[keyword] = previous + 1;
+        active.advanced = true;
         active.saved = false;
         updated = active.counters;
         operation.operation_id = active.id;
@@ -706,6 +752,16 @@ Status register_current_table(const std::string& table)
     return register_table(scope, kProtocolVersion);
 }
 
+Status current_operation_counters(Counters& out)
+{
+    std::lock_guard<std::mutex> guard(state_mutex);
+    out.clear();
+    if (!active.lock.valid() || active.failed || active.kind == "create")
+        return {Code::incomplete_operation, "active insert or search required before loading Fides counters"};
+    out = active.counters;
+    return good();
+}
+
 Status save_counters(const Operation& operation, const Counters& counters)
 {
     std::lock_guard<std::mutex> guard(state_mutex);
@@ -731,18 +787,15 @@ Status complete_operation(const Operation& operation)
     if (!active.lock.valid() || active.failed || operation.operation_id != active.id)
         return {Code::incomplete_operation, "matching successful operation required"};
     if (!active.saved) return operation_failure(state_error("required local writes have not completed"));
-    std::string stored;
-    Status s = read_file(active.directory.fd, kMarker, stored);
-    if (!s.ok() || stored != active.marker) return operation_failure(state_error("operation marker changed or is missing"));
-    if (unlinkat(active.directory.fd, kMarker, 0) != 0)
-        return operation_failure(io_error("unlink", kMarker));
-    if (!sync_fd(active.directory.fd)) {
-        s = io_error("fsync directory after clearing", kMarker);
-        const Status restore = durable_write(active.directory.fd, kMarker, active.marker, true);
-        if (!restore.ok()) s.message += "; marker restoration is uncertain: " + restore.message;
-        return operation_failure(s);
-    }
-    release_operation();
-    return good();
+    return clear_marker();
+}
+
+Status cancel_unmodified_search(const Operation& operation)
+{
+    std::lock_guard<std::mutex> guard(state_mutex);
+    if (!active.lock.valid() || active.failed || active.kind != "search" || operation.operation_id != active.id ||
+        active.saved || active.advanced)
+        return {Code::incomplete_operation, "unmodified active search required"};
+    return clear_marker();
 }
 } // namespace sse_v1

@@ -1,3 +1,5 @@
+#include "libpq/row_request_v1.h"
+#include "libpq/row_state_v1.h"
 /*
  * psql - the PostgreSQL interactive terminal
  *
@@ -1489,6 +1491,22 @@ bool GetPrintResult(PGresult** results, bool is_explain, bool is_print, const ch
 
 bool SendQuery(const char* query, bool is_print, bool print_error)
 {
+    if (sse_v1::v1_state_selected() || (query && strcasestr(query, "sse_storage"))) {
+        bool handled = false;
+        PGresult* protected_result = NULL;
+        const auto status = sse_v1::execute_request(pset.db, query, handled, protected_result);
+        if (!status.ok()) {
+            if (print_error) psql_error("Fides %s: %s\n", sse_v1::code_name(status.code), status.message.c_str());
+            PQclear(protected_result);
+            return false;
+        }
+        if (handled) {
+            const bool success = !is_print || PrintQueryResults(protected_result);
+            PQclear(protected_result);
+            return success;
+        }
+    }
+
     //set flag and extract keyword
     common_sseflag.resetSSEflags();
     common_delsseflag.resetSSEdelflags();

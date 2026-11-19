@@ -2,6 +2,7 @@
 #include "libpq/sse_common.h"
 #include "libpq/row_state_v1.h"
 #include <stdexcept>
+#include <cstdlib>
 #include "../../../../sse/opensse-schemes/lib/include/sse/schemes/sophos/sophos_common.hpp"
 namespace sse {
 namespace sophos {
@@ -124,7 +125,13 @@ SophosClient::SophosClient(const std::string& tdp_private_key, crypto::Key<kKeyS
     : k_prf_(std::move(derivation_master_key)), inverse_tdp_(tdp_private_key),
       rsa_prg_(std::move(rsa_prg_key))
 {
-	counter_map = wrapped_loadDictionary2("/opt/og/openGauss-server/sse_storage/fides_client.mat");
+	if (sse_v1::v1_state_selected()) {
+	    sse_v1::Counters counters;
+	    require_state(sse_v1::current_operation_counters(counters));
+	    counter_map.insert(counters.begin(), counters.end());
+	} else {
+	    counter_map = wrapped_loadDictionary2("/opt/og/openGauss-server/sse_storage/fides_client.mat");
+	}
 }
 
 SophosClient::~SophosClient()
