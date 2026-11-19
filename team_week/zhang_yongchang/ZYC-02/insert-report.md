@@ -1,6 +1,6 @@
 # ZYC-02：用户 SQL 到密文写入
 
-本轮复验结果和输入指纹见 [verified/summary.json](../ZYC-03/evidence/verified/summary.json)，用例见 [results.json](../ZYC-03/evidence/verified/requests/results.json)。实际工具提交：`a0f563fe586cca1c72384b40397dc614954e0080`。应用源自 `c631fbc2be747e3611f00ff521ae4dd306cc2789`，SHY-02 v1.0 字节布局及 SHY-03 请求/计数/事务约定不变。
+本轮复验结果和输入指纹见 [verified/summary.json](../ZYC-03/evidence/verified/summary.json)，用例见 [results.json](../ZYC-03/evidence/verified/requests/results.json)。实际工具提交：`3bce830c9f428e8e3d76336e4170e5dbeb056a31`。应用源自 `c631fbc2be747e3611f00ff521ae4dd306cc2789`，SHY-02 v1.0 字节布局及 SHY-03 请求/计数/事务约定不变。
 
 ## 实现与本轮改动
 

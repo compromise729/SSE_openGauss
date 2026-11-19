@@ -15,7 +15,7 @@ repo=/path/to/configured/SSE_openGauss
 bash "$repo/team_week/zhang_yongchang/tools/zyc_live_verify_all.sh" --project-root "$repo"
 ```
 
-入口自动选择 Python 3.6+、使用 omm 的编译环境，编译 `initialize-live`、独立解密工具及公开夹具记录器，运行 3 项入口回归、18 项模块用例、18 项上游真实客户端用例、13 项 ZYC 实库验收。支持含空格路径；默认新建证据目录和隔离实例，不复用旧 PASS 文件。
+入口自动选择 Python 3.6+、使用 omm 的编译环境，编译 `initialize-live`、独立解密工具及公开夹具记录器，运行 5 项入口回归、18 项模块用例、18 项上游真实客户端用例、13 项 ZYC 实库验收。支持含空格路径；默认新建证据目录和隔离实例，不复用旧 PASS 文件。
 
 最后必须同时满足退出码 0、`EVIDENCE_VALIDATED=PASS` 和 `ZYC_RESULT=PASS`。任何 SQL、初始化、输出断言或阶段核对失败均非零退出，详见打印的 `ZYC_EVIDENCE_DIR`。可选 `--evidence-dir NEW_DIR`、`--port 55443`；证据目录必须不存在。
 
