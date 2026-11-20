@@ -1,0 +1,44 @@
+{
+  "source_baseline": "5c8b2b03b482e203ac65a6f989a1b669126f263c",
+  "checkout_head": "51fa4f22e4c2a444263e564b4a8d2990baa108f4",
+  "case": {
+    "case": "ZYC-10-last-row-authentication",
+    "result": "PASS",
+    "events": [
+      "keys_loaded",
+      "preflight",
+      "begin_durable",
+      "token_generated",
+      "fides_setup",
+      "search_take_sent",
+      "counter_advanced",
+      "counter_advanced",
+      "counter_advanced",
+      "reinsert_sent",
+      "fetch_sent"
+    ],
+    "healthy_rows_before_last": 2,
+    "last_returned_tag_tampered": true,
+    "no_partial_plaintext": true,
+    "database_unchanged": true,
+    "reopen_blocked": true,
+    "requests": [
+      27,
+      28
+    ]
+  },
+  "checks": [
+    {
+      "request": 27,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "request": 28,
+      "exit_code": 1,
+      "status": "incomplete_operation",
+      "business_lines": 0
+    }
+  ]
+}
