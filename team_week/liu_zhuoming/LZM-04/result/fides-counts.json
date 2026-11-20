@@ -1,0 +1,27 @@
+[
+  {
+    "stage": "insert",
+    "counter": 2,
+    "rows": 2
+  },
+  {
+    "stage": "first_query",
+    "counter": 4,
+    "rows": 2
+  },
+  {
+    "stage": "repeat_query",
+    "counter": 6,
+    "rows": 2
+  },
+  {
+    "stage": "client_reopen",
+    "counter": 8,
+    "rows": 2
+  },
+  {
+    "stage": "server_restart_setup_query",
+    "counter": 10,
+    "rows": 2
+  }
+]

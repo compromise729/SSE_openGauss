@@ -1,0 +1,3 @@
+PASS installed binaries and libraries unchanged
+PASS original client/server state bytes unchanged
+PASS original client/server file inventory, permissions and owners unchanged
