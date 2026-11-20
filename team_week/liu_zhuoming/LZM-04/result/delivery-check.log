@@ -1,0 +1,850 @@
+PASS latest results only; no historical copy folders
+PASS input metadata has no deleted history references
+PASS current tools replay 36 cases with exit 0
+PASS unchanged source/tool src/bin/psql/common.cpp
+PASS unchanged source/tool src/bin/psql/startup.cpp
+PASS unchanged source/tool src/common/interfaces/libpq/row_request_v1.cpp
+PASS unchanged source/tool src/common/interfaces/libpq/row_state_v1.cpp
+PASS unchanged source/tool src/common/interfaces/libpq/Client_Sophos.cpp
+PASS unchanged source/tool src/include/libpq/row_state_v1.h
+PASS unchanged source/tool src/gausskernel/process/tcop/postgres.cpp
+PASS unchanged source/tool src/gausskernel/process/tcop/Server_Sophos.cpp
+PASS unchanged source/tool sse_sql/SSE_v1.sql
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-01/isolated.sh
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-03/preflight/build-live.py
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-04/preflight/build-current.py
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-04/preflight/cases.py
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-04/preflight/diagnose.py
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-04/preflight/faults.cpp
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-04/preflight/legacy-control.cpp
+PASS unchanged source/tool team_week/liu_zhuoming/LZM-04/preflight/verify.sh
+PASS current artifact gaussdb
+PASS current artifact gsql
+PASS current artifact librow_request_verify.so
+PASS current artifact faults04.so
+PASS current artifact legacy-control
+PASS latest case paths 04-01-normal-restart-and-counters
+PASS SQL evidence 04-01-normal-restart-and-counters
+PASS request 001.stdout
+PASS request 001.stderr
+PASS request 001.command.json
+PASS request actual exit and run 001
+PASS request 002.stdout
+PASS request 002.stderr
+PASS request 002.command.json
+PASS request actual exit and run 002
+PASS request 003.stdout
+PASS request 003.stderr
+PASS request 003.command.json
+PASS request actual exit and run 003
+PASS request 004.stdout
+PASS request 004.stderr
+PASS request 004.command.json
+PASS request actual exit and run 004
+PASS request 005.stdout
+PASS request 005.stderr
+PASS request 005.command.json
+PASS request actual exit and run 005
+PASS request 006.stdout
+PASS request 006.stderr
+PASS request 006.command.json
+PASS request actual exit and run 006
+PASS latest case paths 04-02-marker-before-effects
+PASS SQL evidence 04-02-marker-before-effects
+PASS request 007.stdout
+PASS request 007.stderr
+PASS request 007.command.json
+PASS request actual exit and run 007
+PASS request 008.stdout
+PASS request 008.stderr
+PASS request 008.command.json
+PASS request actual exit and run 008
+PASS request 009.stdout
+PASS request 009.stderr
+PASS request 009.command.json
+PASS request actual exit and run 009
+PASS request 010.stdout
+PASS request 010.stderr
+PASS request 010.command.json
+PASS request actual exit and run 010
+PASS latest case paths 04-03-counter-save-failure
+PASS SQL evidence 04-03-counter-save-failure
+PASS request 011.stdout
+PASS request 011.stderr
+PASS request 011.command.json
+PASS request actual exit and run 011
+PASS request 012.stdout
+PASS request 012.stderr
+PASS request 012.command.json
+PASS request actual exit and run 012
+PASS request 013.stdout
+PASS request 013.stderr
+PASS request 013.command.json
+PASS request actual exit and run 013
+PASS request 014.stdout
+PASS request 014.stderr
+PASS request 014.command.json
+PASS request actual exit and run 014
+PASS latest case paths 04-04-real-process-kill
+PASS SQL evidence 04-04-real-process-kill
+PASS request 015.stdout
+PASS request 015.stderr
+PASS request 015.command.json
+PASS request actual exit and run 015
+PASS request 016.stdout
+PASS request 016.stderr
+PASS request 016.command.json
+PASS request actual exit and run 016
+PASS request 017.stdout
+PASS request 017.stderr
+PASS request 017.command.json
+PASS request actual exit and run 017
+PASS request 018.stdout
+PASS request 018.stderr
+PASS request 018.command.json
+PASS request actual exit and run 018
+PASS latest case paths 04-05-two-clients
+PASS SQL evidence 04-05-two-clients
+PASS request 019.stdout
+PASS request 019.stderr
+PASS request 019.command.json
+PASS request actual exit and run 019
+PASS request 020.stdout
+PASS request 020.stderr
+PASS request 020.command.json
+PASS request actual exit and run 020
+PASS request 021.stdout
+PASS request 021.stderr
+PASS request 021.command.json
+PASS request actual exit and run 021
+PASS request 022.stdout
+PASS request 022.stderr
+PASS request 022.command.json
+PASS request actual exit and run 022
+PASS latest case paths 04-06-existing-data-missing-key
+PASS SQL evidence 04-06-existing-data-missing-key
+PASS request 023.stdout
+PASS request 023.stderr
+PASS request 023.command.json
+PASS request actual exit and run 023
+PASS request 024.stdout
+PASS request 024.stderr
+PASS request 024.command.json
+PASS request actual exit and run 024
+PASS request 025.stdout
+PASS request 025.stderr
+PASS request 025.command.json
+PASS request actual exit and run 025
+PASS request 026.stdout
+PASS request 026.stderr
+PASS request 026.command.json
+PASS request actual exit and run 026
+PASS latest case paths 04-07-broken-state
+PASS SQL evidence 04-07-broken-state
+PASS request 027.stdout
+PASS request 027.stderr
+PASS request 027.command.json
+PASS request actual exit and run 027
+PASS request 028.stdout
+PASS request 028.stderr
+PASS request 028.command.json
+PASS request actual exit and run 028
+PASS request 029.stdout
+PASS request 029.stderr
+PASS request 029.command.json
+PASS request actual exit and run 029
+PASS request 030.stdout
+PASS request 030.stderr
+PASS request 030.command.json
+PASS request actual exit and run 030
+PASS latest case paths 04-08-create-and-reopen
+PASS SQL evidence 04-08-create-and-reopen
+PASS request 031.stdout
+PASS request 031.stderr
+PASS request 031.command.json
+PASS request actual exit and run 031
+PASS request 032.stdout
+PASS request 032.stderr
+PASS request 032.command.json
+PASS request actual exit and run 032
+PASS latest case paths 04-09-physical-create-failure
+PASS SQL evidence 04-09-physical-create-failure
+PASS request 033.stdout
+PASS request 033.stderr
+PASS request 033.command.json
+PASS request actual exit and run 033
+PASS request 034.stdout
+PASS request 034.stderr
+PASS request 034.command.json
+PASS request actual exit and run 034
+PASS latest case paths 04-10-mapping-save-failure
+PASS SQL evidence 04-10-mapping-save-failure
+PASS request 035.stdout
+PASS request 035.stderr
+PASS request 035.command.json
+PASS request actual exit and run 035
+PASS request 036.stdout
+PASS request 036.stderr
+PASS request 036.command.json
+PASS request actual exit and run 036
+PASS latest case paths 04-11-current-reinsert-rollback
+PASS SQL evidence 04-11-current-reinsert-rollback
+PASS request 037.stdout
+PASS request 037.stderr
+PASS request 037.command.json
+PASS request actual exit and run 037
+PASS request 038.stdout
+PASS request 038.stderr
+PASS request 038.command.json
+PASS request actual exit and run 038
+PASS request 039.stdout
+PASS request 039.stderr
+PASS request 039.command.json
+PASS request actual exit and run 039
+PASS request 040.stdout
+PASS request 040.stderr
+PASS request 040.command.json
+PASS request actual exit and run 040
+PASS latest case paths 04-12-legacy-two-to-zero
+PASS SQL evidence 04-12-legacy-two-to-zero
+PASS request 041.stdout
+PASS request 041.stderr
+PASS request 041.command.json
+PASS request actual exit and run 041
+PASS request 042.stdout
+PASS request 042.stderr
+PASS request 042.command.json
+PASS request actual exit and run 042
+PASS request 043.stdout
+PASS request 043.stderr
+PASS request 043.command.json
+PASS request actual exit and run 043
+PASS latest case paths 04-13-real-state-unwritable
+PASS SQL evidence 04-13-real-state-unwritable
+PASS request 044.stdout
+PASS request 044.stderr
+PASS request 044.command.json
+PASS request actual exit and run 044
+PASS request 045.stdout
+PASS request 045.stderr
+PASS request 045.command.json
+PASS request actual exit and run 045
+PASS request 046.stdout
+PASS request 046.stderr
+PASS request 046.command.json
+PASS request actual exit and run 046
+PASS request 047.stdout
+PASS request 047.stderr
+PASS request 047.command.json
+PASS request actual exit and run 047
+PASS latest case paths 04-14-missing-locator
+PASS SQL evidence 04-14-missing-locator
+PASS request 048.stdout
+PASS request 048.stderr
+PASS request 048.command.json
+PASS request actual exit and run 048
+PASS request 049.stdout
+PASS request 049.stderr
+PASS request 049.command.json
+PASS request actual exit and run 049
+PASS request 050.stdout
+PASS request 050.stderr
+PASS request 050.command.json
+PASS request actual exit and run 050
+PASS request 051.stdout
+PASS request 051.stderr
+PASS request 051.command.json
+PASS request actual exit and run 051
+PASS latest case paths 04-15-missing-keyid
+PASS SQL evidence 04-15-missing-keyid
+PASS request 052.stdout
+PASS request 052.stderr
+PASS request 052.command.json
+PASS request actual exit and run 052
+PASS request 053.stdout
+PASS request 053.stderr
+PASS request 053.command.json
+PASS request actual exit and run 053
+PASS request 054.stdout
+PASS request 054.stderr
+PASS request 054.command.json
+PASS request actual exit and run 054
+PASS request 055.stdout
+PASS request 055.stderr
+PASS request 055.command.json
+PASS request actual exit and run 055
+PASS latest case paths 04-16-short-row
+PASS SQL evidence 04-16-short-row
+PASS request 056.stdout
+PASS request 056.stderr
+PASS request 056.command.json
+PASS request actual exit and run 056
+PASS request 057.stdout
+PASS request 057.stderr
+PASS request 057.command.json
+PASS request actual exit and run 057
+PASS request 058.stdout
+PASS request 058.stderr
+PASS request 058.command.json
+PASS request actual exit and run 058
+PASS request 059.stdout
+PASS request 059.stderr
+PASS request 059.command.json
+PASS request actual exit and run 059
+PASS latest case paths 04-17-short-locator
+PASS SQL evidence 04-17-short-locator
+PASS request 060.stdout
+PASS request 060.stderr
+PASS request 060.command.json
+PASS request actual exit and run 060
+PASS request 061.stdout
+PASS request 061.stderr
+PASS request 061.command.json
+PASS request actual exit and run 061
+PASS request 062.stdout
+PASS request 062.stderr
+PASS request 062.command.json
+PASS request actual exit and run 062
+PASS request 063.stdout
+PASS request 063.stderr
+PASS request 063.command.json
+PASS request actual exit and run 063
+PASS latest case paths 04-18-wrong-keyid
+PASS SQL evidence 04-18-wrong-keyid
+PASS request 064.stdout
+PASS request 064.stderr
+PASS request 064.command.json
+PASS request actual exit and run 064
+PASS request 065.stdout
+PASS request 065.stderr
+PASS request 065.command.json
+PASS request actual exit and run 065
+PASS request 066.stdout
+PASS request 066.stderr
+PASS request 066.command.json
+PASS request actual exit and run 066
+PASS request 067.stdout
+PASS request 067.stderr
+PASS request 067.command.json
+PASS request actual exit and run 067
+PASS latest case paths 04-19-key-permissions
+PASS SQL evidence 04-19-key-permissions
+PASS request 068.stdout
+PASS request 068.stderr
+PASS request 068.command.json
+PASS request actual exit and run 068
+PASS request 069.stdout
+PASS request 069.stderr
+PASS request 069.command.json
+PASS request actual exit and run 069
+PASS request 070.stdout
+PASS request 070.stderr
+PASS request 070.command.json
+PASS request actual exit and run 070
+PASS request 071.stdout
+PASS request 071.stderr
+PASS request 071.command.json
+PASS request actual exit and run 071
+PASS latest case paths 04-20-bad-mapping
+PASS SQL evidence 04-20-bad-mapping
+PASS request 072.stdout
+PASS request 072.stderr
+PASS request 072.command.json
+PASS request actual exit and run 072
+PASS request 073.stdout
+PASS request 073.stderr
+PASS request 073.command.json
+PASS request actual exit and run 073
+PASS request 074.stdout
+PASS request 074.stderr
+PASS request 074.command.json
+PASS request actual exit and run 074
+PASS request 075.stdout
+PASS request 075.stderr
+PASS request 075.command.json
+PASS request actual exit and run 075
+PASS latest case paths 04-21-missing-counter
+PASS SQL evidence 04-21-missing-counter
+PASS request 076.stdout
+PASS request 076.stderr
+PASS request 076.command.json
+PASS request actual exit and run 076
+PASS request 077.stdout
+PASS request 077.stderr
+PASS request 077.command.json
+PASS request actual exit and run 077
+PASS request 078.stdout
+PASS request 078.stderr
+PASS request 078.command.json
+PASS request actual exit and run 078
+PASS request 079.stdout
+PASS request 079.stderr
+PASS request 079.command.json
+PASS request actual exit and run 079
+PASS latest case paths 04-22-missing-mapping
+PASS SQL evidence 04-22-missing-mapping
+PASS request 080.stdout
+PASS request 080.stderr
+PASS request 080.command.json
+PASS request actual exit and run 080
+PASS request 081.stdout
+PASS request 081.stderr
+PASS request 081.command.json
+PASS request actual exit and run 081
+PASS request 082.stdout
+PASS request 082.stderr
+PASS request 082.command.json
+PASS request actual exit and run 082
+PASS request 083.stdout
+PASS request 083.stderr
+PASS request 083.command.json
+PASS request actual exit and run 083
+PASS latest case paths 04-23-server-version
+PASS SQL evidence 04-23-server-version
+PASS request 084.stdout
+PASS request 084.stderr
+PASS request 084.command.json
+PASS request actual exit and run 084
+PASS request 085.stdout
+PASS request 085.stderr
+PASS request 085.command.json
+PASS request actual exit and run 085
+PASS request 086.stdout
+PASS request 086.stderr
+PASS request 086.command.json
+PASS request actual exit and run 086
+PASS request 087.stdout
+PASS request 087.stderr
+PASS request 087.command.json
+PASS request actual exit and run 087
+PASS latest case paths 04-24-physical-shape
+PASS SQL evidence 04-24-physical-shape
+PASS request 088.stdout
+PASS request 088.stderr
+PASS request 088.command.json
+PASS request actual exit and run 088
+PASS request 089.stdout
+PASS request 089.stderr
+PASS request 089.command.json
+PASS request actual exit and run 089
+PASS request 090.stdout
+PASS request 090.stderr
+PASS request 090.command.json
+PASS request actual exit and run 090
+PASS request 091.stdout
+PASS request 091.stderr
+PASS request 091.command.json
+PASS request actual exit and run 091
+PASS latest case paths 04-25-empty-token
+PASS SQL evidence 04-25-empty-token
+PASS request 092.stdout
+PASS request 092.stderr
+PASS request 092.command.json
+PASS request actual exit and run 092
+PASS request 093.stdout
+PASS request 093.stderr
+PASS request 093.command.json
+PASS request actual exit and run 093
+PASS request 094.stdout
+PASS request 094.stderr
+PASS request 094.command.json
+PASS request actual exit and run 094
+PASS request 095.stdout
+PASS request 095.stderr
+PASS request 095.command.json
+PASS request actual exit and run 095
+PASS latest case paths 04-26-empty-derivation
+PASS SQL evidence 04-26-empty-derivation
+PASS request 096.stdout
+PASS request 096.stderr
+PASS request 096.command.json
+PASS request actual exit and run 096
+PASS request 097.stdout
+PASS request 097.stderr
+PASS request 097.command.json
+PASS request actual exit and run 097
+PASS request 098.stdout
+PASS request 098.stderr
+PASS request 098.command.json
+PASS request actual exit and run 098
+PASS request 099.stdout
+PASS request 099.stderr
+PASS request 099.command.json
+PASS request actual exit and run 099
+PASS latest case paths 04-27-marker-write
+PASS SQL evidence 04-27-marker-write
+PASS request 100.stdout
+PASS request 100.stderr
+PASS request 100.command.json
+PASS request actual exit and run 100
+PASS request 101.stdout
+PASS request 101.stderr
+PASS request 101.command.json
+PASS request actual exit and run 101
+PASS request 102.stdout
+PASS request 102.stderr
+PASS request 102.command.json
+PASS request actual exit and run 102
+PASS request 103.stdout
+PASS request 103.stderr
+PASS request 103.command.json
+PASS request actual exit and run 103
+PASS latest case paths 04-28-marker-fsync
+PASS SQL evidence 04-28-marker-fsync
+PASS request 104.stdout
+PASS request 104.stderr
+PASS request 104.command.json
+PASS request actual exit and run 104
+PASS request 105.stdout
+PASS request 105.stderr
+PASS request 105.command.json
+PASS request actual exit and run 105
+PASS request 106.stdout
+PASS request 106.stderr
+PASS request 106.command.json
+PASS request actual exit and run 106
+PASS request 107.stdout
+PASS request 107.stderr
+PASS request 107.command.json
+PASS request actual exit and run 107
+PASS latest case paths 04-29-marker-close
+PASS SQL evidence 04-29-marker-close
+PASS request 108.stdout
+PASS request 108.stderr
+PASS request 108.command.json
+PASS request actual exit and run 108
+PASS request 109.stdout
+PASS request 109.stderr
+PASS request 109.command.json
+PASS request actual exit and run 109
+PASS request 110.stdout
+PASS request 110.stderr
+PASS request 110.command.json
+PASS request actual exit and run 110
+PASS request 111.stdout
+PASS request 111.stderr
+PASS request 111.command.json
+PASS request actual exit and run 111
+PASS latest case paths 04-30-marker-dir-fsync
+PASS SQL evidence 04-30-marker-dir-fsync
+PASS request 112.stdout
+PASS request 112.stderr
+PASS request 112.command.json
+PASS request actual exit and run 112
+PASS request 113.stdout
+PASS request 113.stderr
+PASS request 113.command.json
+PASS request actual exit and run 113
+PASS request 114.stdout
+PASS request 114.stderr
+PASS request 114.command.json
+PASS request actual exit and run 114
+PASS request 115.stdout
+PASS request 115.stderr
+PASS request 115.command.json
+PASS request actual exit and run 115
+PASS latest case paths 04-31-counter-write
+PASS SQL evidence 04-31-counter-write
+PASS request 116.stdout
+PASS request 116.stderr
+PASS request 116.command.json
+PASS request actual exit and run 116
+PASS request 117.stdout
+PASS request 117.stderr
+PASS request 117.command.json
+PASS request actual exit and run 117
+PASS request 118.stdout
+PASS request 118.stderr
+PASS request 118.command.json
+PASS request actual exit and run 118
+PASS request 119.stdout
+PASS request 119.stderr
+PASS request 119.command.json
+PASS request actual exit and run 119
+PASS latest case paths 04-32-counter-fsync
+PASS SQL evidence 04-32-counter-fsync
+PASS request 120.stdout
+PASS request 120.stderr
+PASS request 120.command.json
+PASS request actual exit and run 120
+PASS request 121.stdout
+PASS request 121.stderr
+PASS request 121.command.json
+PASS request actual exit and run 121
+PASS request 122.stdout
+PASS request 122.stderr
+PASS request 122.command.json
+PASS request actual exit and run 122
+PASS request 123.stdout
+PASS request 123.stderr
+PASS request 123.command.json
+PASS request actual exit and run 123
+PASS latest case paths 04-33-counter-close
+PASS SQL evidence 04-33-counter-close
+PASS request 124.stdout
+PASS request 124.stderr
+PASS request 124.command.json
+PASS request actual exit and run 124
+PASS request 125.stdout
+PASS request 125.stderr
+PASS request 125.command.json
+PASS request actual exit and run 125
+PASS request 126.stdout
+PASS request 126.stderr
+PASS request 126.command.json
+PASS request actual exit and run 126
+PASS request 127.stdout
+PASS request 127.stderr
+PASS request 127.command.json
+PASS request actual exit and run 127
+PASS latest case paths 04-34-counter-dir-fsync
+PASS SQL evidence 04-34-counter-dir-fsync
+PASS request 128.stdout
+PASS request 128.stderr
+PASS request 128.command.json
+PASS request actual exit and run 128
+PASS request 129.stdout
+PASS request 129.stderr
+PASS request 129.command.json
+PASS request actual exit and run 129
+PASS request 130.stdout
+PASS request 130.stderr
+PASS request 130.command.json
+PASS request actual exit and run 130
+PASS request 131.stdout
+PASS request 131.stderr
+PASS request 131.command.json
+PASS request actual exit and run 131
+PASS latest case paths 04-35-clear-unlink
+PASS SQL evidence 04-35-clear-unlink
+PASS request 132.stdout
+PASS request 132.stderr
+PASS request 132.command.json
+PASS request actual exit and run 132
+PASS request 133.stdout
+PASS request 133.stderr
+PASS request 133.command.json
+PASS request actual exit and run 133
+PASS request 134.stdout
+PASS request 134.stderr
+PASS request 134.command.json
+PASS request actual exit and run 134
+PASS request 135.stdout
+PASS request 135.stderr
+PASS request 135.command.json
+PASS request actual exit and run 135
+PASS latest case paths 04-36-clear-dir-fsync
+PASS SQL evidence 04-36-clear-dir-fsync
+PASS request 136.stdout
+PASS request 136.stderr
+PASS request 136.command.json
+PASS request actual exit and run 136
+PASS request 137.stdout
+PASS request 137.stderr
+PASS request 137.command.json
+PASS request actual exit and run 137
+PASS request 138.stdout
+PASS request 138.stderr
+PASS request 138.command.json
+PASS request actual exit and run 138
+PASS request 139.stdout
+PASS request 139.stderr
+PASS request 139.command.json
+PASS request actual exit and run 139
+PASS 139 actual requests preserved
+PASS counter and result-multiset reproduction
+PASS protected outside bytes/permissions/owners unchanged
+PASS actual replay final log PASS
+PASS actual latest instance stopped
+PASS document target handoff.md#closed-loop
+PASS document anchor closed-loop
+PASS document target handoff.md#resolved
+PASS document anchor resolved
+PASS document target result/input.json
+PASS document target README.md
+PASS document target env.md
+PASS document target 人工诊断与测试重建.md
+PASS document target preflight/build-current.py
+PASS document target preflight/verify.sh
+PASS document target preflight/cases.py
+PASS document target preflight/faults.cpp
+PASS document target preflight/legacy-control.cpp
+PASS document target preflight/diagnose.py
+PASS document target result/results.json
+PASS document target result/fides-counts.json
+PASS document target result/legacy-control.log
+PASS document target result/environment.log
+PASS document target result/verify.log
+PASS document target result/live.log
+PASS document target result/closed-loop.json
+PASS document target result/diagnosis-counter.json
+PASS document target result/delivery-check.log
+PASS document target result/request-001.command.json
+PASS document target result/request-006.command.json
+PASS document target result/04-01-normal-restart-and-counters.commands.json
+PASS document target result/request-009.command.json
+PASS document target result/request-010.command.json
+PASS document target result/04-02-marker-before-effects.commands.json
+PASS document target result/request-013.command.json
+PASS document target result/request-014.command.json
+PASS document target result/04-03-counter-save-failure.commands.json
+PASS document target result/request-017.command.json
+PASS document target result/request-018.command.json
+PASS document target result/04-04-real-process-kill.commands.json
+PASS document target result/request-021.command.json
+PASS document target result/request-022.command.json
+PASS document target result/04-05-two-clients.commands.json
+PASS document target result/request-025.command.json
+PASS document target result/request-026.command.json
+PASS document target result/04-06-existing-data-missing-key.commands.json
+PASS document target result/request-029.command.json
+PASS document target result/request-030.command.json
+PASS document target result/04-07-broken-state.commands.json
+PASS document target result/request-031.command.json
+PASS document target result/request-032.command.json
+PASS document target result/04-08-create-and-reopen.commands.json
+PASS document target result/request-033.command.json
+PASS document target result/request-034.command.json
+PASS document target result/04-09-physical-create-failure.commands.json
+PASS document target result/request-035.command.json
+PASS document target result/request-036.command.json
+PASS document target result/04-10-mapping-save-failure.commands.json
+PASS document target result/request-039.command.json
+PASS document target result/request-040.command.json
+PASS document target result/04-11-current-reinsert-rollback.commands.json
+PASS document target result/request-042.command.json
+PASS document target result/request-043.command.json
+PASS document target result/04-12-legacy-two-to-zero.commands.json
+PASS document target result/request-046.command.json
+PASS document target result/request-047.command.json
+PASS document target result/04-13-real-state-unwritable.commands.json
+PASS document target result/request-050.command.json
+PASS document target result/request-051.command.json
+PASS document target result/04-14-missing-locator.commands.json
+PASS document target result/request-054.command.json
+PASS document target result/request-055.command.json
+PASS document target result/04-15-missing-keyid.commands.json
+PASS document target result/request-058.command.json
+PASS document target result/request-059.command.json
+PASS document target result/04-16-short-row.commands.json
+PASS document target result/request-062.command.json
+PASS document target result/request-063.command.json
+PASS document target result/04-17-short-locator.commands.json
+PASS document target result/request-066.command.json
+PASS document target result/request-067.command.json
+PASS document target result/04-18-wrong-keyid.commands.json
+PASS document target result/request-070.command.json
+PASS document target result/request-071.command.json
+PASS document target result/04-19-key-permissions.commands.json
+PASS document target result/request-074.command.json
+PASS document target result/request-075.command.json
+PASS document target result/04-20-bad-mapping.commands.json
+PASS document target result/request-078.command.json
+PASS document target result/request-079.command.json
+PASS document target result/04-21-missing-counter.commands.json
+PASS document target result/request-082.command.json
+PASS document target result/request-083.command.json
+PASS document target result/04-22-missing-mapping.commands.json
+PASS document target result/request-086.command.json
+PASS document target result/request-087.command.json
+PASS document target result/04-23-server-version.commands.json
+PASS document target result/request-090.command.json
+PASS document target result/request-091.command.json
+PASS document target result/04-24-physical-shape.commands.json
+PASS document target result/request-094.command.json
+PASS document target result/request-095.command.json
+PASS document target result/04-25-empty-token.commands.json
+PASS document target result/request-098.command.json
+PASS document target result/request-099.command.json
+PASS document target result/04-26-empty-derivation.commands.json
+PASS document target result/request-102.command.json
+PASS document target result/request-103.command.json
+PASS document target result/04-27-marker-write.commands.json
+PASS document target result/request-106.command.json
+PASS document target result/request-107.command.json
+PASS document target result/04-28-marker-fsync.commands.json
+PASS document target result/request-110.command.json
+PASS document target result/request-111.command.json
+PASS document target result/04-29-marker-close.commands.json
+PASS document target result/request-114.command.json
+PASS document target result/request-115.command.json
+PASS document target result/04-30-marker-dir-fsync.commands.json
+PASS document target result/request-118.command.json
+PASS document target result/request-119.command.json
+PASS document target result/04-31-counter-write.commands.json
+PASS document target result/request-122.command.json
+PASS document target result/request-123.command.json
+PASS document target result/04-32-counter-fsync.commands.json
+PASS document target result/request-126.command.json
+PASS document target result/request-127.command.json
+PASS document target result/04-33-counter-close.commands.json
+PASS document target result/request-130.command.json
+PASS document target result/request-131.command.json
+PASS document target result/04-34-counter-dir-fsync.commands.json
+PASS document target result/request-134.command.json
+PASS document target result/request-135.command.json
+PASS document target result/04-35-clear-unlink.commands.json
+PASS document target result/request-138.command.json
+PASS document target result/request-139.command.json
+PASS document target result/04-36-clear-dir-fsync.commands.json
+PASS document target result/legacy-control.log
+PASS document target ../../../src/common/interfaces/libpq/row_request_v1.cpp
+PASS document target ../../../src/common/interfaces/libpq/row_state_v1.cpp
+PASS document target result/request-013.stderr
+PASS document target result/request-046.stderr
+PASS document target ../../../src/common/interfaces/libpq/row_request_v1.cpp
+PASS document target ../../../src/common/interfaces/libpq/row_state_v1.cpp
+PASS document target result/04-10-mapping-save-failure.commands.json
+PASS document target result/request-035.stderr
+PASS document target preflight/legacy-control.cpp
+PASS document target ../../../src/gausskernel/process/tcop/Server_Sophos.cpp
+PASS document target ../../../sse_sql/SSE_v1.sql
+PASS document target result/legacy-control.log
+PASS document target ../../../src/common/interfaces/libpq/row_request_v1.cpp
+PASS document target ../../../sse_sql/SSE_v1.sql
+PASS document target ../../../src/include/libpq/row_state_v1.h
+PASS document target ../../../src/common/interfaces/libpq/row_state_v1.cpp
+PASS document target ../../../src/common/interfaces/libpq/row_state_catalog.cpp
+PASS document target ../../../team_week/yan_zihan/YZH-01/src/row_aead_v1.cpp
+PASS document target ../../../src/common/interfaces/libpq/row_state_v1.cpp
+PASS document target preflight/cases.py
+PASS document target ../../../src/common/interfaces/libpq/row_request_v1.cpp
+PASS document target ../LZM-01/isolated.sh
+PASS document target ../../../src/common/interfaces/libpq/row_state_catalog.cpp
+PASS document target preflight/build-current.py
+PASS document target ../LZM-03/preflight/build-live.py
+PASS document target ../LZM-01/isolated.sh
+PASS document target ../../../src/common/interfaces/libpq/Client_Sophos.cpp
+PASS document target ../../../src/bin/psql/startup.cpp
+PASS document target result/request-001.stderr
+PASS document target preflight/faults.cpp
+PASS document target preflight/cases.py
+PASS document target result/results.json
+PASS document target result/verify.log
+PASS document target result/results.json
+PASS document target #closed-loop
+PASS document anchor closed-loop
+PASS document target env.md
+PASS document target result/results.json
+PASS document target result/environment.log
+PASS document target result/fides-counts.json
+PASS document target result/request-006.stderr
+PASS document target result/diagnosis-counter.json
+PASS document target result/diagnosis-readonly.json
+PASS document target result/pg-control.txt
+PASS document target 人工诊断与测试重建.md
+PASS document target result/input.json
+PASS document target result/closed-loop.json
+PASS document target handoff.md
+PASS document target result/results.json
+PASS document target result/verify.log
+PASS document target handoff.md
+PASS document target env.md
+PASS document target 人工诊断与测试重建.md
+PASS document target preflight/
+PASS document target result/
+PASS latest private failure snapshots preserved locally
+PASS prior original experiments preserved
+PASS delivery excludes keys/private manifests/build binaries
+PASS Python/shell syntax
+DELIVERY_CHECK=PASS

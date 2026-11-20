@@ -1,0 +1,27 @@
+[Warning]: The "libpq.so" loaded mismatch the version of gsql, please check it.
+expected: (GaussDB Kernel V500R001C20 build c551dd12) compiled at 2024-03-01 20:55:53 commit 0 last mr  debug
+result: (GaussDB Kernel V500R001C20 build 25489f56) compiled at 2026-10-12 18:01:33 commit 0 last mr  debug
+STATE_EVENT keys_loaded
+STATE_EVENT begin_durable
+STATE_EVENT create_sent
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_data_pkey" for table "week_demo_data"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function original_create(text,text) line 10 at EXECUTE statement
+referenced column: original_create
+SQL statement "SELECT public.original_create($1,$2)"
+PL/pgSQL function sse_v1_create(text,text) line 1 at PERFORM
+referenced column: sse_v1_create
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_index_pkey" for table "week_demo_index"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function original_create(text,text) line 13 at EXECUTE statement
+referenced column: original_create
+SQL statement "SELECT public.original_create($1,$2)"
+PL/pgSQL function sse_v1_create(text,text) line 1 at PERFORM
+referenced column: sse_v1_create
+Fides db_failed: ERROR:  injected physical create rollback
+CONTEXT:  referenced column: sse_v1_create
+
