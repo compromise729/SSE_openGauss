@@ -1,0 +1,118 @@
+{
+  "candidate": "5c484c593d3520fa62046871371446d5cd5b7c70",
+  "fixture": "SHY-04 public synthetic fixture analyzed on the SHY-05 build",
+  "input_rows": [
+    [
+      "1",
+      "apple",
+      "red apple"
+    ],
+    [
+      "2",
+      "apple",
+      "green apple"
+    ],
+    [
+      "3",
+      "banana",
+      "yellow banana"
+    ]
+  ],
+  "write_request": 4,
+  "encrypted_insert_call": {
+    "sql": "SELECT public.sse_v1_insert('public',$1,$2::text[],$3::text[],$4::text[],$5::text[])",
+    "params": [
+      "week_demo",
+      "{\"554d529c0012884b918b3485b4be0e84\",\"e9576631457633d769a883d859ec2683\",\"c910ca74f5045d6f9f95d84c543c7f38\"}",
+      "{\"U1NFMQEB5uw0W5Ow9lTmkM6Q/N8IdJTNniPTiexJ/7LtTAAAABtPjUwIdhxBQOrQATrIdXGoR+wYqvanx/0pSCjBehLbvsB3Mjk7cP31j1NP\",\"U1NFMQEB5uw0W5Ow9lTmkM6Q/N8IdEeDkb1aKfU9ek2oZAAAAB0LmmG26OwhqvTqXSKjS/X/XpRUsnxlO0W41hNep82p0enJRVmHEu4rk6djprg=\",\"U1NFMQEB5uw0W5Ow9lTmkM6Q/N8IdPhUhPpCgsZx7HECwgAAACDerocVwcTj9TyOEo7ffr7JNWGy7Npuv0PXAAwRR2fkuvTAn9hGidZCemc2coO5Gi8=\"}",
+      "{\"2QOvDE6plwUTIIUMWnahDQ==\",\"AjcJcYtOdCyqEvB+tVG81w==\",\"/0m6D9hI1dUNu1enLXCcAQ==\"}",
+      "{\"U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdNetA0pNiZBHarujaAAAABHcV1q9ri5B8rOCCwXPUs/BwXkZtdZeTTLZZGp4XlAKGsE=\",\"U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdEMpzcVCFreMn4U9+AAAABGOxJaHkdzJDKiuZTUtwWKAKSnzcvVypTJHYjayvPXQDA0=\",\"U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdABleE456Wt0jiPc1wAAABG54x5Y7wyZc8bkyK9RpxU4fwIdnWGTFV+Es6riCEwanC4=\"}"
+    ],
+    "status": "PGRES_TUPLES_OK",
+    "rows": []
+  },
+  "query_request": 5,
+  "client_sql": "SELECT * FROM week_demo WHERE keyword='apple';",
+  "client_exit_code": 0,
+  "token_search_call": {
+    "sql": "fides_v1_select * from public.week_demo_index where token=O77fHsk3YjHZw450LQ4gZVSEi4YJHt7unIX1k0WmnB7CjKeiPkRNaz6CYwXUjJzk7uatlvzSUIri20W7AvQXCsT01f9LPR6VSmW0YCeB2blnr5o8KAHRD698KYF0s9mP0DMk8uMgv+wQ6Mj7Q8Cs9lLfoX84AL6sKje1eQyCuNJUM79Ufrj8+pcrA4GkaYeVwEQDv7KrKrbQif44QV0S0s/TeB5iodjcv41QkeceFlmKqSW7onYIqKzuLZdYZT5JcAu1uF9MeNYJOb7Wx2IJ1EIifloY/WjJeggZFvZcygunVZAbtKlrZgqirNXFPw12U57Ps2QJYbHVa4Nh1ZBioQ== and derivation_key=<redacted> and add_count=2;",
+    "params": [],
+    "status": "PGRES_TUPLES_OK",
+    "rows": [
+      [
+        "2QOvDE6plwUTIIUMWnahDQ==",
+        "U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdNetA0pNiZBHarujaAAAABHcV1q9ri5B8rOCCwXPUs/BwXkZtdZeTTLZZGp4XlAKGsE="
+      ],
+      [
+        "AjcJcYtOdCyqEvB+tVG81w==",
+        "U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdEMpzcVCFreMn4U9+AAAABGOxJaHkdzJDKiuZTUtwWKAKSnzcvVypTJHYjayvPXQDA0="
+      ]
+    ]
+  },
+  "encrypted_position_count": 2,
+  "positions_authenticated_to_rids": [
+    "554d529c0012884b918b3485b4be0e84",
+    "e9576631457633d769a883d859ec2683"
+  ],
+  "reinsert_call": {
+    "sql": "SELECT public.sse_v1_reinsert('public',$1,$2::text[],$3::text[])",
+    "params": [
+      "week_demo",
+      "{\"tpbG5ph9X28nbc4h7aAAfw==\",\"p0ltLU2oXaL6KMGONsX+2Q==\"}",
+      "{\"U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdG/FY7ADDriOLN5nPAAAABHhXMu6hiFF/dPVuSrVFbyg9W68aGz1PilHljCnVokh6EA=\",\"U1NFMQEC5uw0W5Ow9lTmkM6Q/N8IdJJ5131ASfraoOES0gAAABFPT+MCWNDQ9KBdWmEVMAkuGiEz9gdoCRFaoYLXh7cJaH0=\"}"
+    ],
+    "status": "PGRES_TUPLES_OK",
+    "rows": []
+  },
+  "reinsert_rids": [
+    "554d529c0012884b918b3485b4be0e84",
+    "e9576631457633d769a883d859ec2683"
+  ],
+  "bound_rid_fetch_call": {
+    "sql": "SELECT rid,data_blob FROM public.sse_v1_fetch('public',$1,$2::text[])",
+    "params": [
+      "week_demo",
+      "{\"554d529c0012884b918b3485b4be0e84\",\"e9576631457633d769a883d859ec2683\"}"
+    ],
+    "status": "PGRES_TUPLES_OK",
+    "rows": [
+      [
+        "554d529c0012884b918b3485b4be0e84",
+        "U1NFMQEB5uw0W5Ow9lTmkM6Q/N8IdJTNniPTiexJ/7LtTAAAABtPjUwIdhxBQOrQATrIdXGoR+wYqvanx/0pSCjBehLbvsB3Mjk7cP31j1NP"
+      ],
+      [
+        "e9576631457633d769a883d859ec2683",
+        "U1NFMQEB5uw0W5Ow9lTmkM6Q/N8IdEeDkb1aKfU9ek2oZAAAAB0LmmG26OwhqvTqXSKjS/X/XpRUsnxlO0W41hNep82p0enJRVmHEu4rk6djprg="
+      ]
+    ]
+  },
+  "fetch_rids": [
+    "554d529c0012884b918b3485b4be0e84",
+    "e9576631457633d769a883d859ec2683"
+  ],
+  "returned_rids": [
+    "554d529c0012884b918b3485b4be0e84",
+    "e9576631457633d769a883d859ec2683"
+  ],
+  "authenticated_plaintext_rows": [
+    "1|apple|red apple",
+    "2|apple|green apple"
+  ],
+  "client_stage_order": [
+    "keys_loaded",
+    "preflight",
+    "begin_durable",
+    "token_generated",
+    "fides_setup",
+    "search_take_sent",
+    "counter_advanced",
+    "counter_advanced",
+    "reinsert_sent",
+    "fetch_sent",
+    "rows_authenticated",
+    "search_commit",
+    "state_saved",
+    "complete_durable"
+  ],
+  "derivation_key_redacted": true
+}

@@ -1,0 +1,39 @@
+{
+  "tested_main": "5c484c593d3520fa62046871371446d5cd5b7c70",
+  "runtime_source_baseline": "5c8b2b03b482e203ac65a6f989a1b669126f263c",
+  "build_mode": "clean native checkout, configure, make -j8, make install, install freshly built SSE shared libraries",
+  "third_party_toolchain": "preinstalled binarylibs, GCC 7.3.0, CMake 3.29.3, SCons 4.5.2 on CentOS 7.9 WSL",
+  "source_checkout_clean_before_build": true,
+  "installed_versions": [
+    "gsql (GaussDB Kernel V500R001C20 build 5c484c59) compiled at 2026-11-20 19:55:02 commit 0 last mr  debug",
+    "gaussdb (GaussDB Kernel V500R001C20 build 5c484c59) compiled at 2026-11-20 19:55:02 commit 0 last mr  debug",
+    "gs_ctl (openGauss) 9.2.4",
+    "gs_initdb (openGauss) 9.2.4"
+  ],
+  "actual_server_sql_version": "PostgreSQL 9.2.4 (GaussDB Kernel V500R001C20 build 5c484c59) compiled at 2026-11-20 19:55:02 commit 0 last mr  debug on x86_64-unknown-linux-gnu, compiled by g++ (GCC) 7.3.0, 64-bit",
+  "gsql_ldd_libraries": {
+    "libcrypto.so.1.1": "dest/lib/libcrypto.so.1.1",
+    "libsse_crypto.so": "dest/lib/libsse_crypto.so",
+    "libmitra_sse_crypto.so": "dest/lib/libmitra_sse_crypto.so",
+    "libpq_ce.so.5": "dest/lib/libpq_ce.so.5"
+  },
+  "live_gaussdb_matches_candidate_inode": true,
+  "live_gaussdb_mapped_candidate_libraries": [
+    "dest/lib/libcrypto.so.1.1",
+    "dest/lib/libmitra_sse_crypto.so",
+    "dest/lib/libsse_crypto.so"
+  ],
+  "runtime_sha256": {
+    "dest/bin/gsql": "3f0481b0b26e6bb04fb39cb1e85db37e19176b71d54d5217400a1e0da53c0f62",
+    "dest/bin/gaussdb": "407d8e05d1e65bf509286dfb7a312b00ace566f7885fc6eb1caa8e6615541e47",
+    "dest/lib/libpq_ce.so.5.5": "dc8018a9493b6d899f0b2cd20371f1d3d77e4855cd179f0519d9c708aa81d4b3",
+    "dest/lib/libsse_crypto.so": "0a00109c3795c6bb4665a51c317921d93b65c88f77d99600df24982e33e9ec52",
+    "dest/lib/libmitra_sse_crypto.so": "29af24875f4676b9c5d477dd167939e4062221601d4f1e9311b578bb1a238048",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34"
+  },
+  "lzm04_fault_suite_mode": "LZM-04 builds a temporary verification server and client from this source and freshly built objects",
+  "native_probe_sha256": {
+    "verify-native.sh": "97ed09dae12693ad1914e39610870367745c31c9ad2ae263a6ac49dcba8ac186",
+    "native-fixture.py": "cf5e3faab92c7e8e800feb7425e486a6cdda82117f6eec53f783bdc0ea4c9d43"
+  }
+}

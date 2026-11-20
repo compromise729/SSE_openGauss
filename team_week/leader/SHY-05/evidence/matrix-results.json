@@ -1,0 +1,604 @@
+{
+  "task": "SHY-05",
+  "verified_on": "2026-11-20",
+  "candidate": "5c484c593d3520fa62046871371446d5cd5b7c70",
+  "result": "PASS",
+  "aggregate_real_database_and_module_gate": {
+    "exit_code": 0,
+    "entry_regressions": 5,
+    "lzm03_module": [
+      {
+        "case": "FLOW-01",
+        "result": "PASS"
+      },
+      {
+        "case": "FLOW-02",
+        "result": "PASS"
+      },
+      {
+        "case": "FLOW-03",
+        "result": "PASS"
+      },
+      {
+        "case": "FLOW-04",
+        "result": "PASS"
+      },
+      {
+        "case": "FLOW-05",
+        "result": "PASS"
+      },
+      {
+        "case": "HOOK-01",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-01",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-02",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-03",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-04",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-05",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-06",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-07",
+        "result": "PASS"
+      },
+      {
+        "case": "KEY-08",
+        "result": "PASS"
+      },
+      {
+        "case": "ORDER-01",
+        "result": "PASS"
+      },
+      {
+        "case": "ORDER-02",
+        "result": "PASS"
+      },
+      {
+        "case": "ORDER-03",
+        "result": "PASS"
+      },
+      {
+        "case": "ORDER-04",
+        "result": "PASS"
+      }
+    ],
+    "lzm03_native": [
+      {
+        "case": "LIVE-01-create",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-02-insert",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-03-search",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-04-reopen-search",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-05-unknown",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-06-marker-insert",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-07-marker-search",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-08-broken-state",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-09-missing-key",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-10-missing-key",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-11-missing-key",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-12-empty-token",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-13-empty-derivation",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-14-quoted-keyword",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-16-ordinary-sql",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-17-protected-rejection",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-18-counter-capacity",
+        "result": "PASS"
+      },
+      {
+        "case": "LIVE-15-reinsert-failure",
+        "result": "PASS"
+      }
+    ],
+    "zyc_native": [
+      {
+        "case": "ZYC-00-registration-failure",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-01-create",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-02-insert-three",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-03-physical-ciphertext",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-04-normal-reopen-unknown",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-05-append-and-repeat",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-06-utf8-quote-empty",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-07-maximum-payload",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-08-reject-before-effects",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-09-write-failure",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-10-last-row-authentication",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-11-missing-fetched-row",
+        "result": "PASS"
+      },
+      {
+        "case": "ZYC-12-wire-phases",
+        "result": "PASS"
+      }
+    ],
+    "yzh02_native": [
+      {
+        "case": "N01-duplicate-full-row",
+        "result": "PASS"
+      },
+      {
+        "case": "N02-supported-text",
+        "result": "PASS"
+      },
+      {
+        "case": "N03-locator-example",
+        "result": "PASS"
+      },
+      {
+        "case": "R-ciphertext",
+        "result": "PASS"
+      },
+      {
+        "case": "R-tag",
+        "result": "PASS"
+      },
+      {
+        "case": "R-version",
+        "result": "PASS"
+      },
+      {
+        "case": "R-key_id",
+        "result": "PASS"
+      },
+      {
+        "case": "R-truncate",
+        "result": "PASS"
+      },
+      {
+        "case": "R-cross-record",
+        "result": "PASS"
+      },
+      {
+        "case": "L-ciphertext",
+        "result": "PASS"
+      },
+      {
+        "case": "L-tag",
+        "result": "PASS"
+      },
+      {
+        "case": "L-version",
+        "result": "PASS"
+      },
+      {
+        "case": "L-key_id",
+        "result": "PASS"
+      },
+      {
+        "case": "L-truncate",
+        "result": "PASS"
+      },
+      {
+        "case": "K-wrong",
+        "result": "PASS"
+      },
+      {
+        "case": "K-missing",
+        "result": "PASS"
+      },
+      {
+        "case": "K-short",
+        "result": "PASS"
+      },
+      {
+        "case": "L-cross-table",
+        "result": "PASS"
+      }
+    ],
+    "lmd03_native": [
+      {
+        "case": "DB-01-real-user-create-and-ciphertext",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-02-two-reinserts-preserve-rid",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-03-middle-duplicate-rid-rollback",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-04-second-business-row-rollback",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-05-index-write-collision-rollback",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-06-second-reinsert-failure-rollback",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-07-real-hit-with-missing-data",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-08-equal-total-corruption",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-09-physical-and-real-envelope-limits",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-10-client-oversize-before-effects",
+        "result": "PASS"
+      },
+      {
+        "case": "DB-11-read-only-profile-and-ordinary-sql",
+        "result": "PASS"
+      }
+    ],
+    "lzm04": [
+      {
+        "case": "04-01-normal-restart-and-counters",
+        "result": "PASS"
+      },
+      {
+        "case": "04-02-marker-before-effects",
+        "result": "PASS"
+      },
+      {
+        "case": "04-03-counter-save-failure",
+        "result": "PASS"
+      },
+      {
+        "case": "04-04-real-process-kill",
+        "result": "PASS"
+      },
+      {
+        "case": "04-05-two-clients",
+        "result": "PASS"
+      },
+      {
+        "case": "04-06-existing-data-missing-key",
+        "result": "PASS"
+      },
+      {
+        "case": "04-07-broken-state",
+        "result": "PASS"
+      },
+      {
+        "case": "04-08-create-and-reopen",
+        "result": "PASS"
+      },
+      {
+        "case": "04-09-physical-create-failure",
+        "result": "PASS"
+      },
+      {
+        "case": "04-10-mapping-save-failure",
+        "result": "PASS"
+      },
+      {
+        "case": "04-11-current-reinsert-rollback",
+        "result": "PASS"
+      },
+      {
+        "case": "04-12-legacy-two-to-zero",
+        "result": "PASS"
+      },
+      {
+        "case": "04-13-real-state-unwritable",
+        "result": "PASS"
+      },
+      {
+        "case": "04-14-missing-locator",
+        "result": "PASS"
+      },
+      {
+        "case": "04-15-missing-keyid",
+        "result": "PASS"
+      },
+      {
+        "case": "04-16-short-row",
+        "result": "PASS"
+      },
+      {
+        "case": "04-17-short-locator",
+        "result": "PASS"
+      },
+      {
+        "case": "04-18-wrong-keyid",
+        "result": "PASS"
+      },
+      {
+        "case": "04-19-key-permissions",
+        "result": "PASS"
+      },
+      {
+        "case": "04-20-bad-mapping",
+        "result": "PASS"
+      },
+      {
+        "case": "04-21-missing-counter",
+        "result": "PASS"
+      },
+      {
+        "case": "04-22-missing-mapping",
+        "result": "PASS"
+      },
+      {
+        "case": "04-23-server-version",
+        "result": "PASS"
+      },
+      {
+        "case": "04-24-physical-shape",
+        "result": "PASS"
+      },
+      {
+        "case": "04-25-empty-token",
+        "result": "PASS"
+      },
+      {
+        "case": "04-26-empty-derivation",
+        "result": "PASS"
+      },
+      {
+        "case": "04-27-marker-write",
+        "result": "PASS"
+      },
+      {
+        "case": "04-28-marker-fsync",
+        "result": "PASS"
+      },
+      {
+        "case": "04-29-marker-close",
+        "result": "PASS"
+      },
+      {
+        "case": "04-30-marker-dir-fsync",
+        "result": "PASS"
+      },
+      {
+        "case": "04-31-counter-write",
+        "result": "PASS"
+      },
+      {
+        "case": "04-32-counter-fsync",
+        "result": "PASS"
+      },
+      {
+        "case": "04-33-counter-close",
+        "result": "PASS"
+      },
+      {
+        "case": "04-34-counter-dir-fsync",
+        "result": "PASS"
+      },
+      {
+        "case": "04-35-clear-unlink",
+        "result": "PASS"
+      },
+      {
+        "case": "04-36-clear-dir-fsync",
+        "result": "PASS"
+      }
+    ],
+    "published_case_total": 119,
+    "successful_search_traces": 10
+  },
+  "supplemental": {
+    "opensse_ctest": {
+      "passed": 89,
+      "failed": 0
+    },
+    "yzh01": {
+      "normal_assertions": 226,
+      "rng_failure_assertions": 8,
+      "last_row_batch_exit": 17
+    },
+    "lzm01_offline": {
+      "fixtures": 19,
+      "checker_runs": 38,
+      "missing_argument_rejected": true
+    },
+    "lmd01_required_fail_and_skip_propagation": true,
+    "native_short_word_and_legacy_exit_code": 0
+  },
+  "isolated_database_instances": 8,
+  "all_instances_stopped": true,
+  "row_field_limit": {
+    "field_bytes": [
+      16384,
+      1024,
+      16384
+    ],
+    "base64_envelope_bytes": 45144,
+    "roundtrip": true,
+    "oversize_no_effects": true
+  },
+  "protected_request_failures": {
+    "batch_insert_failure": {
+      "request": 25,
+      "exit_code": 3,
+      "code": "db_failed",
+      "business_rows_output": 0,
+      "reopen_request": 26,
+      "reopen_exit_code": 1,
+      "reopen_code": "incomplete_operation"
+    },
+    "last_row_tag_failure": {
+      "request": 27,
+      "exit_code": 3,
+      "code": "auth_failed",
+      "business_rows_output": 0,
+      "reopen_request": 28,
+      "reopen_exit_code": 1,
+      "reopen_code": "incomplete_operation"
+    },
+    "missing_fetched_row": {
+      "request": 29,
+      "exit_code": 3,
+      "code": "inconsistent_result",
+      "business_rows_output": 0,
+      "reopen_request": 30,
+      "reopen_exit_code": 1,
+      "reopen_code": "incomplete_operation"
+    }
+  },
+  "state_checks": {
+    "normal_restart": {
+      "history": [
+        {
+          "stage": "insert",
+          "counter": 2,
+          "rows": 2
+        },
+        {
+          "stage": "first_query",
+          "counter": 4,
+          "rows": 2
+        },
+        {
+          "stage": "repeat_query",
+          "counter": 6,
+          "rows": 2
+        },
+        {
+          "stage": "client_reopen",
+          "counter": 8,
+          "rows": 2
+        },
+        {
+          "stage": "server_restart_setup_query",
+          "counter": 10,
+          "rows": 2
+        }
+      ],
+      "state_unchanged_during_restart": true,
+      "key_mapping_unchanged": true,
+      "fides_base_keys_unchanged": true
+    },
+    "post_commit_counter_failure": {
+      "database_committed": true,
+      "local_count": 2,
+      "marker_retained": true
+    },
+    "actual_process_kill": {
+      "signal": "SIGKILL",
+      "database_rollback": true,
+      "marker_retained": true
+    },
+    "second_client": {
+      "lock_competition": "EWOULDBLOCK",
+      "second_client": "incomplete_operation",
+      "first_client_completed": true
+    },
+    "partial_registration": {
+      "server_created": true,
+      "partial_local_registry_preserved": true,
+      "not_usable": true
+    },
+    "current_reinsertion_rollback": {
+      "index_before": 2,
+      "index_after": 2,
+      "marker_retained": true
+    },
+    "legacy_nontransactional_control": {
+      "index_before": 2,
+      "index_after": 0,
+      "control_only": true,
+      "marker_retained": true
+    }
+  }
+}
