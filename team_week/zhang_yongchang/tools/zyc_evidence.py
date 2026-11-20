@@ -37,13 +37,16 @@ for p in paths:
 git = ['git']
 checkout_owner = repo.stat().st_uid
 if os.geteuid() == 0 and checkout_owner != 0:
-    # Older Git can refresh its index during status. Keep it owned by the checkout user.
     git = ['runuser', '-u', pwd.getpwuid(checkout_owner).pw_name, '--', 'git']
 head = subprocess.check_output(git + ['rev-parse', 'HEAD'], cwd=str(repo)).decode().strip()
-dirty = subprocess.check_output(git + ['status', '--porcelain', '--untracked-files=no', '--',
-    'src/bin/psql/common.cpp', 'src/common/interfaces/libpq', 'sse_sql/SSE_v1.sql',
-    'team_week/zhang_yongchang/tools'], cwd=str(repo)).decode()
-summary = {'result': 'PASS', 'tested_head': head, 'modified_tracked_inputs': bool(dirty),
+# Git 1.8 may rewrite the index even for a status check. Inspect patches
+# without refreshing it, and distinguish stat-only changes from changed bytes.
+diff = git + ['-c', 'diff.autoRefreshIndex=false', 'diff', '--no-ext-diff', '--no-textconv']
+tracked_inputs = ['--', 'src/bin/psql/common.cpp', 'src/common/interfaces/libpq',
+                  'sse_sql/SSE_v1.sql', 'team_week/zhang_yongchang/tools']
+dirty = any(subprocess.check_output(diff + scope + tracked_inputs, cwd=str(repo))
+            for scope in (['--cached', 'HEAD'], []))
+summary = {'result': 'PASS', 'tested_head': head, 'modified_tracked_inputs': dirty,
            'python_optimized': bool(sys.flags.optimize),
            'module_cases': 18, 'baseline_live_cases': 18, 'zyc_cases': 13, 'entry_regressions': 5,
            'successful_search_traces': len(phases), 'instances_stopped': True,
