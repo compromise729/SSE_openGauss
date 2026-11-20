@@ -1,6 +1,6 @@
 # SHA-256 manifest (ZYC-04)
-generated: 2026-11-20 +0800
-
+# Generated 2026-11-20 (Asia/Shanghai)
+cde36315c1c831ac4a3124a6553ba32edde3e174f1613e4681ec1c77b02184fc *./README.md
 1916324d0828f4dd5c2e1b05d7ecb587c2219891edec7c607a7d1f53eadf5582 *./call-site-audit.md
 06d7f2074d32daec4cb81e35c0f675ade5f36c278522660cd835544af780bd29 *./evidence/README.md
 fa7059fa2a6efb6c2289d351548172a36a502baa5868363d67ec851186908924 *./evidence/zyc13-run/baseline-release.json
@@ -100,6 +100,5 @@ d0250ab7bae8b40a4b87472e6d656d0f3f3323f29ada47ed79cd82973f9fa1fe *./evidence/zyc
 02c61b3fd168f0afa2cca128fd2310d498c9086ad9eb969b1189631062a0af91 *./evidence/zyc13-run/zyc-live.log
 e5594b5017c6dc1c59be2afb057bcdd28d5deb780a7b2cb36c7f9834bacb82ef *./handoff.md
 5993375be318465bd48c42864db0189721ca979bdc6072815f8ec2bfaa1ffe07 *./problem-closure.md
-cde36315c1c831ac4a3124a6553ba32edde3e174f1613e4681ec1c77b02184fc *./README.md
 74e9fb4d880316f3eb46e620cbfb26d820e05595e5cc68c4e6fc1d14514a07e5 *./regression-log.md
-339db7560b3084e60b6d14bc5ce3dc9c7845698e4611a6f5a71f0c74af8bc1f5 *./reproduce.sh
+07a186842ce0d52ed12e619a6d088be1c47859c0cc65a3376cf3510d2cd164fd *./reproduce.sh
