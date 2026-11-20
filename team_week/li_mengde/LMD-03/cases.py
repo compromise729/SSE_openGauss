@@ -77,7 +77,9 @@ def public_state(directory):
 
 
 def row_multiset(process):
-    return Counter(line for line in process.stdout.decode("utf-8").splitlines() if line not in STARTUP_LINES)
+    lines = process.stdout.decode("utf-8").splitlines()
+    return Counter(line for line in lines if line not in STARTUP_LINES
+                   and not re.fullmatch(r"total time: [0-9]+(?:\.[0-9]+)? +ms", line))
 
 
 def client(sql, directory=None):
