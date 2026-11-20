@@ -20,6 +20,8 @@ common = ["-X", "-q", "-A", "-t", "-F", "|", "-h", str(run / "socket"),
 records = []
 requests = []
 sequence = 0
+EXPECTED_CASES = 11
+STARTUP_LINES = {"", "Initializing crypto library", "cryptoInitWrapper ok"}
 apple = [("1", "apple", "red apple"), ("2", "apple", "green apple")]
 
 
@@ -75,7 +77,7 @@ def public_state(directory):
 
 
 def row_multiset(process):
-    return Counter(line for line in process.stdout.decode("utf-8").splitlines() if "|" in line)
+    return Counter(line for line in process.stdout.decode("utf-8").splitlines() if line not in STARTUP_LINES)
 
 
 def client(sql, directory=None):
@@ -146,8 +148,13 @@ def case(name, action):
     finally:
         item["requests"] = list(range(start + 1, sequence + 1))
         records.append(item)
-        result = {"task": "LMD-03", "source_commit": "5c8b2b03b482e203ac65a6f989a1b669126f263c",
-                  "result": "PASS" if all(row["result"] == "PASS" for row in records) else "FAIL",
+        verdict = "INCOMPLETE"
+        if any(row["result"] == "FAIL" for row in records):
+            verdict = "FAIL"
+        elif len(records) == EXPECTED_CASES:
+            verdict = "PASS"
+        result = {"task": "LMD-03", "source_commit": os.environ["LMD03_SOURCE_BASELINE"],
+                  "checkout_head": os.environ["LMD03_CHECKOUT_HEAD"], "result": verdict,
                   "cases": records, "requests": requests}
         (output / "results.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                                              encoding="utf-8")
@@ -190,7 +197,7 @@ def create_and_insert():
 
 def repeat_search():
     before = snapshot_server()
-    identities = set()
+    identities = Counter()
     phases = []
     for _ in range(2):
         _, events, calls = expect_rows("apple", apple)
@@ -198,11 +205,13 @@ def repeat_search():
         fetched = next(call for call in calls if "sse_v1_fetch(" in call["sql"])
         reinserted = next(call for call in calls if "sse_v1_reinsert(" in call["sql"])
         recovered = decode("locator", [row[1] for row in hit["rows"]])
-        rids = {row["rid"] for row in recovered}
-        require(len(rids) == 2 and set(arrays(fetched["params"][1])) == rids ==
-                {row[0] for row in fetched["rows"]}, "Fides hit/fetch sets differ")
+        rids = Counter(row["rid"] for row in recovered)
+        require(len(rids) == 2 and all(count == 1 for count in rids.values()) and
+                Counter(arrays(fetched["params"][1])) == rids ==
+                Counter(row[0] for row in fetched["rows"]), "Fides hit/fetch row identities differ")
         refreshed = decode("locator", arrays(reinserted["params"][2]))
-        require({row["rid"] for row in refreshed} == rids, "reinsert changed rid identities")
+        require(Counter(row["rid"] for row in refreshed) == rids and
+                all(row["operation"] == 0 for row in recovered + refreshed), "reinsert changed location identities")
         if identities:
             require(rids == identities, "second reinsert changed identities")
         identities = rids
@@ -218,19 +227,21 @@ def repeat_search():
 
 
 def failure_result(directory, process, events, error, server_before, state_before):
-    require(process.returncode != 0 and error in process.stderr, "expected error did not propagate")
+    require(process.returncode == 3 and error in process.stderr, "expected batch error did not propagate")
     require(not row_multiset(process), "failed operation displayed plaintext")
     require((directory / "operation.v1").exists(), "incomplete marker absent")
     after = snapshot_server()
     require(after == server_before, "database statement/transaction left partial writes")
     files_after = snapshot_files(directory)
-    require(all(files_after.get(name) == content for name, content in state_before.items()),
-            "failed operation changed persisted input state")
+    saved_inputs = dict(files_after)
+    saved_inputs.pop("operation.v1")
+    require(saved_inputs == state_before, "failed operation changed persisted input state")
     process_again, reopen_events, _ = client("SELECT * FROM week_demo WHERE keyword='apple';", directory)
-    require(process_again.returncode != 0 and b"incomplete_operation" in process_again.stderr,
+    require(process_again.returncode == 1 and b"incomplete_operation" in process_again.stderr,
             "client reopen after failure was not blocked")
     require(not row_multiset(process_again), "blocked reopen printed business data")
-    require("search_take_sent" not in reopen_events, "blocked reopen contacted search")
+    require(not reopen_events and snapshot_server() == after and snapshot_files(directory) == files_after,
+            "blocked reopen changed database or client state")
     return {"before": server_before, "after": after, "exit_code": process.returncode,
             "reopen_exit_code": process_again.returncode, "events": events,
             "persisted_input_files_unchanged": True, "failure_marker_retained": True,
@@ -261,8 +272,10 @@ def injected_write(kind):
         require("insert_sent" in events, "write was not sent through the real client")
         require(any("sse_v1_insert(" in call["sql"] and call["status"] == "PGRES_FATAL_ERROR"
                     for call in calls), "database insert did not fail")
-        if kind in ("duplicate-rid", "index-collision"):
-            require(b"duplicate key" in process.stderr, "unique constraint error absent")
+        fault = {"duplicate-rid": b"week_demo_data_pkey",
+                 "second-row": b"LMD03 second row failure",
+                 "index-collision": b"week_demo_index_pkey"}[kind]
+        require(fault in process.stderr, "write did not hit the requested constraint or trigger")
         return failure_result(directory, process, events, b"db_failed", before, files)
     finally:
         raw("DROP TRIGGER lmd03_inject ON public." + table + "; DROP FUNCTION public.lmd03_inject();")
@@ -285,7 +298,9 @@ def reinsert_failure():
                 "reinsert failure occurred at unexpected phase")
         require(any("sse_v1_reinsert(" in call["sql"] and call["status"] == "PGRES_FATAL_ERROR"
                     for call in calls), "reinsert did not fail in database")
-        require(any(call["sql"] == "ROLLBACK" for call in calls), "search did not roll back")
+        require(b"LMD03 second reinsert failure" in process.stderr, "second reinsert trigger was not reached")
+        require(any(call["sql"] == "ROLLBACK" and call["status"] == "PGRES_COMMAND_OK" for call in calls),
+                "search did not roll back")
         return failure_result(directory, process, events, b"db_failed", before, files)
     finally:
         raw("DROP TRIGGER lmd03_inject ON public.week_demo_index; DROP FUNCTION public.lmd03_inject();")
@@ -305,6 +320,8 @@ def missing_row():
         process, events, calls = client("SELECT * FROM week_demo WHERE keyword='apple';", directory)
         require(all(event in events for event in ("search_take_sent", "reinsert_sent", "fetch_sent")),
                 "missing-row case did not use real Fides hit and fetch")
+        require(any("sse_v1_fetch(" in call["sql"] and call["status"] == "PGRES_FATAL_ERROR"
+                    for call in calls), "missing row did not fail in the server fetch")
         result = failure_result(directory, process, events, b"inconsistent_result", before, files)
         result["before_fault"] = original
         result["injected_missing_rid"] = saved[0]
@@ -330,11 +347,15 @@ def equal_total_corruption():
         raw(sql, "equal-total-fetch")
         directory = copy_state("lmd03-broken-primary-key")
         before = snapshot_files(directory)
+        corrupted = snapshot_server()
+        require(corrupted["data_rows"] == original["data_rows"] and corrupted["data_digest"] != original["data_digest"],
+                "equal-total corruption fixture did not change rid coverage")
         process, events, _ = client("SELECT * FROM week_demo WHERE keyword='apple';", directory)
-        require(process.returncode != 0 and b"state_invalid" in process.stderr, "client accepted corrupted table shape")
-        require("search_take_sent" not in events and before == snapshot_files(directory),
-                "bad schema advanced client state")
-        return {"before": original, "corrupted": snapshot_server(), "direct_fetch_sqlstate": "21000",
+        require(process.returncode == 1 and b"state_invalid" in process.stderr and not row_multiset(process),
+                "client accepted corrupted table shape or returned business output")
+        require(not events and before == snapshot_files(directory) and snapshot_server() == corrupted,
+                "bad schema changed database or client state")
+        return {"before": original, "corrupted": corrupted, "direct_fetch_sqlstate": "21000",
                 "client_status": "state_invalid", "client_exit_code": process.returncode}
     finally:
         raw("DELETE FROM public.week_demo_data WHERE rid=" + quote(repeated[0]) + ";"
@@ -348,6 +369,10 @@ def boundary_tests():
     before = snapshot_server()
     sql = (repo / "team_week/li_mengde/LMD-03/db-boundaries.sql").read_text()
     raw(sql, "db-boundaries")
+    notices = (output / "db-boundaries.stderr").read_bytes()
+    require(b"PASS synthetic database cap 65624 bytes and non-integer rid round trip" in notices and
+            b"PASS synthetic over-cap envelope rejected SQLSTATE 23514" in notices,
+            "database boundary assertions did not complete")
     require(snapshot_server() == before, "synthetic boundary test changed physical rows")
     row = ("i" * 16384, "k" * 1024, "p" * 16384)
     process, _, _ = client("INSERT INTO week_demo VALUES (" + ",".join(quote(value) for value in row) + ");")
@@ -355,7 +380,8 @@ def boundary_tests():
     expect_rows(row[1], [row])
     require("SIZE=45144" in raw("SELECT 'SIZE='||max(octet_length(data_blob)) FROM public.week_demo_data;"),
             "max real ciphertext was truncated")
-    return {"synthetic_database_cap": 65624, "max_real_envelope": 45144,
+    return {"synthetic_database_cap": 65624, "oversize_envelope_bytes": 65628,
+            "oversize_sqlstate": "23514", "max_real_envelope": 45144,
             "field_bytes": [16384, 1024, 16384], "exact_client_recovery": True}
 
 
@@ -364,9 +390,11 @@ def oversize_rejected():
     for row in examples:
         before, files = snapshot_server(), snapshot_files(state)
         process, events, _ = client("INSERT INTO week_demo VALUES (" + ",".join(quote(value) for value in row) + ");")
-        require(process.returncode != 0 and not row_multiset(process), "oversize SQL did not fail")
-        require("begin_durable" not in events and snapshot_server() == before and snapshot_files(state) == files,
-                "oversize SQL changed state")
+        require(process.returncode == 3 and b"Fides invalid_input" in process.stderr and not row_multiset(process),
+                "oversize SQL did not fail with invalid_input")
+        require(not any(phase in events for phase in ("begin_durable", "counter_advanced", "insert_sent")) and
+                snapshot_server() == before and snapshot_files(state) == files,
+                "oversize SQL changed state or reached a write")
     return {"rejected_inputs": 3, "no_network_or_counter_effects": True}
 
 
@@ -384,10 +412,16 @@ def audit():
         require(b"PASS fides_v1 structure and registration" in process.stderr, "audit skipped required check")
         require(b"FAIL " not in process.stderr and b"SKIP " not in process.stderr, "audit false positive")
     require(before == snapshot_server() and files == snapshot_files(state), "read-only audit changed state")
-    raw("CREATE TABLE public.lmd03_plain(id int PRIMARY KEY, message text); "
-        "INSERT INTO public.lmd03_plain VALUES (1,'ordinary SQL');")
-    require("ordinary SQL" in raw("SELECT message FROM public.lmd03_plain WHERE id=1;"), "ordinary SQL failed")
-    return {"before": before, "after": snapshot_server(), "state_files_unchanged": True,
+    for sql, expected in (
+            ("CREATE TABLE public.lmd03_plain(id int PRIMARY KEY, message text);", Counter()),
+            ("INSERT INTO public.lmd03_plain VALUES (1,'ordinary SQL');", Counter()),
+            ("SELECT message FROM public.lmd03_plain WHERE id=1;", Counter(["ordinary SQL"]))):
+        process, events, _ = client(sql)
+        succeeded(process)
+        require(row_multiset(process) == expected and not events, "ordinary SQL entered the Fides path or returned wrong output")
+    after = snapshot_server()
+    require(before == after and files == snapshot_files(state), "ordinary SQL affected the Fides table or state")
+    return {"before": before, "after": after, "state_files_unchanged": True,
             "ordinary_sql": True}
 
 
@@ -402,4 +436,5 @@ case("DB-08-equal-total-corruption", equal_total_corruption)
 case("DB-09-physical-and-real-envelope-limits", boundary_tests)
 case("DB-10-client-oversize-before-effects", oversize_rejected)
 case("DB-11-read-only-profile-and-ordinary-sql", audit)
+require(len(records) == EXPECTED_CASES, "incomplete LMD-03 case matrix")
 print("LMD03_REQUIRED_CASES=PASS COUNT={}".format(len(records)), flush=True)
