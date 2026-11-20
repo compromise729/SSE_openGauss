@@ -1,6 +1,6 @@
 # ZYC-04 证据目录
 
-## 本轮实测（2026-11-20）
+## 张永昌原始实测（2026-11-20）
 
 - `zyc13-run/`：SHY-04 官方入口 `zyc_live_verify_all.sh` 的原始证据（95 个文件），从 VM 隔离目录 `/var/tmp/zyc-acceptance.x3eqf4KY` 整包拉回。
   - `summary.json`：入口总结果、测试产物 SHA-256 指纹、用例计数。`result=PASS`、`module_cases=18`、`baseline_live_cases=18`、`zyc_cases=13`、`entry_regressions=5`、`successful_search_traces=10`。
@@ -12,10 +12,10 @@
 
 ## 复跑脚本与说明
 
-- `../reproduce.sh`：四入口汇总复跑脚本（ZYC 13 项 + YZH-02 18 项 + LMD-03 11 项 + LZM-04 36 项）；本轮因 VM 精简 git 对象库缺 `5c8b2b03` 祖先，三份报告原生入口未原样重放，改用组长指定的官方 ZYC 入口在同基线覆盖核心阻塞项。
+- [汇总复验记录](combined-review.json) 记录实际候选提交、运行产物指纹、四套原生入口结果与停机证据。按 [复跑说明](../README.md) 准备独立检出，再执行 [汇总入口](../reproduce.sh)。
 - `../regression-log.md`：针对性回归日志（失败用例退出码、错误码、无部分明文、结构化断言与覆盖关系对照）。
 
 ## 说明
 
 - 所有业务明文均来自 SHY-04 公开夹具；派生密钥值在证据中已遮盖（`<redacted>`）。
-- 未执行 `reproduce.sh` 中三份报告原生入口的部分如实标注为「未在本 VM 重放」，并引用上游 main 上已发布、经复核的证据，不写成已实测。
+- 原始实测和候选汇总各自保留，以便核对首次失败、修订与复验。
