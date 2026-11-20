@@ -1,0 +1,33 @@
+{
+  "actual_server_version": "PostgreSQL 9.2.4 (GaussDB Kernel V500R001C20 build 5c484c59) compiled at 2026-11-20 19:55:02 commit 0 last mr  debug on x86_64-unknown-linux-gnu, compiled by g++ (GCC) 7.3.0, 64-bit",
+  "ordinary_sql": "ordinary|2",
+  "gsql_libraries": {
+    "libcrypto.so.1.1": "dest/lib/libcrypto.so.1.1",
+    "libsse_crypto.so": "dest/lib/libsse_crypto.so",
+    "libmitra_sse_crypto.so": "dest/lib/libmitra_sse_crypto.so",
+    "libpq_ce.so.5": "dest/lib/libpq_ce.so.5"
+  },
+  "gaussdb_libraries": {
+    "libcrypto.so.1.1": "dest/lib/libcrypto.so.1.1",
+    "libsse_crypto.so": "dest/lib/libsse_crypto.so",
+    "libmitra_sse_crypto.so": "dest/lib/libmitra_sse_crypto.so"
+  },
+  "legacy_fides_full_rows": {
+    "shy01_apple": [
+      "1|shy01_apple|red apple",
+      "2|shy01_apple|green apple"
+    ],
+    "shy01_banana": [
+      "3|shy01_banana|yellow banana"
+    ]
+  },
+  "successful_gsql_searches": 3,
+  "legacy_unknown_keyword": {
+    "exit_code": 3,
+    "business_rows": 0,
+    "request_not_sent": true,
+    "state_and_index_unchanged": true
+  },
+  "mode": "legacy",
+  "result": "PASS"
+}

@@ -1,0 +1,82 @@
+{
+  "actual_server_version": "PostgreSQL 9.2.4 (GaussDB Kernel V500R001C20 build 5c484c59) compiled at 2026-11-20 19:55:02 commit 0 last mr  debug on x86_64-unknown-linux-gnu, compiled by g++ (GCC) 7.3.0, 64-bit",
+  "ordinary_sql": "ordinary|2",
+  "gsql_libraries": {
+    "libcrypto.so.1.1": "dest/lib/libcrypto.so.1.1",
+    "libsse_crypto.so": "dest/lib/libsse_crypto.so",
+    "libmitra_sse_crypto.so": "dest/lib/libmitra_sse_crypto.so",
+    "libpq_ce.so.5": "dest/lib/libpq_ce.so.5"
+  },
+  "gaussdb_libraries": {
+    "libcrypto.so.1.1": "dest/lib/libcrypto.so.1.1",
+    "libsse_crypto.so": "dest/lib/libsse_crypto.so",
+    "libmitra_sse_crypto.so": "dest/lib/libmitra_sse_crypto.so"
+  },
+  "complete_rows_by_keyword": {
+    "a": [
+      "01|a|单字 词",
+      "02|a|"
+    ],
+    "ab": [
+      "03|ab|前缀区分"
+    ],
+    "中": [
+      "04|中|中文 短词"
+    ],
+    "中文": [
+      "05|中文|双字前缀"
+    ],
+    "a?": []
+  },
+  "physical_columns": [
+    "shy05_short_data:rid,data_blob",
+    "shy05_short_index:ut,locator_blob"
+  ],
+  "non_integer_unique_rids": 5,
+  "catalog_protocol_version": 1,
+  "rejected_scoped_sql": {
+    "update": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "delete": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "join": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "range": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "like": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "or": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "dollar_quote": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    },
+    "escape_quote": {
+      "exit_code": 3,
+      "error": "unsupported",
+      "business_rows": 0
+    }
+  },
+  "state_and_database_unchanged_after_rejection": true,
+  "mode": "row-v1",
+  "result": "PASS"
+}
