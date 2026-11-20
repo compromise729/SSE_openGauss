@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -28,7 +29,11 @@ TEST_PROGRAMS = ('gaussdb', 'gsql', 'initialize-live', 'librow_request_verify.so
 
 
 def git(repo, *args):
-    return subprocess.check_output(['git'] + list(args), cwd=str(repo)).decode('utf-8')
+    command = ['git'] + list(args)
+    if os.geteuid() == 0:
+        # Older Git refreshes its index even for a working-tree diff.
+        command = ['runuser', '-u', 'omm', '--'] + command
+    return subprocess.check_output(command, cwd=str(repo)).decode('utf-8')
 
 
 def sha256(path):
