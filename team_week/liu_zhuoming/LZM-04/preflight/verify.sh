@@ -5,8 +5,10 @@ umask 077
 here=$(cd -- "$(dirname -- "$0")" && pwd -P)
 repo=$(cd -- "$here/../../../.." && pwd -P)
 build=$(cd -- "$1" && pwd -P)
+python3 "$here/build-current.py" --repo "$repo" --out "$build" --verify-inputs
 out=$(mktemp -d /var/tmp/lzm04-evidence.XXXXXXXX)
 echo "EVIDENCE_DIR=$out"
+cp -- "$build/build-input.json" "$out/build-input.json"
 # Exercise supported relocation and invocation outside the checkout on every run.
 chmod 0711 "$out"
 mkdir -m 0755 "$out/isolated-tools"
@@ -46,6 +48,11 @@ cmp "$out/modes.before.private" "$out/modes.after.private"
 printf '%s\n' 'PASS installed binaries and libraries unchanged' 'PASS original client/server state bytes unchanged' 'PASS original client/server file inventory, permissions and owners unchanged' > "$out/environment.log"
 cat "$out/environment.log"
 grep -E '^(RUN_DIR=|PASS 04|LZM04_CASES|ISOLATED_SERVER_STOPPED)' "$out/live.log" || true
+if (( rc == 0 )) && { ! grep -Fxq 'LZM04_CASES=36 RESULT=PASS' "$out/live.log" ||
+                       ! grep -Fxq 'ISOLATED_SERVER_STOPPED' "$out/live.log"; }; then
+    echo 'LZM-04 evidence is incomplete' >&2
+    rc=1
+fi
 if (( rc != 0 )); then tail -n 25 "$out/live.log"; fi
 echo "VERIFY_EXIT=$rc"
 exit "$rc"

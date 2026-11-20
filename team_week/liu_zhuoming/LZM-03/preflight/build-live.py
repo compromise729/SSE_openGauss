@@ -27,6 +27,16 @@ def dry(directory,targets):
     if proc.returncode:raise RuntimeError(proc.stdout.decode(errors='replace')[-3000:])
     return proc.stdout.decode(errors='replace').splitlines()
 
+def link_recipe(lines, target, drivers):
+    for line in reversed(lines):
+        if not line.rstrip().endswith(' -o ' + target):
+            continue
+        command = shlex.split(line)
+        if Path(command[0]).name in drivers and command[-2:] == ['-o', target]:
+            return line
+    raise RuntimeError('make -n did not emit a compiler link command for ' + target)
+
+
 def compile_object(directory,name):
     lines=dry(directory,['-W',name+'.cpp',name+'.o'])
     line=next(x for x in lines if '-c -o '+name+'.o '+name+'.cpp' in x)
@@ -39,7 +49,7 @@ server=repo/'src/gausskernel/process/tcop'
 if not args.frontend_only:
     for name in ('postgres','Server_Sophos'):compile_object(server,name)
     lines=dry(repo/'src/gausskernel',['gaussdb'])
-    line=next(x for x in lines if x.startswith('g++ ') and x.endswith('-o gaussdb'))
+    line=link_recipe(lines, 'gaussdb', ('g++',))
     command=shlex.split(line)
     for name in ('postgres','Server_Sophos'):
         old='../../src/gausskernel/process/tcop/'+name+'.o'
@@ -81,7 +91,7 @@ run([os.environ.get('CXX','g++')]+flags+[str(tools/'initialize-live.cpp'),
 client=repo/'src/bin/psql'
 for name in ('startup','common'):compile_object(client,name)
 lines=dry(client,['gsql'])
-line=next(x for x in reversed(lines) if x.startswith(('g++ ','gcc ')) and x.endswith('-o gsql'))
+line=link_recipe(lines, 'gsql', ('g++', 'gcc'))
 command=shlex.split(line)
 for name in ('startup','common'):command[command.index(name+'.o')]=str(out/(name+'.o'))
 command[1:1]=['-L'+str(out),'-Wl,-rpath,'+str(out),'-lrow_request_verify']

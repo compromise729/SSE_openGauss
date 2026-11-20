@@ -4,9 +4,10 @@ import stat,errno
 run=Path(os.environ['ISOLATED_RUN_DIR']);repo=Path(os.environ['OPENGAUSS_PROJECT_ROOT']);build=Path(os.environ['LZM04_BUILD'])
 out=run/'evidence/lzm04';out.mkdir(mode=0o700);db='postgres';state=None;seq=0;results=[]
 private=run/'private/lzm04';private.mkdir(mode=0o700)
-commit=(repo/'.git/refs/heads/main').read_text().strip()
-need_commit='4a44da0ecb990b3edb584a29dc56b05e650ed77d'
-if commit!=need_commit:raise RuntimeError('Unexpected source commit; use the documented main baseline')
+commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=str(repo)).decode('utf-8').strip()
+EXPECTED_CASES = 36
+STARTUP_LINES = {'', 'Initializing crypto library', 'cryptoInitWrapper ok'}
+APPLE_ROWS = ['1|apple|red apple', '2|apple|green apple']
 raw_records=[];request_records={};snapseq=0;initialization={}
 conn=['-X','-q','-A','-t','-F','|','-h',str(run/'socket'),'-p',os.environ['ISOLATED_PORT'],'-U','omm','-v','ON_ERROR_STOP=1']
 def need(x,msg):
@@ -32,7 +33,11 @@ def query(sql,fault=None,async_=False):
 def good(sql):
     rc,stdout,stderr=query(sql);need(rc==0,stderr);return stdout,stderr
 def database_snapshot():
-    return next(x for x in raw("SELECT 'SNAP='||(SELECT count(*) FROM week_demo_data)||':'||(SELECT count(*) FROM week_demo_index)||':'||COALESCE((SELECT md5(string_agg(ut||locator_blob,',' ORDER BY ut)) FROM week_demo_index),'-');") if x.startswith('SNAP='))
+    sql = ("SELECT 'SNAP='||(SELECT count(*) FROM week_demo_data)||':'||"
+           "(SELECT count(*) FROM week_demo_index)||':'||"
+           "COALESCE((SELECT md5(string_agg(rid||data_blob,',' ORDER BY rid)) FROM week_demo_data),'-')||':'||"
+           "COALESCE((SELECT md5(string_agg(ut||locator_blob,',' ORDER BY ut)) FROM week_demo_index),'-');")
+    return next(line for line in raw(sql) if line.startswith('SNAP='))
 def count():return int((state/'fides_client.mat').read_text().strip().rsplit(' ',1)[1])
 def files():
     global snapseq
@@ -75,17 +80,26 @@ def seed(name,create=True):
         good("CREATE TABLE week_demo (ind text, keyword text SSE='FIDES', payload text) WITH (sse_storage='ROW_AEAD_V1');")
         good("INSERT INTO week_demo VALUES ('1','apple','red apple'),('2','apple','green apple');")
     initial=initialization[db];initial_consistency(create);initialization[db].update(initial)
+def business_lines(stdout):
+    return [line for line in stdout.splitlines() if line not in STARTUP_LINES]
+
+
 def rows():
-    stdout,trace=good("SELECT * FROM week_demo WHERE keyword='apple';")
-    actual=[x for x in stdout.splitlines() if x.startswith(('1|apple|','2|apple|'))]
-    need(sorted(actual)==['1|apple|red apple','2|apple|green apple'],'wrong row multiset')
-    need('STATE_EVENT fides_setup' in trace,'setup missing');return trace
+    stdout, trace = good("SELECT * FROM week_demo WHERE keyword='apple';")
+    need(sorted(business_lines(stdout)) == APPLE_ROWS, 'wrong row multiset')
+    need('STATE_EVENT fides_setup' in trace, 'setup missing')
+
+
+def fail_result(rc, stdout, stderr, status):
+    need(rc != 0 and status in stderr and not business_lines(stdout),
+         'incorrect failure or business output: ' + stderr)
+
+
 def blocked():
-    before=files()
-    rc,s,t=query("SELECT * FROM week_demo WHERE keyword='apple';")
-    need(rc!=0 and 'incomplete_operation' in t and 'red apple' not in s,'reopen did not block')
-    need(files()==before,'blocked reopen changed counters, keys, mapping or marker')
-def fail_result(rc,s,t,status):need(rc!=0 and status in t and 'red apple' not in s and 'green apple' not in s,'incorrect failure/display: '+t)
+    before = files()
+    result = query("SELECT * FROM week_demo WHERE keyword='apple';")
+    fail_result(*result, 'incomplete_operation')
+    need(files() == before, 'blocked reopen changed counters, keys, mapping or marker')
 expectations={
  '04-01':'Fresh initialization matches keys, scope, mapping and server version; new clients and real server restart/setup return ind 1/2 once; counters 2/4/6/8/10.',
  '04-02':'Marker rename EIO rejects SELECT and INSERT before count/index mutation; state and database unchanged.',
@@ -112,7 +126,13 @@ def case(name,fn):
             record['events']=[line for line in (out/record['stderr']).read_text().splitlines() if line.startswith('STATE_EVENT ')]
             (out/('request-%03d.command.json'%number)).write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
         (out/(name+'.commands.json')).write_text(json.dumps(raw_records[raw_first:],ensure_ascii=False,indent=2)+'\n',encoding='utf8')
-        (out/'results.json').write_text(json.dumps({'commit':commit,'cases':results,'result':'PASS' if all(x['result']=='PASS' for x in results) else 'FAIL'},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+        verdict = 'INCOMPLETE'
+        if any(item['result'] == 'FAIL' for item in results):
+            verdict = 'FAIL'
+        elif len(results) == EXPECTED_CASES:
+            verdict = 'PASS'
+        summary = {'commit': commit, 'cases': results, 'result': verdict}
+        (out / 'results.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
 def normal():
     seed('s04_normal');stable=keys_mapping();fides_keys={str(p):p.read_bytes() for p in list((run/'client').glob('*.key'))+[run/'server/tdp_pk.key']};history=[{'stage':'insert','counter':count(),'rows':2}]
     for stage in ('first_query','repeat_query','client_reopen'):
@@ -124,6 +144,8 @@ def normal():
     need(a.returncode==0,'server start failed: '+a.stderr.decode());time.sleep(2)
     need(files()==before,'state changed merely by restarting server');need(pid!=(run/'db/instance/postmaster.pid').read_text().splitlines()[0],'server PID did not change')
     rows();history.append(dict(stage='server_restart_setup_query',counter=count(),rows=2));need(keys_mapping()==stable,'keys/mapping changed');need(all(Path(p).read_bytes()==v for p,v in fides_keys.items()),'Fides base keys changed')
+    need([step['counter'] for step in history] == [2, 4, 6, 8, 10], 'wrong Fides counter progression')
+    need(database_snapshot().startswith('SNAP=2:2:'), 'repeated queries changed table counts')
     return dict(history=history,state_unchanged_during_restart=True,key_mapping_unchanged=True,fides_base_keys_unchanged=True)
 def marker():
     seed('s04_marker');before=files();snap=database_snapshot()
@@ -139,7 +161,8 @@ def counter():
     blocked();return dict(marker_retained=True,local_count=2,database_committed=True)
 def killed():
     seed('s04_kill');snap=database_snapshot();rc,s,t=query("SELECT * FROM week_demo WHERE keyword='apple';",'kill')
-    need(rc==-9 and 'STATE_EVENT counter_advanced' in t and 'red apple' not in s,'process not killed at real phase')
+    need(rc == -9 and 'STATE_EVENT counter_advanced' in t and not business_lines(s),
+         'process not killed at real phase or displayed business rows')
     for _ in range(30):
         if database_snapshot()==snap:break
         time.sleep(.1)
@@ -174,7 +197,8 @@ def broken():
     return dict(reopen_blocked=True)
 def create_reopen():
     seed('s04_create',False);good("CREATE TABLE week_demo (ind text, keyword text SSE='FIDES', payload text) WITH (sse_storage='ROW_AEAD_V1');");before=files()
-    s,t=good("SELECT * FROM week_demo WHERE keyword='unknown';");need(files()==before and 'unknown_empty' in t,'table version reopen failed')
+    s, t = good("SELECT * FROM week_demo WHERE keyword='unknown';")
+    need(files() == before and 'unknown_empty' in t and not business_lines(s), 'table version reopen failed')
 def physical():
     seed('s04_physical',False)
     raw('ALTER FUNCTION public.sse_v1_create(text,text) RENAME TO original_create;')
@@ -199,7 +223,11 @@ def reinsert(legacy=False):
         need(database_snapshot().startswith('SNAP=2:0:'),'legacy index not zero');blocked()
         return dict(index_before=2,index_after=0,control_only=True,marker_retained=True)
     rc,s,t=query("SELECT * FROM week_demo WHERE keyword='apple';");fail_result(rc,s,t,'db_failed')
-    need(database_snapshot()==snap and 'STATE_EVENT fetch_sent' not in t,'current transaction did not rollback');blocked()
+    need('STATE_EVENT reinsert_sent' in t and 'injected reinsert failure' in t,
+         'failure did not reach the reinsert trigger')
+    need(database_snapshot() == snap and 'STATE_EVENT fetch_sent' not in t,
+         'current transaction did not roll back cleanly')
+    blocked()
     return dict(index_before=2,index_after=2,current_transaction_rollback=True,marker_retained=True)
 def readonly():
     seed('s04_readonly');before=(state/'fides_client.mat').read_bytes();snap=database_snapshot()
@@ -288,4 +316,5 @@ for mode in ('empty-token','empty-derivation'):
 for mode in ('marker-write','marker-fsync','marker-close','marker-dir-fsync','counter-write','counter-fsync','counter-close','counter-dir-fsync','clear-unlink','clear-dir-fsync'):
     name='04-%02d-%s'%(next_id,mode);expectations[name[:5]]='Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.'
     case(name,lambda mode=mode:persistence(mode));next_id+=1
-print('LZM04_CASES=%d RESULT=PASS'%len(results),flush=True)
+need(len(results) == EXPECTED_CASES, 'incomplete LZM-04 case matrix')
+print('LZM04_CASES=%d RESULT=PASS' % len(results), flush=True)

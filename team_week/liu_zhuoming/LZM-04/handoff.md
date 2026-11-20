@@ -6,7 +6,7 @@
 
 ## 一、实际输入与范围
 
-被测分支：main。被测提交：`4a44da0ecb990b3edb584a29dc56b05e650ed77d`。
+原始实测对应 `main` 的 `4a44da0ecb990b3edb584a29dc56b05e650ed77d`，下方历史日志与指纹保留。后续复跑按 [env.md](env.md) 核对固定源码和本次实测提交。
 
 当前请求搜索使用真实 Fides 和认证加密；索引取出、重插、回查处于数据库事务内。测试通过实际 gsql 用户入口执行；旧式无事务对照使用相同真实 Fides/数据库接口，故意省略当前事务包装，单独记录，不当成当前实现缺陷。
 
@@ -176,10 +176,10 @@ wsl.exe -d CentOS7 -u root
 本机Linux root终端执行：
 
 ```bash
-cd /opt/og/openGauss-server
+repo=$(pwd -P)
 source /home/omm/.sse_opengauss_env
 source /opt/rh/rh-python36/enable
-tools=/opt/og/openGauss-server/team_week/liu_zhuoming/LZM-04/preflight
+tools="$repo/team_week/liu_zhuoming/LZM-04/preflight"
 build=/var/tmp/lzm04-build.0PK0r6V3
 log=$(mktemp /var/tmp/lzm04-closure.XXXXXXXX.log)
 rc=0
