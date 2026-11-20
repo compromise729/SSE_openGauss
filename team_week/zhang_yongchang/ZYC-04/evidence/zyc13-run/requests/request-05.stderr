@@ -1,0 +1,14 @@
+STATE_EVENT keys_loaded
+STATE_EVENT preflight
+STATE_EVENT begin_durable
+STATE_EVENT token_generated
+STATE_EVENT fides_setup
+STATE_EVENT search_take_sent
+STATE_EVENT counter_advanced
+STATE_EVENT counter_advanced
+STATE_EVENT reinsert_sent
+STATE_EVENT fetch_sent
+STATE_EVENT rows_authenticated
+STATE_EVENT search_commit
+STATE_EVENT state_saved
+STATE_EVENT complete_durable

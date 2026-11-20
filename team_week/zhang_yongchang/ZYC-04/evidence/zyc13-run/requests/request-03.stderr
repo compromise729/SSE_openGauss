@@ -1,0 +1,17 @@
+STATE_EVENT keys_loaded
+STATE_EVENT begin_durable
+STATE_EVENT create_sent
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_data_pkey" for table "week_demo_data"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_data (
+        rid text COLLATE "C" PRIMARY KEY CHECK (rid ~ '^[0-9a-f]{32}$'),
+        data_blob text NOT NULL CHECK (public.sse_v1_blob_valid(data_blob, 1)))"
+PL/pgSQL function sse_v1_create(text,text) line 10 at EXECUTE statement
+referenced column: sse_v1_create
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "week_demo_index_pkey" for table "week_demo_index"
+CONTEXT:  SQL statement "CREATE TABLE public.week_demo_index (
+        ut text COLLATE "C" PRIMARY KEY CHECK (ut ~ '^[A-Za-z0-9+/]{22}==$'),
+        locator_blob text NOT NULL CHECK (public.sse_v1_blob_valid(locator_blob, 2)))"
+PL/pgSQL function sse_v1_create(text,text) line 13 at EXECUTE statement
+referenced column: sse_v1_create
+STATE_EVENT state_saved
+STATE_EVENT complete_durable

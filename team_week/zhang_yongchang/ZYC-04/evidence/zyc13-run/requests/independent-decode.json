@@ -1,0 +1,36 @@
+{
+  "rows": [
+    {
+      "rid": "a4d38119aeae74cde4eeeeaa11a1d6cd",
+      "ind": "1",
+      "keyword": "apple",
+      "payload": "red apple"
+    },
+    {
+      "rid": "0518629bd88881ed8065a36815bbda1d",
+      "ind": "2",
+      "keyword": "apple",
+      "payload": "green apple"
+    },
+    {
+      "rid": "7c1022f1395cb7bc8d3964c5f76836a9",
+      "ind": "3",
+      "keyword": "banana",
+      "payload": "yellow banana"
+    }
+  ],
+  "locators": [
+    {
+      "rid": "a4d38119aeae74cde4eeeeaa11a1d6cd",
+      "operation": 0
+    },
+    {
+      "rid": "0518629bd88881ed8065a36815bbda1d",
+      "operation": 0
+    },
+    {
+      "rid": "7c1022f1395cb7bc8d3964c5f76836a9",
+      "operation": 0
+    }
+  ]
+}

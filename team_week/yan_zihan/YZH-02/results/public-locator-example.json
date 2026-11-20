@@ -1,0 +1,8 @@
+{
+  "locator_blob": "U1NFMQEC3Bj+up9NU9Qv8utZcxo4bVzmEtGaw4UtigObPgAAABH/O4o8QAEvz/ApDqH+jIVF+hols3GWPkl6g3fHG6/U+c8=",
+  "recovered": {
+    "rid": "f917dbd922baf07aa63f5fe8f84f9c1b",
+    "operation": 0
+  },
+  "explanation": "This authenticates a location; business fields require a separate row decryption."
+}

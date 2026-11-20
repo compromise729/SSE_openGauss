@@ -1,0 +1,28 @@
+{
+  "input_row": [
+    "同一编号",
+    "yzh02_duplicate",
+    "完整业务行 apple 空格"
+  ],
+  "ciphertexts_differ": true,
+  "nonces_differ": true,
+  "restored_rows": [
+    {
+      "rid": "577ce0612b6913638e49f53515ab7edf",
+      "ind": "同一编号",
+      "keyword": "yzh02_duplicate",
+      "payload": "完整业务行 apple 空格"
+    },
+    {
+      "rid": "990429a4b19db61f5ff52cfde867dbeb",
+      "ind": "同一编号",
+      "keyword": "yzh02_duplicate",
+      "payload": "完整业务行 apple 空格"
+    }
+  ],
+  "ciphertexts": [
+    "U1NFMQEB3Bj+up9NU9Qv8utZcxo4bQ9UF6Zs8/GhDGjXUgAAAEM234dhqUVHIjwQTWswcmHljODA5KHF2khAZPOXDRmXJBokgDc+IaO11J6WAY79Gc5G1OWoMKdUZQYc8cEdV/QvLvoG6wOwxzm/LAse5cvN90ggcg==",
+    "U1NFMQEB3Bj+up9NU9Qv8utZcxo4bUdZlL5FFMZ/BXkzhwAAAEOAzlyXfUFSDichTafQVWpXkcmYUIeTxzjPbMwyqHVuG8hmR6ptW4g37rq4pjONaQ9AQtUmu6Nc1/hMHCvyzEtN3UIZOX2S89W4njCII4ZnnKgSDQ=="
+  ],
+  "note": "Public synthetic rows and their complete ciphertexts; keys are omitted."
+}

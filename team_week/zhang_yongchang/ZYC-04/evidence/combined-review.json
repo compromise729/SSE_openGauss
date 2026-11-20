@@ -1,0 +1,79 @@
+{
+  "task": "ZYC-04",
+  "reviewed_on": "2026-11-20",
+  "pull_request": 17,
+  "result": "PASS",
+  "tested_head": "9aa868a8369f301813877d5fd70e962b2e80738c",
+  "source_baseline": "5c8b2b03b482e203ac65a6f989a1b669126f263c",
+  "yzh02_tool_commit": "04f4a488f46ff4b76335455943f5a0cf083df606",
+  "entry": "bash team_week/zhang_yongchang/ZYC-04/reproduce.sh --repo CHECKOUT",
+  "entry_sha256": "07a186842ce0d52ed12e619a6d088be1c47859c0cc65a3376cf3510d2cd164fd",
+  "exit_code": 0,
+  "suites": {
+    "ZYC": {
+      "exit_code": 0,
+      "real_database_cases": 13,
+      "entry_checks": 5,
+      "baseline_module_cases": 18,
+      "baseline_database_cases": 18,
+      "successful_search_traces": 10
+    },
+    "YZH-02": {
+      "exit_code": 0,
+      "cases": 18
+    },
+    "LMD-03": {
+      "exit_code": 0,
+      "cases": 11
+    },
+    "LZM-04": {
+      "exit_code": 0,
+      "cases": 36
+    }
+  },
+  "isolated_instances_stopped": true,
+  "git_index_ownership_mode_and_bytes_preserved": true,
+  "runtime_sha256": {
+    "dest/bin/gsql": "a5eba5da80d68c7a75d1a9e6679d1cd28169cd14fbf32473e2a633e34a52d0b5",
+    "dest/bin/gaussdb": "9820a86ce1a6d2b261f6a3631daf1cfce223aa71a9c29b487d92dbec5ea9fd8c",
+    "dest/lib/libpq_ce.so.5.5": "7cd62db3f6f5ddf733efd985880d3c2f1867acbbe1123ccf97cb7e4ec21307af",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34"
+  },
+  "client_error_behavior": {
+    "write_failure": {
+      "exit": 3,
+      "error": "db_failed",
+      "business_rows": 0,
+      "reopen_exit": 1,
+      "reopen_error": "incomplete_operation"
+    },
+    "last_row_authentication": {
+      "exit": 3,
+      "error": "auth_failed",
+      "business_rows": 0,
+      "reopen_exit": 1,
+      "reopen_error": "incomplete_operation"
+    },
+    "missing_fetched_row": {
+      "exit": 3,
+      "error": "inconsistent_result",
+      "business_rows": 0,
+      "reopen_exit": 1,
+      "reopen_error": "incomplete_operation"
+    }
+  },
+  "reinsert": {
+    "current_transaction_04_11": [
+      2,
+      2
+    ],
+    "control_without_outer_transaction_04_12": [
+      2,
+      0
+    ]
+  },
+  "open_protocol_issues": {
+    "LZM04-U01": "The database can commit before the local counter is saved. Reopening is blocked. Automatic cross-end recovery remains open.",
+    "LZM04-U02": "A partially completed registration is blocked. Automatic compensation remains open."
+  }
+}
