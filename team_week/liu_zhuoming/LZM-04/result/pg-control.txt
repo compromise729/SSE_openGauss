@@ -1,0 +1,39 @@
+pg_control version number:            923
+Catalog version number:               201611171
+Database system identifier:           6684246702087619553
+Database cluster state:               shut down
+pg_control last modified:             Fri 20 Nov 2026 12:36:06 PM CST
+Latest checkpoint location:           0/23AAD38
+Prior checkpoint location:            0/2392BB0
+Latest checkpoint's REDO location:    0/23AACB8
+Latest checkpoint's TimeLineID:       1
+Latest checkpoint's full_page_writes: off
+Latest checkpoint's NextXID:          9195
+Latest checkpoint's NextOID:          17866
+Latest checkpoint's NextMultiXactId:  2
+Latest checkpoint's NextMultiOffset:  0
+Latest checkpoint's oldestXID:        7600
+Latest checkpoint's oldestXID's DB:   14172
+Latest checkpoint's oldestActiveXID:  0
+Latest checkpoint's remove lsn:          0/1
+Time of latest checkpoint:            Fri 20 Nov 2026 12:36:06 PM CST
+Minimum recovery ending location:     0/0
+Backup start location:                0/0
+Backup end location:                  0/0
+End-of-backup record required:        no
+Current wal_level setting:            hot_standby
+Current max_connections setting:      250
+Current max_prepared_xacts setting:   200
+Current max_locks_per_xact setting:   256
+Maximum data alignment:               8
+Database block size:                  8192
+Blocks per segment of large relation: 131072
+WAL block size:                       8192
+Bytes per WAL segment:                16777216
+Maximum length of identifiers:        64
+Maximum columns in an index:          32
+Maximum size of a TOAST chunk:        1996
+Date/time type storage:               64-bit integers
+Float4 argument passing:              by value
+Float8 argument passing:              by value
+Database system TimeLine:             2

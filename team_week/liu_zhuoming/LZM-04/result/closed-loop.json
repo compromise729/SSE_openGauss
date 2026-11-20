@@ -1,0 +1,143 @@
+{
+  "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+  "items": [
+    {
+      "id": "C1",
+      "requirement": "新隔离环境初始化并验证映射、密钥与表版本一致，保存内外证据",
+      "cases": [
+        "04-01",
+        "04-08"
+      ],
+      "inputs": "空个人运行目录，显式ROW_AEAD_V1建表，两个公开apple样例",
+      "expected": "真实密钥初始化成功；key_id、deployment、database、instance、映射和两端版本匹配；隔离外受保护文件不变",
+      "actual": "13个用例初始化检查均通过；外层三项环境比较PASS",
+      "evidence": [
+        "results.json",
+        "input.json",
+        "live.log",
+        "environment.log"
+      ],
+      "status": "PASS",
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "run_dir": "/var/tmp/fides-isolated.Xyi3aqSs",
+      "reproduce": "bash /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-04/preflight/verify.sh /var/tmp/lzm04-build.0PK0r6V3"
+    },
+    {
+      "id": "C2",
+      "requirement": "同密钥/原计数重开客户端，重启服务后setup，集合及重复次数正确",
+      "cases": [
+        "04-01"
+      ],
+      "inputs": "同一状态目录及数据库；ind为1和2的apple",
+      "expected": "同密钥和映射；服务重启本身不改状态；每次查询1和2各一次；查询按实际实现推进计数",
+      "actual": "客户端每次为新进程；实际gs_ctl停/启且PID改变；setup事件存在；计数2/4/6/8/10，每次2行，重启期间状态字节一致",
+      "evidence": [
+        "results.json",
+        "fides-counts.json",
+        "request-003.command.json",
+        "request-003.stdout",
+        "request-006.command.json",
+        "request-006.stderr",
+        "pg-control.txt"
+      ],
+      "status": "PASS",
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "run_dir": "/var/tmp/fides-isolated.Xyi3aqSs",
+      "reproduce": "bash /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-04/preflight/verify.sh /var/tmp/lzm04-build.0PK0r6V3"
+    },
+    {
+      "id": "C3",
+      "requirement": "实际链路覆盖标记、不可写、重插、中断、缺钥、建表登记失败和第二客户端",
+      "cases": [
+        "04-02",
+        "04-03",
+        "04-04",
+        "04-05",
+        "04-06",
+        "04-07",
+        "04-08",
+        "04-09",
+        "04-10",
+        "04-11",
+        "04-12",
+        "04-13",
+        "04-14",
+        "04-15",
+        "04-16",
+        "04-17",
+        "04-18",
+        "04-19",
+        "04-20",
+        "04-21",
+        "04-22",
+        "04-23",
+        "04-24",
+        "04-25",
+        "04-26",
+        "04-27",
+        "04-28",
+        "04-29",
+        "04-30",
+        "04-31",
+        "04-32",
+        "04-33",
+        "04-34",
+        "04-35",
+        "04-36"
+      ],
+      "inputs": "见逐用例命令及故障配置",
+      "expected": "各失败按预期停止，不展示失败请求业务数据；按故障阶段保留现场并阻断后续客户端",
+      "actual": "36项PASS；包含当前短钥/key_id、映射/版本/物理结构、空令牌、write/fsync/close/清标记失败及工具移动后仓库外调用",
+      "evidence": [
+        "results.json",
+        "request-046.command.json",
+        "request-046.stderr",
+        "request-047.command.json",
+        "request-047.stderr",
+        "legacy-control.log"
+      ],
+      "status": "PASS",
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "run_dir": "/var/tmp/fides-isolated.Xyi3aqSs",
+      "reproduce": "bash /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-04/preflight/verify.sh /var/tmp/lzm04-build.0PK0r6V3"
+    },
+    {
+      "id": "C4",
+      "requirement": "保留异常现场，新客户端继续阻断，不清计数/换钥/盲目重试，区分诊断与测试重建",
+      "cases": [
+        "04-03",
+        "04-04",
+        "04-05",
+        "04-06",
+        "04-07",
+        "04-09",
+        "04-10",
+        "04-11",
+        "04-12",
+        "04-13"
+      ],
+      "inputs": "在原故障目录启动新gsql，执行同一公开查询",
+      "expected": "未完成操作或损坏状态仍拒绝；无修复动作；旧运行目录保留；实例正常停止",
+      "actual": "所有有标记的新增失败均以新客户端验证阻断及文件不变；未发布标记的失败无副作用，随后正常请求可完成；实例已停机",
+      "evidence": [
+        "results.json",
+        "diagnosis-counter.json",
+        "diagnosis-readonly.json",
+        "pg-control.txt",
+        "verify.log"
+      ],
+      "status": "PASS",
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "run_dir": "/var/tmp/fides-isolated.Xyi3aqSs",
+      "reproduce": "bash /opt/og/openGauss-server/team_week/liu_zhuoming/LZM-04/preflight/verify.sh /var/tmp/lzm04-build.0PK0r6V3"
+    }
+  ],
+  "not_verified": [
+    "ENOSPC/只读文件系统",
+    "机器掉电/内核崩溃",
+    "每一个提交窗口中断及复合持久化失败",
+    "所有组员机器独立复跑"
+  ],
+  "note": "PASS denotes executed behavioral assertions, not repair or automatic recovery of retained inconsistencies.",
+  "independent_followup": "36 cases / 139 gsql requests; short keys, wrong key_id, malformed mapping/catalog/shape, invalid tokens and scoped I/O failures verified; copied lifecycle entry invoked outside checkout"
+}

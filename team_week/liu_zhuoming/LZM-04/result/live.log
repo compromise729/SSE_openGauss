@@ -1,0 +1,52 @@
+RUN_DIR=/var/tmp/fides-isolated.Xyi3aqSs
+PREFLIGHT_EXIT=3 RECORD=/var/tmp/fides-isolated.Xyi3aqSs/pre-init.lCSw7P9T.json
+{"counter": {"path": "/var/tmp/fides-isolated.Xyi3aqSs/client/fides_client.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "teamdemo20261012apple"}, "mapping": {"path": "/var/tmp/fides-isolated.Xyi3aqSs/client/sse_table.mat", "reason": "\u6587\u4ef6\u4e0d\u5b58\u5728", "status": "missing", "target": "team_fides_demo"}, "recommendation": "\u72b6\u6001\u5f02\u5e38\uff0c\u5148\u5904\u7406\u6587\u4ef6\u95ee\u9898\uff1b\u5982\u9884\u671f\u4e3a\u9996\u6b21\u521d\u59cb\u5316\uff0c\u8bf7\u4eba\u5de5\u6838\u5bf9\u5b9e\u9a8c\u524d\u63d0\u3002"}
+RUN_DIR=/var/tmp/fides-isolated.Xyi3aqSs
+INSTANCE=/var/tmp/fides-isolated.Xyi3aqSs/db/instance
+SOCKET=/var/tmp/fides-isolated.Xyi3aqSs/socket
+PORT=55432
+CLIENT=/var/tmp/fides-isolated.Xyi3aqSs/client (mounted at /opt/og/openGauss-server/sse_storage)
+SERVER=/var/tmp/fides-isolated.Xyi3aqSs/server (mounted at /opt/og/openGauss-server/sse_server_storage)
+PID=378642
+In this omm shell: isolated.sh gsql | preflight | stop; exit also stops the instance.
+PASS 04-01-normal-restart-and-counters
+PASS 04-02-marker-before-effects
+PASS 04-03-counter-save-failure
+PASS 04-04-real-process-kill
+PASS 04-05-two-clients
+PASS 04-06-existing-data-missing-key
+PASS 04-07-broken-state
+PASS 04-08-create-and-reopen
+PASS 04-09-physical-create-failure
+PASS 04-10-mapping-save-failure
+PASS 04-11-current-reinsert-rollback
+PASS 04-12-legacy-two-to-zero
+PASS 04-13-real-state-unwritable
+PASS 04-14-missing-locator
+PASS 04-15-missing-keyid
+PASS 04-16-short-row
+PASS 04-17-short-locator
+PASS 04-18-wrong-keyid
+PASS 04-19-key-permissions
+PASS 04-20-bad-mapping
+PASS 04-21-missing-counter
+PASS 04-22-missing-mapping
+PASS 04-23-server-version
+PASS 04-24-physical-shape
+PASS 04-25-empty-token
+PASS 04-26-empty-derivation
+PASS 04-27-marker-write
+PASS 04-28-marker-fsync
+PASS 04-29-marker-close
+PASS 04-30-marker-dir-fsync
+PASS 04-31-counter-write
+PASS 04-32-counter-fsync
+PASS 04-33-counter-close
+PASS 04-34-counter-dir-fsync
+PASS 04-35-clear-unlink
+PASS 04-36-clear-dir-fsync
+LZM04_CASES=36 RESULT=PASS
+[2026-11-20 12:36:03.554][395477][][gs_ctl]: gs_ctl stopped ,datadir is /var/tmp/fides-isolated.Xyi3aqSs/db/instance 
+waiting for server to shut down....... done
+server stopped
+ISOLATED_SERVER_STOPPED

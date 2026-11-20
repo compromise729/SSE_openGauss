@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-20",
+  "source_branch": "main",
+  "head": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+  "source_sha256": {
+    "src/bin/psql/common.cpp": "219e518b3a2c19fc38ecd6eee0718b8d5b9df1e31e5a33f38580003a7e0b35a5",
+    "src/bin/psql/startup.cpp": "221059ab511da5340c36cdc219c11ff63451e3e6310f2fd07625a916386879e4",
+    "src/common/interfaces/libpq/row_request_v1.cpp": "02b0c2a1b69b9efafaa282727beacacad8a7e2d8f7f72fe4fe7668abc41cf916",
+    "src/common/interfaces/libpq/row_state_v1.cpp": "c84f3911a6f32b68cc1731506d73e4d5e50346ebeb34833cf1d2719bfe7b2f02",
+    "src/common/interfaces/libpq/Client_Sophos.cpp": "5522b6dde5d7769b8966915ee73761bb2b6e0f272bdc714508a5956bfad6b100",
+    "src/include/libpq/row_state_v1.h": "549355fa91cf618d6a50dea97303bb9304c1586027490360e3a4fd223258dbc0",
+    "src/gausskernel/process/tcop/postgres.cpp": "c904340489e2f377d79d4ee6c0f7d6db0a02a90c941098a9ff0b8223f1fae827",
+    "src/gausskernel/process/tcop/Server_Sophos.cpp": "62693631eb747c43b7b53892ac5c24d66d25aa2a147455927b1e81f9010c23f2",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34",
+    "team_week/liu_zhuoming/LZM-01/isolated.sh": "ccdfdba2cb1a1fd4e9f5af2f27a31b29fce8e89f55ed9f41918dd99aa79ac0bb",
+    "team_week/liu_zhuoming/LZM-03/preflight/build-live.py": "d59f1a44eb87391b4181d1e5df4669ab7b36853268af5e724a60020e935a734c"
+  },
+  "tools_sha256": {
+    "team_week/liu_zhuoming/LZM-04/preflight/build-current.py": "e6d9254ad56cdc51c01dff205c858fc3f75eb42f83947b1753053c523cb87c2f",
+    "team_week/liu_zhuoming/LZM-04/preflight/cases.py": "6587dab1d0a91378e812b1d38e8a78945b27acc5bf5abfa70dd6080bbde6ecbf",
+    "team_week/liu_zhuoming/LZM-04/preflight/diagnose.py": "328508be2322101ea9ff9feb5821dd9cc74dd0816ead6430e2204726482e3947",
+    "team_week/liu_zhuoming/LZM-04/preflight/faults.cpp": "2f1344caa5fd2bf92d185f7a5e49696852afccc4927778a798a81f50c1aec1d0",
+    "team_week/liu_zhuoming/LZM-04/preflight/legacy-control.cpp": "000ff9bbd9bfc1a6895c724b3900abd18d5b540b01141fef6d0e6c1711e64deb",
+    "team_week/liu_zhuoming/LZM-04/preflight/verify.sh": "79f912ccde634d4a4caa448d009d14311ce2582904e4654de91f27102e98725e"
+  },
+  "build_dir": "/var/tmp/lzm04-build.0PK0r6V3",
+  "evidence_dir": "/var/tmp/lzm04-evidence.jfMpDMvm",
+  "run_dir": "/var/tmp/fides-isolated.Xyi3aqSs",
+  "artifact_sha256": {
+    "gaussdb": "d09128e50e3849044524c0a1c4af81370e76874d79a4e89f2a1b7ac197ced345",
+    "gsql": "665b35e8bdd20d9c95161e1325e874f7e9b1bbe723b71666dfd007102767c0b0",
+    "librow_request_verify.so": "bbe882f9cc7ef66e8e0dad01cc5c3e3f0f2d8c6d996374cc04be0d24dc96eee6",
+    "faults04.so": "fd5a6ef271e5fd64fcaa8c922e41dfd33380886b2ce15103dea4b41cdb9690fe",
+    "legacy-control": "82a859a3a6802a0e11cd9828290f728513471d903709d65e007f91f5e113090e"
+  },
+  "source_changes": [],
+  "test_tool_files": 6,
+  "case_count": 36,
+  "result": "PASS",
+  "exit_code": 0,
+  "build_mode": "current changed units + existing object cache; generated headers/lists recovered only in independent build",
+  "git_operations": "not executed",
+  "remote_changes": "none",
+  "output_commit": null,
+  "installed_environment_modified": false,
+  "request_count": 139,
+  "independent_changes": [
+    "preflight/cases.py",
+    "preflight/faults.cpp",
+    "preflight/verify.sh"
+  ],
+  "result_policy": "latest verification only; original experiment directories preserved",
+  "replay_verified": true
+}

@@ -1,0 +1,48 @@
+{
+  "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+  "command": [
+    "/var/tmp/lzm04-build.0PK0r6V3/gsql",
+    "-X",
+    "-q",
+    "-A",
+    "-t",
+    "-F",
+    "|",
+    "-h",
+    "/var/tmp/fides-isolated.Xyi3aqSs/socket",
+    "-p",
+    "55432",
+    "-U",
+    "omm",
+    "-v",
+    "ON_ERROR_STOP=1",
+    "-d",
+    "s04_counter_fsync",
+    "-c",
+    "SELECT * FROM week_demo WHERE keyword='apple';"
+  ],
+  "environment": {
+    "SSE_V1_STATE_DIR": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_fsync",
+    "LD_PRELOAD": "/var/tmp/lzm04-build.0PK0r6V3/faults04.so",
+    "STATE_SIGNAL_DIR": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/lzm04/signals",
+    "STATE_FAULT": "counter-fsync"
+  },
+  "fault": "counter-fsync",
+  "stdout": "request-122.stdout",
+  "stderr": "request-122.stderr",
+  "exit_code": 3,
+  "events": [
+    "STATE_EVENT keys_loaded",
+    "STATE_EVENT preflight",
+    "STATE_EVENT begin_durable",
+    "STATE_EVENT token_generated",
+    "STATE_EVENT fides_setup",
+    "STATE_EVENT search_take_sent",
+    "STATE_EVENT counter_advanced",
+    "STATE_EVENT counter_advanced",
+    "STATE_EVENT reinsert_sent",
+    "STATE_EVENT fetch_sent",
+    "STATE_EVENT rows_authenticated",
+    "STATE_EVENT search_commit"
+  ]
+}

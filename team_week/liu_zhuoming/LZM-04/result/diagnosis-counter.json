@@ -1,0 +1,82 @@
+{
+  "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter",
+  "operation_incomplete": true,
+  "files": {
+    "deployment.v1": {
+      "present": true,
+      "regular": true,
+      "size": 16,
+      "mode": "0o600",
+      "uid": 2000
+    },
+    "environment.v1": {
+      "present": true,
+      "regular": true,
+      "size": 184,
+      "mode": "0o600",
+      "uid": 2000,
+      "sha256": "88e615f19dbdf60a31d1c33cfc69565414f6f234c5d895766eae3cd4aa27454b"
+    },
+    "fides_client.mat": {
+      "present": true,
+      "regular": true,
+      "size": 8,
+      "mode": "0o600",
+      "uid": 2000,
+      "sha256": "c01f8b17e75d22cbfc3957c0339842f50fb58722122b2e42ffb34e45a4694580"
+    },
+    "locator_aead_v1.key": {
+      "present": true,
+      "regular": true,
+      "size": 32,
+      "mode": "0o600",
+      "uid": 2000
+    },
+    "operation.lock": {
+      "present": true,
+      "regular": true,
+      "size": 0,
+      "mode": "0o600",
+      "uid": 2000,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "operation.v1": {
+      "present": true,
+      "regular": true,
+      "size": 115,
+      "mode": "0o600",
+      "uid": 2000,
+      "sha256": "6ebcc66e0f83584a47b18659687713898e344538ce680cbacadc4e006405d843"
+    },
+    "row_aead_tables.v1": {
+      "present": true,
+      "regular": true,
+      "size": 76,
+      "mode": "0o600",
+      "uid": 2000,
+      "sha256": "41b29a73e46b9b8fe5616a04003516b31609d74781f37d65dd84d4ec3dd13466"
+    },
+    "row_aead_v1.key": {
+      "present": true,
+      "regular": true,
+      "size": 32,
+      "mode": "0o600",
+      "uid": 2000
+    },
+    "row_aead_v1.keyid": {
+      "present": true,
+      "regular": true,
+      "size": 16,
+      "mode": "0o600",
+      "uid": 2000
+    },
+    "sse_table.mat": {
+      "present": true,
+      "regular": true,
+      "size": 56,
+      "mode": "0o600",
+      "uid": 2000,
+      "sha256": "038446cd6c9551e95ec55e2fc363df1157ce947877e7720319b4656b223940b2"
+    }
+  }
+}

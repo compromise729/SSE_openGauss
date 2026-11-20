@@ -1,0 +1,3238 @@
+{
+  "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+  "cases": [
+    {
+      "case": "04-01-normal-restart-and-counters",
+      "result": "PASS",
+      "database": "s04_normal",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_normal",
+      "requests": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Fresh initialization matches keys, scope, mapping and server version; new clients and real server restart/setup return ind 1/2 once; counters 2/4/6/8/10.",
+      "initialization": {
+        "database_oid": "16385",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_normal user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_normal"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 9,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-01-normal-restart-and-counters.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "history": [
+        {
+          "stage": "insert",
+          "counter": 2,
+          "rows": 2
+        },
+        {
+          "stage": "first_query",
+          "counter": 4,
+          "rows": 2
+        },
+        {
+          "stage": "repeat_query",
+          "counter": 6,
+          "rows": 2
+        },
+        {
+          "stage": "client_reopen",
+          "counter": 8,
+          "rows": 2
+        },
+        {
+          "stage": "server_restart_setup_query",
+          "counter": 10,
+          "rows": 2
+        }
+      ],
+      "state_unchanged_during_restart": true,
+      "key_mapping_unchanged": true,
+      "fides_base_keys_unchanged": true
+    },
+    {
+      "case": "04-02-marker-before-effects",
+      "result": "PASS",
+      "database": "s04_marker",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker",
+      "requests": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Marker rename EIO rejects SELECT and INSERT before count/index mutation; state and database unchanged.",
+      "initialization": {
+        "database_oid": "16426",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_marker user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-02-marker-before-effects.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-03-counter-save-failure",
+      "result": "PASS",
+      "database": "s04_counter",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter",
+      "requests": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Counter rename EIO after COMMIT preserves old local count and operation marker; fresh client is blocked.",
+      "initialization": {
+        "database_oid": "16467",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_counter user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-03-counter-save-failure.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "marker_retained": true,
+      "local_count": 2,
+      "database_committed": true
+    },
+    {
+      "case": "04-04-real-process-kill",
+      "result": "PASS",
+      "database": "s04_kill",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_kill",
+      "requests": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "SIGKILL at counter_advanced rolls back database transaction; marker survives and fresh client is blocked.",
+      "initialization": {
+        "database_oid": "16508",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_kill user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_kill"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-04-real-process-kill.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "signal": "SIGKILL",
+      "database_rollback": true,
+      "marker_retained": true
+    },
+    {
+      "case": "04-05-two-clients",
+      "result": "PASS",
+      "database": "s04_compete",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_compete",
+      "requests": [
+        19,
+        20,
+        21,
+        22
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Real lock probe rejects competition; second gsql is blocked without effects; first can finish after release.",
+      "initialization": {
+        "database_oid": "16549",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_compete user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_compete"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-05-two-clients.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "lock_competition": "EWOULDBLOCK",
+      "second_client": "incomplete_operation",
+      "first_client_completed": true
+    },
+    {
+      "case": "04-06-existing-data-missing-key",
+      "result": "PASS",
+      "database": "s04_missing",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing",
+      "requests": [
+        23,
+        24,
+        25,
+        26
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Missing row key rejects two fresh clients without regeneration or database effects.",
+      "initialization": {
+        "database_oid": "16590",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_missing user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key.held": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-06-existing-data-missing-key.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "no_key_recreation": true,
+      "reopen_blocked": true
+    },
+    {
+      "case": "04-07-broken-state",
+      "result": "PASS",
+      "database": "s04_broken",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_broken",
+      "requests": [
+        27,
+        28,
+        29,
+        30
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Truncated counter rejects two fresh clients without replacing corrupt state.",
+      "initialization": {
+        "database_oid": "16631",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_broken user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_broken"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 7,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-07-broken-state.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "reopen_blocked": true
+    },
+    {
+      "case": "04-08-create-and-reopen",
+      "result": "PASS",
+      "database": "s04_create",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_create",
+      "requests": [
+        31,
+        32
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Explicit new table registration is recognized by a new client; unknown word is healthy empty result.",
+      "initialization": {
+        "database_oid": "16672",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": false,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_create user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_create"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-08-create-and-reopen.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04"
+    },
+    {
+      "case": "04-09-physical-create-failure",
+      "result": "PASS",
+      "database": "s04_physical",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_physical",
+      "requests": [
+        33,
+        34
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Physical CREATE error rolls back server objects/registration, leaves marker and rejects fresh client.",
+      "initialization": {
+        "database_oid": "16713",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": false,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_physical user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_physical"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 18,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-09-physical-create-failure.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04"
+    },
+    {
+      "case": "04-10-mapping-save-failure",
+      "result": "PASS",
+      "database": "s04_mapping",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_mapping",
+      "requests": [
+        35,
+        36
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Mapping save failure leaves partial registration plus marker; fresh client is blocked, no legacy fallback.",
+      "initialization": {
+        "database_oid": "16755",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": false,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_mapping user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_mapping"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-10-mapping-save-failure.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "server_created": true,
+      "partial_local_registry_preserved": true,
+      "not_usable": true
+    },
+    {
+      "case": "04-11-current-reinsert-rollback",
+      "result": "PASS",
+      "database": "s04_reinsert",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_reinsert",
+      "requests": [
+        37,
+        38,
+        39,
+        40
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Current reinsert error suppresses display, rolls back index 2 to 2 and blocks fresh client.",
+      "initialization": {
+        "database_oid": "16796",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_reinsert user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_reinsert"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-11-current-reinsert-rollback.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "index_before": 2,
+      "index_after": 2,
+      "current_transaction_rollback": true,
+      "marker_retained": true
+    },
+    {
+      "case": "04-12-legacy-two-to-zero",
+      "result": "PASS",
+      "database": "s04_legacy",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_legacy",
+      "requests": [
+        41,
+        42,
+        43
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Legacy nontransaction control reproduces index 2 to 0; marker remains and fresh client is blocked.",
+      "initialization": {
+        "database_oid": "16839",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_legacy user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_legacy"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-12-legacy-two-to-zero.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "index_before": 2,
+      "index_after": 0,
+      "control_only": true,
+      "marker_retained": true
+    },
+    {
+      "case": "04-13-real-state-unwritable",
+      "result": "PASS",
+      "database": "s04_readonly",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_readonly",
+      "requests": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Real mode 0500 after COMMIT denies file creation as omm; count save fails with EACCES; marker persists; fresh client remains blocked.",
+      "initialization": {
+        "database_oid": "16882",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_readonly user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_readonly"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o500",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-13-real-state-unwritable.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "real_permissions": "0500",
+      "os_write_errno": "EACCES",
+      "local_count": 2,
+      "database_committed": true,
+      "marker_retained": true,
+      "reopen_status": "state_invalid",
+      "no_permission_reset": true
+    },
+    {
+      "case": "04-14-missing-locator",
+      "result": "PASS",
+      "database": "s04_missing_locator",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_locator",
+      "requests": [
+        48,
+        49,
+        50,
+        51
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "16923",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_missing_locator user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_locator"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key.held": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-14-missing-locator.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "key_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-15-missing-keyid",
+      "result": "PASS",
+      "database": "s04_missing_keyid",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_keyid",
+      "requests": [
+        52,
+        53,
+        54,
+        55
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "16964",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_missing_keyid user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_keyid"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid.held": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-15-missing-keyid.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "key_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-16-short-row",
+      "result": "PASS",
+      "database": "s04_short_row",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_short_row",
+      "requests": [
+        56,
+        57,
+        58,
+        59
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17005",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_short_row user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_short_row"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 5,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-16-short-row.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "key_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-17-short-locator",
+      "result": "PASS",
+      "database": "s04_short_locator",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_short_locator",
+      "requests": [
+        60,
+        61,
+        62,
+        63
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17046",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_short_locator user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_short_locator"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 5,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-17-short-locator.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "key_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-18-wrong-keyid",
+      "result": "PASS",
+      "database": "s04_wrong_keyid",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_wrong_keyid",
+      "requests": [
+        64,
+        65,
+        66,
+        67
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17087",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_wrong_keyid user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_wrong_keyid"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-18-wrong-keyid.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "key_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-19-key-permissions",
+      "result": "PASS",
+      "database": "s04_key_permissions",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_key_permissions",
+      "requests": [
+        68,
+        69,
+        70,
+        71
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17128",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_key_permissions user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_key_permissions"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o644",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-19-key-permissions.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "key_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-20-bad-mapping",
+      "result": "PASS",
+      "database": "s04_bad_mapping",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_bad_mapping",
+      "requests": [
+        72,
+        73,
+        74,
+        75
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17169",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_bad_mapping user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_bad_mapping"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-20-bad-mapping.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "state_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-21-missing-counter",
+      "result": "PASS",
+      "database": "s04_missing_counter",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_counter",
+      "requests": [
+        76,
+        77,
+        78,
+        79
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17210",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_missing_counter user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_counter"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat.held": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-21-missing-counter.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "state_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-22-missing-mapping",
+      "result": "PASS",
+      "database": "s04_missing_mapping",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_mapping",
+      "requests": [
+        80,
+        81,
+        82,
+        83
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17251",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_missing_mapping user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_missing_mapping"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "sse_table.mat.held": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-22-missing-mapping.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "state_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-23-server-version",
+      "result": "PASS",
+      "database": "s04_server_version",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_server_version",
+      "requests": [
+        84,
+        85,
+        86,
+        87
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17292",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_server_version user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_server_version"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-23-server-version.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "state_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-24-physical-shape",
+      "result": "PASS",
+      "database": "s04_physical_shape",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_physical_shape",
+      "requests": [
+        88,
+        89,
+        90,
+        91
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Two fresh SELECT/INSERT clients reject invalid existing state before effects; no regeneration, state and database unchanged.",
+      "initialization": {
+        "database_oid": "17333",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_physical_shape user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_physical_shape"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-24-physical-shape.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "state_invalid",
+      "reopen_blocked": true,
+      "no_file_recreation": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-25-empty-token",
+      "result": "PASS",
+      "database": "s04_empty_token",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_empty_token",
+      "requests": [
+        92,
+        93,
+        94,
+        95
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Registered empty token component is protocol_invalid, not healthy unknown; no counter/index change; marker and restart block retained.",
+      "initialization": {
+        "database_oid": "17374",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_empty_token user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_empty_token"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-25-empty-token.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "protocol_invalid",
+      "local_count": 2,
+      "marker_retained": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-26-empty-derivation",
+      "result": "PASS",
+      "database": "s04_empty_derivation",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_empty_derivation",
+      "requests": [
+        96,
+        97,
+        98,
+        99
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Registered empty token component is protocol_invalid, not healthy unknown; no counter/index change; marker and restart block retained.",
+      "initialization": {
+        "database_oid": "17415",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_empty_derivation user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_empty_derivation"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-26-empty-derivation.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "status": "protocol_invalid",
+      "local_count": 2,
+      "marker_retained": true,
+      "state_database_unchanged": true
+    },
+    {
+      "case": "04-27-marker-write",
+      "result": "PASS",
+      "database": "s04_marker_write",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_write",
+      "requests": [
+        100,
+        101,
+        102,
+        103
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17456",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_marker_write user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_write"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-27-marker-write.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "marker-write",
+      "status": "state_invalid",
+      "marker_retained": false,
+      "syscall_fault_observed": true,
+      "final_counter": 4
+    },
+    {
+      "case": "04-28-marker-fsync",
+      "result": "PASS",
+      "database": "s04_marker_fsync",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_fsync",
+      "requests": [
+        104,
+        105,
+        106,
+        107
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17497",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_marker_fsync user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_fsync"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-28-marker-fsync.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "marker-fsync",
+      "status": "state_invalid",
+      "marker_retained": false,
+      "syscall_fault_observed": true,
+      "final_counter": 4
+    },
+    {
+      "case": "04-29-marker-close",
+      "result": "PASS",
+      "database": "s04_marker_close",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_close",
+      "requests": [
+        108,
+        109,
+        110,
+        111
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17538",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_marker_close user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_close"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": false
+      },
+      "commands": "04-29-marker-close.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "marker-close",
+      "status": "state_invalid",
+      "marker_retained": false,
+      "syscall_fault_observed": true,
+      "final_counter": 4
+    },
+    {
+      "case": "04-30-marker-dir-fsync",
+      "result": "PASS",
+      "database": "s04_marker_dir_fsync",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_dir_fsync",
+      "requests": [
+        112,
+        113,
+        114,
+        115
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17579",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_marker_dir_fsync user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker_dir_fsync"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-30-marker-dir-fsync.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "marker-dir-fsync",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 2
+    },
+    {
+      "case": "04-31-counter-write",
+      "result": "PASS",
+      "database": "s04_counter_write",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_write",
+      "requests": [
+        116,
+        117,
+        118,
+        119
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17620",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_counter_write user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_write"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-31-counter-write.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "counter-write",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 2
+    },
+    {
+      "case": "04-32-counter-fsync",
+      "result": "PASS",
+      "database": "s04_counter_fsync",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_fsync",
+      "requests": [
+        120,
+        121,
+        122,
+        123
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17661",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_counter_fsync user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_fsync"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-32-counter-fsync.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "counter-fsync",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 2
+    },
+    {
+      "case": "04-33-counter-close",
+      "result": "PASS",
+      "database": "s04_counter_close",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_close",
+      "requests": [
+        124,
+        125,
+        126,
+        127
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17702",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_counter_close user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_close"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-33-counter-close.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "counter-close",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 2
+    },
+    {
+      "case": "04-34-counter-dir-fsync",
+      "result": "PASS",
+      "database": "s04_counter_dir_fsync",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_dir_fsync",
+      "requests": [
+        128,
+        129,
+        130,
+        131
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17743",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_counter_dir_fsync user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_counter_dir_fsync"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-34-counter-dir-fsync.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "counter-dir-fsync",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 4
+    },
+    {
+      "case": "04-35-clear-unlink",
+      "result": "PASS",
+      "database": "s04_clear_unlink",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_clear_unlink",
+      "requests": [
+        132,
+        133,
+        134,
+        135
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17784",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_clear_unlink user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_clear_unlink"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-35-clear-unlink.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "clear-unlink",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 4
+    },
+    {
+      "case": "04-36-clear-dir-fsync",
+      "result": "PASS",
+      "database": "s04_clear_dir_fsync",
+      "state_dir": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_clear_dir_fsync",
+      "requests": [
+        136,
+        137,
+        138,
+        139
+      ],
+      "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+      "expected": "Scoped syscall failure is observed and returned; no pre-marker effects; post-change marker survives fresh-client rejection; unpublished marker failure leaves clean state.",
+      "initialization": {
+        "database_oid": "17825",
+        "key_metadata_valid": true,
+        "key_id_matches_environment": true,
+        "deployment_database_instance_match": true,
+        "mapping_matches": true,
+        "local_server_version_matches": true,
+        "registered": true,
+        "initializer_command": [
+          "/var/tmp/lzm04-build.0PK0r6V3/initialize-live",
+          "host=/var/tmp/fides-isolated.Xyi3aqSs/socket port=55432 dbname=s04_clear_dir_fsync user=omm",
+          "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_clear_dir_fsync"
+        ],
+        "initializer_exit_code": 0,
+        "initializer_stdout": "INITIALIZE_STATUS=ok\n"
+      },
+      "final_state": {
+        "directory_mode": "0o700",
+        "files": {
+          "sse_table.mat": {
+            "size": 56,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "deployment.v1": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.lock": {
+            "size": 0,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.keyid": {
+            "size": 16,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "fides_client.mat": {
+            "size": 8,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "environment.v1": {
+            "size": 184,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "operation.v1": {
+            "size": 115,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "row_aead_tables.v1": {
+            "size": 76,
+            "mode": "0o600",
+            "uid": 2000
+          },
+          "locator_aead_v1.key": {
+            "size": 32,
+            "mode": "0o600",
+            "uid": 2000
+          }
+        },
+        "marker_present": true
+      },
+      "commands": "04-36-clear-dir-fsync.commands.json",
+      "private_snapshots": "/var/tmp/fides-isolated.Xyi3aqSs/private/lzm04",
+      "fault": "clear-dir-fsync",
+      "status": "state_invalid",
+      "marker_retained": true,
+      "syscall_fault_observed": true,
+      "final_counter": 4
+    }
+  ],
+  "result": "PASS",
+  "exit_code": 0,
+  "release_result": "PASS",
+  "outside_bytes_permissions_owners_unchanged": true,
+  "instance_stopped": true,
+  "relocated_isolation_entry": "/var/tmp/lzm04-evidence.jfMpDMvm/isolated-tools/isolated.sh",
+  "invocation_directory": "/var/tmp"
+}

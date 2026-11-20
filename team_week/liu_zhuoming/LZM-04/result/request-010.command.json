@@ -1,0 +1,37 @@
+{
+  "commit": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+  "command": [
+    "/var/tmp/lzm04-build.0PK0r6V3/gsql",
+    "-X",
+    "-q",
+    "-A",
+    "-t",
+    "-F",
+    "|",
+    "-h",
+    "/var/tmp/fides-isolated.Xyi3aqSs/socket",
+    "-p",
+    "55432",
+    "-U",
+    "omm",
+    "-v",
+    "ON_ERROR_STOP=1",
+    "-d",
+    "s04_marker",
+    "-c",
+    "INSERT INTO week_demo VALUES ('3','apple','not-written');"
+  ],
+  "environment": {
+    "SSE_V1_STATE_DIR": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/s04_marker",
+    "LD_PRELOAD": "/var/tmp/lzm04-build.0PK0r6V3/faults04.so",
+    "STATE_SIGNAL_DIR": "/var/tmp/fides-isolated.Xyi3aqSs/evidence/lzm04/signals",
+    "STATE_FAULT": "marker"
+  },
+  "fault": "marker",
+  "stdout": "request-010.stdout",
+  "stderr": "request-010.stderr",
+  "exit_code": 3,
+  "events": [
+    "STATE_EVENT keys_loaded"
+  ]
+}
