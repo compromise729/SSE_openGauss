@@ -1,0 +1,129 @@
+{
+  "verified_on": "2026-11-20",
+  "result": "PASS",
+  "source_baseline": "5c8b2b03b482e203ac65a6f989a1b669126f263c",
+  "checkout_head": "51fa4f22e4c2a444263e564b4a8d2990baa108f4",
+  "runtime_sha256": {
+    "dest/bin/gsql": "a5eba5da80d68c7a75d1a9e6679d1cd28169cd14fbf32473e2a633e34a52d0b5",
+    "dest/bin/gaussdb": "9820a86ce1a6d2b261f6a3631daf1cfce223aa71a9c29b487d92dbec5ea9fd8c",
+    "dest/lib/libpq_ce.so.5.5": "7cd62db3f6f5ddf733efd985880d3c2f1867acbbe1123ccf97cb7e4ec21307af",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34"
+  },
+  "tool_sha256": {
+    "yzh02_cases.py": "227c71316d071b12ee015e7f647d7407172be3ab593d081fc6d6dc2c2b6e08f5",
+    "yzh02_session.sh": "e7bfe1c4e716122a4c90b947fd463d36285793cc06b65b2d47e28d80bfc8d440",
+    "mint_foreign_locator.cpp": "943d1bcf5aabc5de02d74132abd885abec96de66f73229c3397602c8f9507ffe"
+  },
+  "prerequisite_live_cases": 13,
+  "yzh02_cases": 18,
+  "physical_and_user_requests": 271,
+  "instances_stopped": true,
+  "expected_failures": [
+    {
+      "case": "R-ciphertext",
+      "request": 19,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "case": "R-tag",
+      "request": 27,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "case": "R-version",
+      "request": 35,
+      "exit_code": 3,
+      "status": "protocol_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "R-key_id",
+      "request": 43,
+      "exit_code": 3,
+      "status": "key_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "R-truncate",
+      "request": 51,
+      "exit_code": 3,
+      "status": "protocol_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "R-cross-record",
+      "request": 58,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "case": "L-ciphertext",
+      "request": 78,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "case": "L-tag",
+      "request": 112,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "case": "L-version",
+      "request": 146,
+      "exit_code": 3,
+      "status": "protocol_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "L-key_id",
+      "request": 180,
+      "exit_code": 3,
+      "status": "key_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "L-truncate",
+      "request": 214,
+      "exit_code": 3,
+      "status": "protocol_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "K-wrong",
+      "request": 232,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    },
+    {
+      "case": "K-missing",
+      "request": 235,
+      "exit_code": 1,
+      "status": "key_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "K-short",
+      "request": 238,
+      "exit_code": 1,
+      "status": "key_invalid",
+      "business_lines": 0
+    },
+    {
+      "case": "L-cross-table",
+      "request": 256,
+      "exit_code": 3,
+      "status": "auth_failed",
+      "business_lines": 0
+    }
+  ],
+  "public_synthetic_data": true
+}

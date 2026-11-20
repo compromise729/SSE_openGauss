@@ -6,7 +6,7 @@
 | --- | --- |
 | 施骅洋 | [SHY-01 基线](leader/SHY-01/README.md) · [SHY-02 接口契约](leader/SHY-02/README.md) · [SHY-03 发布与接续](leader/SHY-03/README.md) · [SHY-04 联合测试基线](leader/SHY-04/README.md) |
 | 张永昌 | [ZYC-01 客户端防护](zhang_yongchang/ZYC-01/README.md) · [ZYC-02 密文写入](zhang_yongchang/ZYC-02/insert-report.md) · [ZYC-03 检索与本地展示](zhang_yongchang/ZYC-03/search-report.md) · [完整复验入口](zhang_yongchang/README-ZYC-02-03.md) |
-| 严子涵 | [YZH-01 随机化认证加密](yan%20zihan/YZH-01/handoff.md) |
+| 严子涵 | [YZH-01 随机化认证加密](yan_zihan/YZH-01/handoff.md) · [YZH-02 实库认证](yan_zihan/YZH-02/handoff.md) |
 | 李孟德 | [LMD-01 密文数据库接口](li_mengde/LMD-01/handoff.md) · [LMD-02 真实密文往返](li_mengde/LMD-02/handoff.md) · [LMD-03 数据库失败与一致性](li_mengde/LMD-03/README.md) |
 | 刘卓明 | [LZM-01 隔离环境](liu_zhuoming/LZM-01/README.md) · [LZM-02 状态与标记](liu_zhuoming/LZM-02/handoff.md) · [LZM-03 状态与密钥联测](liu_zhuoming/LZM-03/README.md) |
 
