@@ -22,3 +22,5 @@ bash "$repo/team_week/li_mengde/LMD-03/run.sh" --project-root "$repo"
 - 复用 LMD-01 的新旧 profile 与 FAIL/SKIP 汇总测试，核对新版检查前后摘要相同。使用同一客户端验证普通 SQL。
 
 证据目录中的日志以公开合成数据运行，供本机复核。交接给组长和张永昌 ZYC-04。
+
+[组长独立复验记录](review-results.json) 包含 11 项 LMD-03、54 项 SHY-04 回归、被测版本和运行指纹。

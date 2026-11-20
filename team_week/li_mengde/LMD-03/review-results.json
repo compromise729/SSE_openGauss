@@ -1,0 +1,100 @@
+{
+  "task": "LMD-03",
+  "reviewed_on": "2026-11-20",
+  "result": "PASS",
+  "source_baseline": "5c8b2b03b482e203ac65a6f989a1b669126f263c",
+  "tested_branch_commit": "992c2d7030df44766f8db93558b37ef54ba2926e",
+  "tested_main_base": "4a44da0ecb990b3edb584a29dc56b05e650ed77d",
+  "tested_candidate_tree": "fbb950d3fd17d2ec46542d87066298060bd89884",
+  "runtime_sha256": {
+    "dest/bin/gsql": "a5eba5da80d68c7a75d1a9e6679d1cd28169cd14fbf32473e2a633e34a52d0b5",
+    "dest/bin/gaussdb": "9820a86ce1a6d2b261f6a3631daf1cfce223aa71a9c29b487d92dbec5ea9fd8c",
+    "dest/lib/libpq_ce.so.5.5": "7cd62db3f6f5ddf733efd985880d3c2f1867acbbe1123ccf97cb7e4ec21307af",
+    "sse_sql/SSE_v1.sql": "5c1f413d710cf746dd22d5bbc1ad07370316775e945034a158627ded7c44bf34"
+  },
+  "test_tool_sha256": {
+    "run.sh": "af17c73d49920f8f5730b9b5c0ade0c205d341a681a6bf74a2e4d89754254470",
+    "session.sh": "4c585d18dee45946a215c2eeb40f5523112b82a5a54e2cac531f7c9a5a5fceb4",
+    "cases.py": "8710e4a4284a6e84fe62e9bbc76884083d555b250655c88fc6ab391f7c4c79d0",
+    "db-boundaries.sql": "5884b62687458a11eb7cdc55526b4ca84c80c4fed4d09d81b203ac30497c9dfe"
+  },
+  "lmd01_profile_suite_passed": true,
+  "relocated_project_root_passed": true,
+  "test_instances_stopped": true,
+  "shy04_regression_cases": 54,
+  "user_requests": 24,
+  "failed_requests_with_business_output": 0,
+  "lmd03_cases": [
+    {
+      "case": "DB-01-real-user-create-and-ciphertext",
+      "result": "PASS",
+      "client_exit": null,
+      "reopen_exit": null
+    },
+    {
+      "case": "DB-02-two-reinserts-preserve-rid",
+      "result": "PASS",
+      "client_exit": null,
+      "reopen_exit": null
+    },
+    {
+      "case": "DB-03-middle-duplicate-rid-rollback",
+      "result": "PASS",
+      "client_exit": 3,
+      "reopen_exit": 1
+    },
+    {
+      "case": "DB-04-second-business-row-rollback",
+      "result": "PASS",
+      "client_exit": 3,
+      "reopen_exit": 1
+    },
+    {
+      "case": "DB-05-index-write-collision-rollback",
+      "result": "PASS",
+      "client_exit": 3,
+      "reopen_exit": 1
+    },
+    {
+      "case": "DB-06-second-reinsert-failure-rollback",
+      "result": "PASS",
+      "client_exit": 3,
+      "reopen_exit": 1
+    },
+    {
+      "case": "DB-07-real-hit-with-missing-data",
+      "result": "PASS",
+      "client_exit": 3,
+      "reopen_exit": 1
+    },
+    {
+      "case": "DB-08-equal-total-corruption",
+      "result": "PASS",
+      "client_exit": 1,
+      "reopen_exit": null
+    },
+    {
+      "case": "DB-09-physical-and-real-envelope-limits",
+      "result": "PASS",
+      "client_exit": null,
+      "reopen_exit": null
+    },
+    {
+      "case": "DB-10-client-oversize-before-effects",
+      "result": "PASS",
+      "client_exit": null,
+      "reopen_exit": null
+    },
+    {
+      "case": "DB-11-read-only-profile-and-ordinary-sql",
+      "result": "PASS",
+      "client_exit": null,
+      "reopen_exit": null
+    }
+  ],
+  "boundary_bytes": {
+    "synthetic_max": 65624,
+    "well_framed_over_limit": 65628,
+    "max_real_envelope": 45144
+  }
+}
