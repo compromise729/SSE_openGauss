@@ -7,7 +7,7 @@
 |前置任务编号|YZH-02、LMD-03、LZM-04；基线 SHY-04|
 |实际输入提交号|SHY-04 固定提交 `5c8b2b03b482e203ac65a6f989a1b669126f263c`；审计时 main `0d9584ea0933`（含 PR #14/#15/#16）。VM 工作副本 6 个关键源码文件 SHA-256 与该固定提交逐字节一致|
 |合同版本|SHY-02 v1.0，`sse_v1_contract.hpp`，`kProtocolVersion=1`|
-|本人输出提交号/补丁|无客户端源码补丁：源码审计 + 真库复跑未发现需张永昌修改的调用处。交付审计报告、问题关闭表（终稿）、复跑脚本和真库证据，不伪造源码修复、不以绕过方式使用例通过|
+|本人输出提交号/补丁|无客户端源码补丁：源码审计 + 真库复跑未发现需张永昌修改的调用处。交付审计报告、问题关闭表（终稿）、复跑脚本和真库证据，不伪造源码修复、不以绕过方式使用例通过。Git 分支 `feature/ZYC-04-joint-issue-fix`（从 main `0d9584ea` 切出），输出提交 `edc563785760b6ad3f2bb866ab251d3b96dc108a`，PR [#17](https://github.com/compromise729/SSE_openGauss/pull/17)（目标 main，已请求 compromise729 评审）|
 |改动文件及原因|`call-site-audit.md`（调用点审计，终稿）、`problem-closure.md`（问题关闭表，终稿）、`reproduce.sh`（四入口复跑脚本）、`evidence/zyc13-run/`（本轮真库原始证据 95 文件）。原因：满足任务书「复现/区分/关闭清单/回归日志」交付|
 |构建/运行命令|组长指定入口：`sudo bash team_week/zhang_yongchang/tools/zyc_live_verify_all.sh --project-root <repo> --port 55443`；四入口汇总见 `reproduce.sh`|
 |测试输入与预期/实际|SHY-04 公开夹具 + ZYC 13 项。预期 ZYC=PASS 13；实际 `ZYC_RESULT=PASS MODULE_CASES=18 BASELINE_LIVE_CASES=18 ZYC_CASES=13`，`ZYC_ENTRY_RC=0`，`EVIDENCE_VALIDATED=PASS`|
